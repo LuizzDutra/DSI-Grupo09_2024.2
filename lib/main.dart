@@ -1,6 +1,16 @@
+/*Projeto da cadeira de DSI 2024.2 do grupo 09
+  O projeto se refere a construção de um medidor de frequência cardíaca
+  através dos acelerômetros do smarthphone*/
+
+/*Neste projeto foi utilizado um algoritmo para medição baseado no seguinte artigo
+Payette J, Vaussenat F, Cloutier SG. 
+Heart Rate Measurement Using the Built-In Triaxial Accelerometer from a Commercial Digital Writing Device. 
+Sensors. 2024; 24(7):2238. 
+https://doi.org/10.3390/s24072238 
+*/
+
 import 'dart:async';
 import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -37,7 +47,9 @@ class AccelerometerDataManager{
   }
 
   /*O algoritmo usado neste método e os valores de filtro são referentes ao seguinte artigo:
-  Payette J, Vaussenat F, Cloutier SG. Heart Rate Measurement Using the Built-In Triaxial Accelerometer from a Commercial Digital Writing Device. Sensors. 2024; 24(7):2238. https://doi.org/10.3390/s24072238 
+  Payette J, Vaussenat F, Cloutier SG. 
+  Heart Rate Measurement Using the Built-In Triaxial Accelerometer from a Commercial Digital Writing Device. 
+  Sensors. 2024; 24(7):2238. https://doi.org/10.3390/s24072238 
   Podendo ser encontrados na seção 2.2*/
   double evaluateData(UserAccelerometerEvent? accelerometerEvent){
     accelEuclidianVal = get3dEuclidianVal(accelerometerEvent!.x, accelerometerEvent.y, accelerometerEvent.z);
