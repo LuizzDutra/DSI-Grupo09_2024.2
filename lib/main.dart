@@ -11,6 +11,42 @@ void main() {
   runApp(const MyApp());
 }
 
+class AccelerometerDataManager{
+  double accelEuclidianVal = 0.0;
+
+  List<FlSpot> accelPoints = List<FlSpot>.filled(1000, const FlSpot(0.0, 0.0));
+  int pointsIdx = 0;
+  bool fullSize = false;
+
+  Butterworth butterworth = Butterworth();
+  double lastFilterValue = 0.0;
+
+  AccelerometerDataManager(Duration accelerometerSampling){
+    butterworth.lowPass(4, 1000/accelerometerSampling.inMilliseconds, 2);
+  }
+
+  double get3dEuclidianVal(double x, double y, double z){
+    return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+  }
+
+  void addPoint(double val){
+    if (pointsIdx < accelPoints.length){
+      accelPoints[pointsIdx] = FlSpot(pointsIdx.toDouble(), val);
+      pointsIdx++;
+    }else{pointsIdx = 0;}
+  }
+
+  /*O algoritmo usado neste método e os valores de filtro são referentes ao seguinte artigo:
+  Payette J, Vaussenat F, Cloutier SG. Heart Rate Measurement Using the Built-In Triaxial Accelerometer from a Commercial Digital Writing Device. Sensors. 2024; 24(7):2238. https://doi.org/10.3390/s24072238 
+  Podendo ser encontrados na seção 2.2*/
+  double evaluateData(UserAccelerometerEvent? accelerometerEvent){
+    accelEuclidianVal = get3dEuclidianVal(accelerometerEvent!.x, accelerometerEvent.y, accelerometerEvent.z);
+    lastFilterValue = butterworth.filter(accelEuclidianVal);
+    return lastFilterValue;
+  }
+  
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -43,18 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
   AndroidDeviceInfo? _androidInfo;
 
   UserAccelerometerEvent? _accelerometerEvent;
-  final Duration _accelerometerSampling = const Duration(milliseconds: 10);
+  static const Duration _accelerometerSampling = Duration(milliseconds: 10);
   final _streamSubscription = <StreamSubscription<dynamic>>[];
-
-  double accelEuclidianVal = 0.0;
-
-  List<FlSpot> accelPoints = List<FlSpot>.filled(1000, const FlSpot(0.0, 0.0));
-  int pointsIdx = 0;
-  bool fullSize = false;
-
-  Butterworth butterworth = Butterworth();
-  double lastFilterValue = 0.0;
-    
+  AccelerometerDataManager accelerometerDataManager = AccelerometerDataManager(_accelerometerSampling);
 
 
   @override
@@ -62,11 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     getAndroidModel();
     initAccelerometer();
-    initFilter();
-  }
-
-  void initFilter(){
-    butterworth.lowPass(4, 1000/_accelerometerSampling.inMilliseconds, 2);
   }
 
   Future<void> getAndroidModel() async{
@@ -82,13 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
       (UserAccelerometerEvent event) {
         setState((){
           _accelerometerEvent = event;
-          accelEuclidianVal = sqrt(pow(_accelerometerEvent!.x, 2) + pow(_accelerometerEvent!.y, 2) + pow(_accelerometerEvent!.z, 2));
-          lastFilterValue = butterworth.filter(accelEuclidianVal);
-          if (pointsIdx < accelPoints.length){
-            accelPoints[pointsIdx] = FlSpot(pointsIdx.toDouble(), lastFilterValue);
-            pointsIdx++;
-          }else{pointsIdx = 0;}
-
+          double managerVal = accelerometerDataManager.evaluateData(_accelerometerEvent);
+          accelerometerDataManager.addPoint(managerVal);
       });
       },
       cancelOnError: true,
@@ -129,13 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
               '${_accelerometerEvent?.x.toStringAsFixed(3)} ${_accelerometerEvent?.y.toStringAsFixed(3)} ${_accelerometerEvent?.z.toStringAsFixed(3)}'
             ),
             Text(
-              accelEuclidianVal.toString()
+              accelerometerDataManager.accelEuclidianVal.toString()
             ),
             const Text(
               "Last filter value"
             ),
             Text(
-              lastFilterValue.toString()
+              accelerometerDataManager.lastFilterValue.toString()
             ),
             AspectRatio(
               aspectRatio: 2.0,
@@ -145,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   maxX: 1000.0,
                   lineBarsData: [
                     LineChartBarData(
-                      spots: accelPoints,
+                      spots: accelerometerDataManager.accelPoints,
                       dotData: const FlDotData(
                         show: false,
                       ),
