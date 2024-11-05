@@ -42,22 +42,23 @@ class CustomGraphData{
 class AccelerometerDataManager{
   double accelEuclidianVal = 0.0;
 
-  double accelPointsSeconds = 5;
-  late CustomGraphData accelPoints;
+  double accelDataSeconds = 5;
+  late CustomGraphData accelData;
   int pointsIdx = 0;
   bool fullSize = false;
 
   Butterworth butterworth = Butterworth();
   double lastFilterValue = 0.0;
+  late double samplingHz;
 
   AccelerometerDataManager(Duration accelerometerSampling){
-    double samplingHz = 1000/accelerometerSampling.inMilliseconds;
+    samplingHz = 1000/accelerometerSampling.inMilliseconds;
     butterworth.lowPass(4, samplingHz, 2);
-    accelPoints = CustomGraphData((samplingHz*accelPointsSeconds).toInt());
+    accelData = CustomGraphData((samplingHz*accelDataSeconds).toInt());
   }
 
   List<FlSpot> get getPoints{
-    return accelPoints.data;
+    return accelData.data;
   }
 
   double get3dEuclidianVal(double x, double y, double z){
@@ -65,7 +66,7 @@ class AccelerometerDataManager{
   }
 
   void addPoint(double val){
-    accelPoints.addData(FlSpot(pointsIdx.toDouble(), val));
+    accelData.addData(FlSpot(pointsIdx.toDouble(), val));
     pointsIdx++;
   }
 
@@ -78,6 +79,33 @@ class AccelerometerDataManager{
     accelEuclidianVal = get3dEuclidianVal(accelerometerEvent!.x, accelerometerEvent.y, accelerometerEvent.z);
     lastFilterValue = butterworth.filter(accelEuclidianVal);
     return lastFilterValue;
+  }
+
+  double getAvg(){
+    double dataSum = 0;
+    for (FlSpot data in accelData.data){
+      dataSum += data.y;
+    }
+    return dataSum/accelData.size.toDouble();
+  }
+
+  double getPulseDelta(){
+    double pulseDeltaMs = 0;
+    double dataAvg = getAvg();
+    List<int> pulsePoints = <int>[];
+    for (int i = 1; i < accelData.data.length; i++){
+      if (accelData.data[i].y >= dataAvg && accelData.data[i-1].y < dataAvg){
+        pulsePoints.add(i);
+      }
+    }
+    if (pulsePoints.length > 1){
+      for (int i = 1; i < pulsePoints.length; i++){
+        pulseDeltaMs += (1000/samplingHz) * (pulsePoints[i] - pulsePoints[i-1]);
+      }
+      pulseDeltaMs /= pulsePoints.length-1;
+    }
+    //print(pulsePoints.length);
+    return pulseDeltaMs/1000;
   }
   
 }
@@ -148,7 +176,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  
   Future<void> popUpError(String e) async{
     showDialog(
       context: context,
@@ -188,6 +215,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               accelerometerDataManager.lastFilterValue.toString()
+            ),
+            Text(
+              accelerometerDataManager.getAvg().toString()
+            ),
+            Text(
+              accelerometerDataManager.getPulseDelta().toString()
+            ),
+            Text(
+              (60/accelerometerDataManager.getPulseDelta()).toString()
             ),
             AspectRatio(
               aspectRatio: 2.0,
