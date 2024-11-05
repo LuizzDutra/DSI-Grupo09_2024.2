@@ -21,10 +21,29 @@ void main() {
   runApp(const MyApp());
 }
 
+class CustomGraphData{
+  int size;
+  List<FlSpot> data = <FlSpot>[];
+
+  CustomGraphData(this.size);
+
+  void addData(FlSpot spot){
+    if (data.length < size){
+      data.add(spot);
+    }else{
+      for (int i = 0; i < size-1; i++){
+        data[i] = data[i+1];
+      }
+      data.last = spot;
+    }
+  }
+
+}
 class AccelerometerDataManager{
   double accelEuclidianVal = 0.0;
 
-  List<FlSpot> accelPoints = List<FlSpot>.filled(1000, const FlSpot(0.0, 0.0));
+  double accelPointsSeconds = 5;
+  late CustomGraphData accelPoints;
   int pointsIdx = 0;
   bool fullSize = false;
 
@@ -32,7 +51,13 @@ class AccelerometerDataManager{
   double lastFilterValue = 0.0;
 
   AccelerometerDataManager(Duration accelerometerSampling){
-    butterworth.lowPass(4, 1000/accelerometerSampling.inMilliseconds, 2);
+    double samplingHz = 1000/accelerometerSampling.inMilliseconds;
+    butterworth.lowPass(4, samplingHz, 2);
+    accelPoints = CustomGraphData((samplingHz*accelPointsSeconds).toInt());
+  }
+
+  List<FlSpot> get getPoints{
+    return accelPoints.data;
   }
 
   double get3dEuclidianVal(double x, double y, double z){
@@ -40,10 +65,8 @@ class AccelerometerDataManager{
   }
 
   void addPoint(double val){
-    if (pointsIdx < accelPoints.length){
-      accelPoints[pointsIdx] = FlSpot(pointsIdx.toDouble(), val);
-      pointsIdx++;
-    }else{pointsIdx = 0;}
+    accelPoints.addData(FlSpot(pointsIdx.toDouble(), val));
+    pointsIdx++;
   }
 
   /*O algoritmo usado neste método e os valores de filtro são referentes ao seguinte artigo:
@@ -170,16 +193,23 @@ class _MyHomePageState extends State<MyHomePage> {
               aspectRatio: 2.0,
               child: LineChart(
                 LineChartData(
-                  minX: 0,
-                  maxX: 1000.0,
+                  //minX: 0,
+                  //maxX: accelerometerDataManager.getPoints.length.toDouble(),
+                  //minY: 0,
+                  baselineY: 0,
+                  maxY: 0.5,
+                  clipData: const FlClipData(top: true, bottom: true, left: true, right: true),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: accelerometerDataManager.accelPoints,
+                      spots: accelerometerDataManager.getPoints,
                       dotData: const FlDotData(
                         show: false,
                       ),
                     ),
                   ],
+                  titlesData: const FlTitlesData(
+                    show: false,
+                  ),
                 ),
                 duration: const Duration(milliseconds: 0),
               ),
