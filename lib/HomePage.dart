@@ -31,6 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String dbQuery = '';
 
+  String usuario = '';
+
   Future<dynamic> pegarQuery() async{
     var query = await UserDatabase().pegarTabelaUsuario();
     setState((){
@@ -40,13 +42,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //função demo apenas para chamada do banco de dados
   Future<void> registrarUsuario() async{
-    Autenticar autenticar = Autenticar();
     try{
-      await autenticar.registrar("Beltrano@e.com", "Beltrano1", "1234");
+      await Autenticar.registrar("Beltrano@e.com", "Beltrano", "0000");
     }on Exception catch(e){
       print(e);
     }
     pegarQuery();
+  }
+  
+  Future<void> logarAdmin() async{
+    await Autenticar.logar("luizzidutra@gmail.com", "admin000");
+    setState(() {
+      usuario = Autenticar.usuarioLogado;
+    });
   }
 
   @override
@@ -60,7 +68,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("O query foi: $dbQuery"),
+        Text(
+          style: const TextStyle(
+            fontSize: 25,
+          ),
+          "O query foi: $dbQuery"),
+        Text(
+          style: const TextStyle(
+            fontSize: 25,
+          ),
+          "Logado como: $usuario"),
+        FloatingActionButton(onPressed: () => logarAdmin()),
       ],
     );
   }
