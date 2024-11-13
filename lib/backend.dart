@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:device_info_plus/device_info_plus.dart';
 
 int? loginId = null;
+
 class Registro{
   int registrar(String nome, String senha){
     //To-do 
