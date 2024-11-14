@@ -1,11 +1,17 @@
 import 'package:sqflite/sqflite.dart';
-
+import 'package:conduit_password_hash/conduit_password_hash.dart';
 
 class MyDatabase{
 
-  MyDatabase._init();
 
   late Database db;
+  late PBKDF2 hashGen;
+  late int defaultRounds;
+  
+  MyDatabase._init(){
+    hashGen = PBKDF2();
+    defaultRounds = 1000;
+  }
 
   static Future<MyDatabase> init() async{
     MyDatabase myDatabase = MyDatabase._init();
@@ -15,16 +21,21 @@ class MyDatabase{
     return myDatabase;
   }
 
+  static Future<void> criarDatabase(Database db) async{
+    await db.execute('CREATE TABLE Users(email VARCHAR PRIMARY KEY, nome TEXT, hash VARCHAR(60), salt VARCHAR(16))');
+  }
+
   static Future<Database> abrirDb() async{
     var dbPathGlobal = await getDatabasesPath();
     var dbPath = '$dbPathGlobal/usuarios.db';
-
-    Database database = await openDatabase(dbPath, version: 1, 
+    
+    Database database = await openDatabase(dbPath, version: 5, 
       onCreate: (Database db, int version) async{
-        //To-do implementer hashing com bcrypt
-        await db.execute('CREATE TABLE Users(email VARCHAR PRIMARY KEY, nome TEXT, senha VARCHAR)');
-        await db.execute('INSERT INTO Users(email, nome, senha) VALUES("luizzidutra@gmail.com", "Luiz", "admin000")');
-    });
+        criarDatabase(db);
+    },onUpgrade: (db, oldVersion, newVersion) async{
+        await db.execute('DROP TABLE Users');
+        criarDatabase(db);
+    },);
     return database;
   }
 
@@ -34,7 +45,9 @@ class MyDatabase{
 
   Future<void> inserirUsuario(String email, String nome, String senha) async{
     db.transaction((txn) async{
-        await txn.rawInsert('INSERT INTO Users(email, nome, senha) VALUES(?, ?, ?)', [email, nome, senha]);
+        String salt = generateAsBase64String(16);
+        String hash = hashGen.generateBase64Key(senha, salt, defaultRounds, 60);
+        await txn.rawInsert('INSERT INTO Users(email, nome, hash, salt) VALUES(?, ?, ?, ?)', [email, nome, hash, salt]);
     });
   }
 
@@ -42,8 +55,12 @@ class MyDatabase{
     return db.rawQuery("SELECT * FROM Users WHERE email=?", [email]);
   }
 
-  Future<List> pegarSenha(String email) async{
-    return db.rawQuery("SELECT senha FROM Users WHERE email=?", [email]);
+  Future<bool> checarSenha(String email, String senha) async{
+    List query = await db.rawQuery("SELECT hash, salt FROM Users WHERE email=?", [email]);
+    String hash = query[0]["hash"];
+    String salt = query[0]["salt"];
+    String hashSenha = hashGen.generateBase64Key(senha, salt, defaultRounds, 60);
+    return hash == hashSenha;
   }
 
   Future<dynamic> pegarTabelaUsuario() async{

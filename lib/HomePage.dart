@@ -36,6 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> init() async{
     auth = await Autenticar.init();
+    registrarAdmin();
+    registrarUsuario();
     pegarQuery();
   }
 
@@ -56,6 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
     pegarQuery();
   }
   
+  Future<void> registrarAdmin() async{
+    try{
+      await auth.registrar("luizzidutra@gmail.com", "Luiz", "admin000");
+    }on Exception catch(e){
+      print(e);
+    }
+  }
   Future<void> logarAdmin() async{
     await auth.logar("luizzidutra@gmail.com", "admin000");
     setState(() {

@@ -30,8 +30,7 @@ class Autenticar{
       throw Exception("Já existe um usuário logado");
     }
 
-    List query = await db.pegarSenha(email);
-    if(query[0]["senha"] == senha){
+    if(await db.checarSenha(email, senha)){
       usuarioLogado = email;
     }else{
       throw Exception("Senha incorreta");
