@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app_gp9/database_usuarios.dart';
 import 'package:app_gp9/autenticacao.dart';
 
 class MyApp extends StatelessWidget {
@@ -33,8 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String usuario = '';
 
+  late Autenticar auth;
+
+  Future<void> init() async{
+    auth = await Autenticar.init();
+    pegarQuery();
+  }
+
   Future<dynamic> pegarQuery() async{
-    var query = await UserDatabase().pegarTabelaUsuario();
+    var query = await auth.db.pegarTabelaUsuario();
     setState((){
       dbQuery = query.toString();
     });
@@ -43,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //função demo apenas para chamada do banco de dados
   Future<void> registrarUsuario() async{
     try{
-      await Autenticar.registrar("Beltrano@e.com", "Beltrano", "0000");
+      await auth.registrar("Beltrano@e.com", "Beltrano", "0000");
     }on Exception catch(e){
       print(e);
     }
@@ -51,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   
   Future<void> logarAdmin() async{
-    await Autenticar.logar("luizzidutra@gmail.com", "admin000");
+    await auth.logar("luizzidutra@gmail.com", "admin000");
     setState(() {
       usuario = Autenticar.usuarioLogado;
     });
@@ -60,8 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    registrarUsuario();
-    pegarQuery();
+    init();
   }
 
   @override
