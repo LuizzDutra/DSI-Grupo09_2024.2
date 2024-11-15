@@ -51,6 +51,12 @@ class MyDatabase{
     });
   }
 
+  Future<void> removerRegistroUsuario(String email) async{
+    db.transaction((txn) async{
+      await txn.delete("Users", where: "email= ?", whereArgs: [email]);
+    });
+  }
+
   Future<List> pegarEmail(String email) async{
     return db.rawQuery("SELECT * FROM Users WHERE email=?", [email]);
   }
