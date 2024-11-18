@@ -3,5 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:app_gp9/HomePage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true
+
+      ),
+    home: const Login(),
+  
+  )
+  
+  );
 }

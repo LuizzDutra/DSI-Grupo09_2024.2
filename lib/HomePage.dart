@@ -1,99 +1,188 @@
-import 'package:flutter/material.dart';
 import 'package:app_gp9/autenticacao.dart';
+import 'package:flutter/material.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Login extends StatefulWidget{
+
+  const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return Scaffold(
+        body: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 120,),
+                    Text("Seja Bem-Vindo",style: TextStyle(fontSize: 50),),
+                    SizedBox(height: 10,),
+                    Text("Efetue seu login",style: TextStyle(color: Color.fromARGB(142, 164, 164, 1)),),
+                    SizedBox(height: 100,),
+                  ],
+                ),
+              ),
+              
+              
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'E-mail ou Usuário',
+                    border: OutlineInputBorder(),
+                    ),
+                  
+                ),
+              ),
+              const SizedBox(height: 10,),
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  obscureText: true,
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'Senha',
+                    border: OutlineInputBorder(),
+
+                    ),
+                  
+                ),
+              ),
+              const SizedBox(height: 15,),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FilledButton(onPressed: (){},style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Acessar")),
+                  const SizedBox(width: 15,),
+                  FilledButton(onPressed: (){
+                    
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Registro()));
+                  
+                  },style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Cadastro")),
+                ],
+              ),
+              
+              const SizedBox(height: 10,),
+              const Text("Esqueceu a senha?"),
+              const SizedBox(height: 10,),
+              TextButton(onPressed: (){}, child: const Text("Clique aqui",style: TextStyle(color: Color.fromRGBO(54, 9, 234, 1)),),)
+              
+            ],
+          )
+        
+        ),
+      );
+     
+    
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class Registro extends StatefulWidget{
 
-  final String title;
+  const Registro({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Registro> createState() => _RegistroState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
-  String dbQuery = '';
-
-  String usuario = '';
-
-  late Autenticar auth;
-
-  Future<void> init() async{
-    auth = await Autenticar.init();
-    registrarAdmin();
-    registrarUsuario();
-    pegarQuery();
-  }
-
-  Future<dynamic> pegarQuery() async{
-    var query = await auth.db.pegarTabelaUsuario();
-    setState((){
-      dbQuery = query.toString();
-    });
-  }
-
-  //função demo apenas para chamada do banco de dados
-  Future<void> registrarUsuario() async{
-    try{
-      await auth.registrar("Beltrano@e.com", "Beltrano", "0000");
-    }on Exception catch(e){
-      print(e);
-    }
-    pegarQuery();
-  }
-  
-  Future<void> registrarAdmin() async{
-    try{
-      await auth.registrar("luizzidutra@gmail.com", "Luiz", "admin000");
-    }on Exception catch(e){
-      print(e);
-    }
-  }
-  Future<void> logarAdmin() async{
-    await auth.logar("luizzidutra@gmail.com", "admin000");
-    setState(() {
-      usuario = Autenticar.usuarioLogado;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-
+class _RegistroState extends State<Registro> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          style: const TextStyle(
-            fontSize: 25,
-          ),
-          "O query foi: $dbQuery"),
-        Text(
-          style: const TextStyle(
-            fontSize: 25,
-          ),
-          "Logado como: $usuario"),
-        FloatingActionButton(onPressed: () => logarAdmin()),
-      ],
-    );
+    return 
+    Scaffold(
+        body: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              const Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 100,),
+                    Text("Cadastro",style: TextStyle(fontSize: 50, color: Color.fromARGB(92, 24, 190, 132)),),
+                    SizedBox(height: 5,),
+                    Text("Efetue seu cadastro",style: TextStyle(color: Color.fromARGB(142, 164, 164, 1), fontSize: 25),),
+                    SizedBox(height: 50,),
+                  ],
+                ),
+              ),
+              
+              
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'Usuário',
+                    //border: OutlineInputBorder(),
+                    ),
+                  
+                ),
+              ),
+              const SizedBox(height: 20,),
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  obscureText: true,
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'Senha',
+                    //border: OutlineInputBorder(),
+
+                    ),
+                  
+                ),
+              ),
+              const SizedBox(height: 20,),
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  obscureText: true,
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'Confimar senha',
+                    //border: OutlineInputBorder(),
+
+                    ),
+                  
+                ),
+              ),
+              
+              const SizedBox(height: 20,),
+              
+              const SizedBox(
+                width: 700,
+                child: TextField(
+                  obscureText: true,
+                  decoration: 
+                  InputDecoration(
+                    labelText: 'E-mail',
+                    //border: OutlineInputBorder(),
+
+                    ),
+                  
+                ),
+              ),
+              
+              const SizedBox(height: 55,),
+
+              FilledButton(onPressed: (){},style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Cadastrar")),
+              
+            
+              
+            ],
+          )
+        
+        ),
+      );
+     
+    
   }
 }
