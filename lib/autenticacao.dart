@@ -38,6 +38,14 @@ class Autenticar{
 
   }
 
+  Future<void> removerUsuario(String email, String senha) async{
+    if(await db.checarSenha(email, senha)){
+      db.removerRegistroUsuario(email);
+    }else{
+      throw Exception("Senha incorreta");
+    }
+  }
+
   Future<bool> emailExiste(String email) async {
 
     List query = await db.pegarEmail(email);
