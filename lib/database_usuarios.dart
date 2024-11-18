@@ -1,3 +1,4 @@
+import 'package:app_gp9/utilitarios.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:conduit_password_hash/conduit_password_hash.dart';
 
@@ -43,6 +44,25 @@ class MyDatabase{
     await db.close();
   }
 
+  
+
+  Future <void> inserirDados(String tabela, List <dynamic> lista) async{
+
+    db.transaction((txn) async{
+        String insert = await stringInserirDados(tabela, lista);
+        await txn.rawInsert(insert, lista);
+    });
+
+  }
+
+  Future <void> updateDados(String tabela, List <dynamic> colunas, List <dynamic> valores, String where) async{
+    db.transaction((txn) async{
+        String update = await stringUpdateDados(tabela, colunas,where);
+        await txn.rawUpdate(update,valores);
+    });
+  
+  }  
+  
   Future<void> inserirUsuario(String email, String nome, String senha) async{
     db.transaction((txn) async{
         String salt = generateAsBase64String(16);
