@@ -10,6 +10,15 @@ class Login extends StatefulWidget{
 }
 
 class _LoginState extends State<Login> {
+  
+  final TextEditingController _controller = TextEditingController();
+
+  String _capturarValor() {
+    String texto = _controller.text;
+    return texto;
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,11 +39,13 @@ class _LoginState extends State<Login> {
               ),
               
               
-              const SizedBox(
+              SizedBox(
                 width: 700,
                 child: TextField(
+                  controller: _controller,
                   decoration: 
-                  InputDecoration(
+                  
+                  const InputDecoration(
                     labelText: 'E-mail ou Usuário',
                     border: OutlineInputBorder(),
                     ),
@@ -60,8 +71,15 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FilledButton(onPressed: (){},style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Acessar")),
+                  FilledButton(onPressed: () async {
+                    String user = _capturarValor();
+                    Autenticar autenticador = await Autenticar.init();
+                    autenticador.logar(user, '0');
+                  
+                  },style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Acessar")),
+                  
                   const SizedBox(width: 15,),
+                  
                   FilledButton(onPressed: (){
                     
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const Registro()));
