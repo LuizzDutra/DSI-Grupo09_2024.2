@@ -11,13 +11,20 @@ class Login extends StatefulWidget{
 
 class _LoginState extends State<Login> {
   
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController = TextEditingController();
 
-  String _capturarValor() {
-    String texto = _controller.text;
-    return texto;
+  late Autenticar autenticador;
+
+  @override
+  void initState() {
+    super.initState();
+    initAutenticar();
   }
 
+  Future<void> initAutenticar() async{
+    autenticador = await Autenticar.init();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -30,68 +37,100 @@ class _LoginState extends State<Login> {
                 child: Column(
                   children: [
                     SizedBox(height: 120,),
-                    Text("Seja Bem-Vindo",style: TextStyle(fontSize: 50),),
+                    Text("Seja Bem-Vindo",
+                      style: TextStyle(
+                        color:Color(0xFF001800), 
+                        fontSize: 40,
+                        fontFamily: "Megrim",
+                        fontWeight: FontWeight.w900
+                        ),
+                      ),
                     SizedBox(height: 10,),
-                    Text("Efetue seu login",style: TextStyle(color: Color.fromARGB(142, 164, 164, 1)),),
-                    SizedBox(height: 100,),
+                    Text("Efetue seu login",
+                      style: TextStyle(
+                        color: Color(0xFF8EA4A4),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    SizedBox(height: 75,),
                   ],
                 ),
               ),
               
-              
               SizedBox(
-                width: 700,
+                width: 320,
                 child: TextField(
-                  controller: _controller,
-                  decoration: 
-                  
-                  const InputDecoration(
-                    labelText: 'E-mail ou Usuário',
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'E-mail',
                     border: OutlineInputBorder(),
                     ),
-                  
                 ),
               ),
-              const SizedBox(height: 10,),
-              const SizedBox(
-                width: 700,
+              const SizedBox(height: 30,),
+              SizedBox(
+                width: 320,
                 child: TextField(
+                  controller: _senhaController,
                   obscureText: true,
-                  decoration: 
-                  InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Senha',
                     border: OutlineInputBorder(),
-
                     ),
                   
                 ),
               ),
               const SizedBox(height: 15,),
               
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton(onPressed: () async {
-                    String user = _capturarValor();
-                    Autenticar autenticador = await Autenticar.init();
-                    autenticador.logar(user, '0');
+                    //To-do
+                    autenticador.logar(_emailController.text, _senhaController.text);
+
+                  },
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Color(0xFF628b27)), 
+                    fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                    ), 
+                  child: const Text("Entrar",
+                          style: 
+                            TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              ),
+                          )
+                  ),
                   
-                  },style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Acessar")),
-                  
-                  const SizedBox(width: 15,),
+                  const SizedBox(height: 10,),
                   
                   FilledButton(onPressed: (){
                     
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Registro()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Registro(autenticador: autenticador)));
                   
-                  },style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Cadastro")),
+                  },
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Color(0xFF628b27)),
+                    fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                    ), 
+                  child: const Text("Cadastrar",
+                          style: 
+                            TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              ),
+                          )
+                  ),
                 ],
               ),
               
+              /*
               const SizedBox(height: 10,),
               const Text("Esqueceu a senha?"),
               const SizedBox(height: 10,),
-              TextButton(onPressed: (){}, child: const Text("Clique aqui",style: TextStyle(color: Color.fromRGBO(54, 9, 234, 1)),),)
+              TextButton(onPressed: (){}, child: const Text("Clique aqui",style: TextStyle(color: Color.fromRGBO(54, 9, 234, 1)),),)*/
               
             ],
           )
@@ -105,13 +144,33 @@ class _LoginState extends State<Login> {
 
 class Registro extends StatefulWidget{
 
-  const Registro({super.key});
+  
+  const Registro({super.key, required this.autenticador});
+  final Autenticar autenticador;
 
   @override
   State<Registro> createState() => _RegistroState();
 }
 
 class _RegistroState extends State<Registro> {
+
+  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController = TextEditingController();
+  final TextEditingController _senhaConfController = TextEditingController();
+
+  void registrar(){
+    //To-do
+    if (_senhaController.text != _senhaConfController.text){
+      throw Exception("As senhas estão diferentes");
+    }
+    widget.autenticador.registrar(
+      _emailController.text, 
+      _nomeController.text,
+      _senhaController.text
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return 
@@ -124,66 +183,80 @@ class _RegistroState extends State<Registro> {
                 child: Column(
                   children: [
                     SizedBox(height: 100,),
-                    Text("Cadastro",style: TextStyle(fontSize: 50, color: Color.fromARGB(92, 24, 190, 132)),),
+                    Text("Cadastro",
+                      style: TextStyle(
+                        fontSize: 40, 
+                        fontFamily: "Megrim",
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF001800)),),
                     SizedBox(height: 5,),
-                    Text("Efetue seu cadastro",style: TextStyle(color: Color.fromARGB(142, 164, 164, 1), fontSize: 25),),
+                    Text("Efetue seu cadastro",
+                      style: TextStyle(
+                        color: Color(0xFF8EA4A4), 
+                        fontSize: 20),),
                     SizedBox(height: 50,),
                   ],
                 ),
               ),
               
               
-              const SizedBox(
-                width: 700,
+              SizedBox(
+                width: 320,
                 child: TextField(
-                  decoration: 
-                  InputDecoration(
-                    labelText: 'Usuário',
-                    //border: OutlineInputBorder(),
+                  controller: _nomeController,
+                  decoration: const InputDecoration(
+                    labelText: 'Nome completo',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF001800),
+                      ),
                     ),
                   
                 ),
               ),
               const SizedBox(height: 20,),
-              const SizedBox(
-                width: 700,
+              SizedBox(
+                width: 320,
                 child: TextField(
-                  obscureText: true,
-                  decoration: 
-                  InputDecoration(
-                    labelText: 'Senha',
-                    //border: OutlineInputBorder(),
-
-                    ),
-                  
-                ),
-              ),
-              const SizedBox(height: 20,),
-              const SizedBox(
-                width: 700,
-                child: TextField(
-                  obscureText: true,
-                  decoration: 
-                  InputDecoration(
-                    labelText: 'Confimar senha',
-                    //border: OutlineInputBorder(),
-
-                    ),
-                  
-                ),
-              ),
-              
-              const SizedBox(height: 20,),
-              
-              const SizedBox(
-                width: 700,
-                child: TextField(
-                  obscureText: true,
-                  decoration: 
-                  InputDecoration(
+                  obscureText: false,
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     labelText: 'E-mail',
-                    //border: OutlineInputBorder(),
-
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF001800),
+                      ),
+                    ),
+                ),
+              ),
+              const SizedBox(height: 20,),
+              SizedBox(
+                width: 320,
+                child: TextField(
+                  obscureText: true,
+                  controller: _senhaController,
+                  decoration: const InputDecoration(
+                    labelText: 'Criar Senha',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF001800),
+                      ),
+                    ),
+                  
+                ),
+              ),
+              const SizedBox(height: 20,),
+              SizedBox(
+                width: 320,
+                child: TextField(
+                  obscureText: true,
+                  controller: _senhaConfController,
+                  decoration: const InputDecoration(
+                    labelText: 'Confimar senha',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF001800),
+                      ),
                     ),
                   
                 ),
@@ -191,7 +264,35 @@ class _RegistroState extends State<Registro> {
               
               const SizedBox(height: 55,),
 
-              FilledButton(onPressed: (){},style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(66, 154,152, 1))), child: const Text("Cadastrar")),
+              FilledButton(onPressed: registrar,
+                style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Color(0xFF628b27)),
+                  fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                  ), 
+                child: const Text("Cadastrar",
+                          style: 
+                            TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              ),
+                        )
+                ),
+              const SizedBox(height: 10,),
+              FilledButton(onPressed: (){
+                Navigator.pop(context);
+              },
+                style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Color(0xFF001800)),
+                  fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                  ), 
+                child: const Text("Voltar",
+                          style: 
+                            TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              ),
+                        )
+                ),
               
             
               
