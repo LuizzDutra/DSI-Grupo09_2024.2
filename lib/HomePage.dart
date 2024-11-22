@@ -87,8 +87,22 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton(onPressed: () async {
-                    //To-do
-                    autenticador.logar(_emailController.text, _senhaController.text);
+                    try{
+                      if(_emailController.text.isEmpty || _senhaController.text.isEmpty){
+                        throw "Preencha todos os campos";
+                      }
+                      autenticador.logar(_emailController.text, _senhaController.text);
+                    }on String catch(e){
+                      if (context.mounted) {
+                        showDialog(
+                        context: context, 
+                        builder: (context){
+                          return AlertDialog(
+                            content: Text(e),
+                          );
+                        });
+                      }
+                    }
 
                   },
                   style: const ButtonStyle(
@@ -159,12 +173,19 @@ class _RegistroState extends State<Registro> {
   final TextEditingController _senhaController = TextEditingController();
   final TextEditingController _senhaConfController = TextEditingController();
 
-  void registrar(){
+  Future<void> registrar() async{
     //To-do
     if (_senhaController.text != _senhaConfController.text){
-      throw Exception("As senhas estão diferentes");
+      throw "As senhas estão diferentes";
     }
-    widget.autenticador.registrar(
+    if (_emailController.text.isEmpty || 
+    _senhaController.text.isEmpty ||
+    _senhaConfController.text.isEmpty||
+    _nomeController.text.isEmpty){
+      throw "Preencha todos os campos";
+    }
+    
+    await widget.autenticador.registrar(
       _emailController.text, 
       _nomeController.text,
       _senhaController.text
@@ -198,7 +219,6 @@ class _RegistroState extends State<Registro> {
                   ],
                 ),
               ),
-              
               
               SizedBox(
                 width: 320,
@@ -264,7 +284,22 @@ class _RegistroState extends State<Registro> {
               
               const SizedBox(height: 55,),
 
-              FilledButton(onPressed: registrar,
+              FilledButton(onPressed: () async {
+                try{
+                  await registrar();
+                  if(context.mounted) Navigator.pop(context);
+                }on String catch(e){
+                  if (context.mounted) {
+                    showDialog(
+                    context: context, 
+                    builder: (context){
+                      return AlertDialog(
+                        content: Text(e),
+                      );
+                    });
+                  }
+                }
+                },
                 style: const ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(Color(0xFF628b27)),
                   fixedSize: WidgetStatePropertyAll(Size(188, 45)),
@@ -278,9 +313,7 @@ class _RegistroState extends State<Registro> {
                         )
                 ),
               const SizedBox(height: 10,),
-              FilledButton(onPressed: (){
-                Navigator.pop(context);
-              },
+              FilledButton(onPressed: () => Navigator.pop(context),
                 style: const ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(Color(0xFF001800)),
                   fixedSize: WidgetStatePropertyAll(Size(188, 45)),

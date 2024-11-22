@@ -14,17 +14,17 @@ class Autenticar{
 
   Future<void> registrar(String email, String nome, String senha) async{
       if(!nomeValido(nome)){
-        throw Exception("Nome possue caracteres invalidos");
+        throw "Nome possue caracteres invalidos";
       }
       if (await emailExiste(email)){
-        throw Exception("Email já em uso");
+        throw "Email já em uso";
       }
       await db.inserirUsuario(email, nome, senha);
   }
 
   Future<void> logar(String email, String senha) async{
     if(!await emailExiste(email)){
-      throw Exception("Email não existe");
+      throw "Email não existe";
     }
     if(usuarioLogado != ""){
       throw Exception("Já existe um usuário logado");
@@ -33,7 +33,7 @@ class Autenticar{
     if(await db.checarSenha(email, senha)){
       usuarioLogado = email;
     }else{
-      throw Exception("Senha incorreta");
+      throw "Senha incorreta";
     }
 
   }
@@ -42,7 +42,7 @@ class Autenticar{
     if(await db.checarSenha(email, senha)){
       db.removerRegistroUsuario(email);
     }else{
-      throw Exception("Senha incorreta");
+      throw "Senha incorreta";
     }
   }
 
