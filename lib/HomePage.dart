@@ -1,4 +1,5 @@
 import 'package:app_gp9/autenticacao.dart';
+import 'package:app_gp9/placeholder.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -27,6 +28,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFEFEE3),
       body: Container(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -98,8 +100,15 @@ class _LoginState extends State<Login> {
                               _senhaController.text.isEmpty) {
                             throw "Preencha todos os campos";
                           }
+                          Autenticar.usuarioLogado = '';
                           await autenticador.logar(
                               _emailController.text, _senhaController.text);
+                          if (context.mounted) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPlaceholder()));
+                          }
                         } on String catch (e) {
                           if (context.mounted) {
                             showDialog(
@@ -137,12 +146,13 @@ class _LoginState extends State<Login> {
                       },
                       style: const ButtonStyle(
                         backgroundColor:
-                            WidgetStatePropertyAll(Color(0xFF628b27)),
+                            WidgetStatePropertyAll(Color(0xFF001800)),
                         fixedSize: WidgetStatePropertyAll(Size(188, 45)),
                       ),
                       child: const Text(
                         "Cadastrar",
                         style: TextStyle(
+                          color: Color(0xFFFFDE59),
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -193,26 +203,26 @@ class _RegistroState extends State<Registro> {
 
   dynamic getHeader() {
     return const Center(
-        child: Column(
-          children: [
-            Text(
-              "Cadastro",
-              style: TextStyle(
-                  fontSize: 40,
-                  fontFamily: "Megrim",
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFF001800)),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              "Efetue seu cadastro",
-              style: TextStyle(color: Color(0xFF8EA4A4), fontSize: 20),
-            ),
-          ],
-        ),
-      );
+      child: Column(
+        children: [
+          Text(
+            "Cadastro",
+            style: TextStyle(
+                fontSize: 40,
+                fontFamily: "Megrim",
+                fontWeight: FontWeight.w900,
+                color: Color(0xFF001800)),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "Efetue seu cadastro",
+            style: TextStyle(color: Color(0xFF8EA4A4), fontSize: 20),
+          ),
+        ],
+      ),
+    );
   }
 
   dynamic getFields() {
@@ -276,8 +286,7 @@ class _RegistroState extends State<Registro> {
   }
 
   dynamic getButtons() {
-    return 
-    Column(
+    return Column(
       children: [
         FilledButton(
             onPressed: () async {
@@ -319,6 +328,7 @@ class _RegistroState extends State<Registro> {
             child: const Text(
               "Voltar",
               style: TextStyle(
+                color: Color(0xFFFFDE59),
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -330,6 +340,7 @@ class _RegistroState extends State<Registro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFEFEE3),
       resizeToAvoidBottomInset: true,
       body: Container(
           padding: const EdgeInsets.all(8.0),
@@ -337,12 +348,11 @@ class _RegistroState extends State<Registro> {
             children: [
               const SizedBox(height: 100),
               getHeader(),
-              const Spacer(flex:50),
+              const Spacer(flex: 50),
               getFields(),
-              const Spacer(flex:20),
+              const Spacer(flex: 20),
               getButtons(),
-              const Spacer(flex:200),
-              
+              const Spacer(flex: 200),
             ],
           )),
     );
