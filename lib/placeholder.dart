@@ -1,4 +1,5 @@
 import 'package:app_gp9/autenticacao.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyPlaceholder extends StatelessWidget {
@@ -6,7 +7,7 @@ class MyPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("Logado como:\n ${Autenticar.usuarioLogado}"),
+        child: Text("Logado como:\n ${FirebaseAuth.instance.currentUser!.email}"),
       ),
     );
   }

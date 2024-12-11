@@ -14,16 +14,42 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
 
-  late Autenticar autenticador;
-
   @override
   void initState() {
     super.initState();
-    initAutenticar();
   }
 
-  Future<void> initAutenticar() async {
-    autenticador = await Autenticar.init();
+  MaterialPageRoute rotaStartPage = MaterialPageRoute(
+      builder: (context) => PageView(
+            children: [
+              const Page1(),
+              const Page2(),
+              const Page3(),
+              MyPlaceholder()
+            ],
+          ));
+
+  void realizarLogin() async {
+    try {
+      if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
+        throw "Preencha todos os campos";
+      }
+      await ControladorAutenticar.logar(
+          _emailController.text, _senhaController.text);
+      if (context.mounted) {
+        Navigator.push(context, rotaStartPage);
+      }
+    } on String catch (e) {
+      if (context.mounted) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(e),
+              );
+            });
+      }
+    }
   }
 
   @override
@@ -96,38 +122,7 @@ class _LoginState extends State<Login> {
                 children: [
                   FilledButton(
                       onPressed: () async {
-                        try {
-                          if (_emailController.text.isEmpty ||
-                              _senhaController.text.isEmpty) {
-                            throw "Preencha todos os campos";
-                          }
-                          Autenticar.usuarioLogado = '';
-                          await autenticador.logar(
-                              _emailController.text, _senhaController.text);
-                          if (context.mounted) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PageView(
-                                          children: [
-                                            const Page1(),
-                                            const Page2(),
-                                            const Page3(),
-                                            MyPlaceholder()
-                                          ],
-                                        )));
-                          }
-                        } on String catch (e) {
-                          if (context.mounted) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: Text(e),
-                                  );
-                                });
-                          }
-                        }
+                        realizarLogin();
                       },
                       style: const ButtonStyle(
                         backgroundColor:
@@ -149,8 +144,7 @@ class _LoginState extends State<Login> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Registro(autenticador: autenticador)));
+                                builder: (context) => Registro()));
                       },
                       style: const ButtonStyle(
                         backgroundColor:
@@ -180,8 +174,7 @@ class _LoginState extends State<Login> {
 }
 
 class Registro extends StatefulWidget {
-  const Registro({super.key, required this.autenticador});
-  final Autenticar autenticador;
+  const Registro({super.key});
 
   @override
   State<Registro> createState() => _RegistroState();
@@ -205,8 +198,8 @@ class _RegistroState extends State<Registro> {
       throw "Preencha todos os campos";
     }
 
-    await widget.autenticador.registrar(
-        _emailController.text, _nomeController.text, _senhaController.text);
+    await ControladorAutenticar.registrar(
+        _emailController.text, _senhaController.text);
   }
 
   dynamic getHeader() {

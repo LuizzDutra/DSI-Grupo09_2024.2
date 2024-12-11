@@ -1,62 +1,47 @@
 import 'package:app_gp9/database_usuarios.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ControladorAutenticar{
+class ControladorAutenticar {
   static String usuarioLogado = "";
-  late MyDatabase db;
 
-  Autenticar._init();
-
-  static Future<Autenticar> init() async{
-    Autenticar auth = Autenticar._init();
-    auth.db = await MyDatabase.init();
-    return auth;
-  }
-
-  Future<void> registrar(String email, String nome, String senha) async{
-      if(!nomeValido(nome)){
-        throw "Nome possue caracteres invalidos";
+  static Future<void> registrar(String email, String senha) async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: senha,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw 'A senha é muito fraca.';
+      } else if (e.code == 'weak-password') {
+        throw 'Email já em uso';
       }
-      if (await emailExiste(email)){
-        throw "Email já em uso";
+      throw e.code.toString();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  static Future<void> logar(String email, String senha) async {
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: senha);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw 'Email não cadastrado';
+      } else if (e.code == 'wrong-password') {
+        throw 'Senha incorreta';
       }
-      await db.inserirUsuario(email, nome, senha);
-  }
-
-  Future<void> logar(String email, String senha) async{
-    if(!await emailExiste(email)){
-      throw "Email não existe";
-    }
-    if(usuarioLogado != ""){
-      throw Exception("Já existe um usuário logado");
-    }
-
-    if(await db.checarSenha(email, senha)){
-      usuarioLogado = email;
-    }else{
-      throw "Senha incorreta";
-    }
-
-  }
-
-  Future<void> removerUsuario(String email, String senha) async{
-    if(await db.checarSenha(email, senha)){
-      db.removerRegistroUsuario(email);
-    }else{
-      throw "Senha incorreta";
+      throw e.code.toString();
+    } catch (e) {
+      throw e.toString();
     }
   }
 
-  Future<bool> emailExiste(String email) async {
-
-    List query = await db.pegarEmail(email);
-    if(query.isNotEmpty){
-      return true;
-    }
-    return false;
-  }
-
-  bool nomeValido(String nome){
-    return !RegExp(r'\d').hasMatch(nome);
+  static registrarLogar(String email, String senha) async{
+    await registrar(email, senha);
+    await logar(email, senha);
   }
 
 }
