@@ -1,6 +1,6 @@
 import 'package:app_gp9/database_usuarios.dart';
 
-class Autenticar{
+class ControladorAutenticar{
   static String usuarioLogado = "";
   late MyDatabase db;
 
