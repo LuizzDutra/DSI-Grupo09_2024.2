@@ -134,14 +134,14 @@ class Page1 extends StatelessWidget {
           ),
     
           Positioned(
-            child: Image.asset('assets/images/Group_3.png'),
             top: 120,
             left: 17,
+            child: Image.asset('assets/images/Group_3.png'),
           ),
           Positioned(
-            child: Image.asset('assets/images/Group_12.png'),
             top: 0.39 * screenHeight,
             left: screenWidth * 0.77,
+            child: Image.asset('assets/images/Group_12.png'),
           ),
     
           Align(
@@ -224,7 +224,6 @@ class Page3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
