@@ -89,7 +89,6 @@ class bdPlanoNegocios {
       print("Erro ao obter planos: $e");
     }
 
-    print(lista);
     return lista; 
   }
 

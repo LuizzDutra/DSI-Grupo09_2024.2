@@ -83,6 +83,10 @@ flutter:
     - assets/images/texto3.png
     - assets/images/sol.png
     - assets/images/botao.png
+    - assets/images/circuloAdicionar.png
+    - assets/images/lixeirinha.png
+    - assets/images/regando.png
+
 
   #   - images/a_dot_ham.jpeg
 

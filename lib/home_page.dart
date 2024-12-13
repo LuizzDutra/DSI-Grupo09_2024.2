@@ -1,5 +1,6 @@
 import 'package:app_gp9/pages_intro.dart';
 import 'package:app_gp9/autenticacao.dart';
+import 'package:app_gp9/pages_novo_plano.dart';
 import 'package:app_gp9/placeholder.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,11 @@ class _LoginState extends State<Login> {
   MaterialPageRoute rotaStartPage = MaterialPageRoute(
       builder: (context) => PageView(
             children: [
-              const Page1(),
-              const Page2(),
-              const Page3(),
-              MyPlaceholder()
+              //const Page1(),
+              //const Page2(),
+              //const Page3(),
+              MyPlaceholder(),
+              Clientes()
             ],
           ));
 
