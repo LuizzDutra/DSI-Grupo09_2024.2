@@ -1,16 +1,17 @@
-import 'package:app_gp9/database_usuarios.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_gp9/pessoa.dart';
 
 class ControladorAutenticar {
   static String usuarioLogado = "";
 
-  static Future<void> registrar(String email, String senha) async {
+  static Future<void> registrar(String email, String senha, String nome) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: senha,
       );
+      PessoaCollection.adicionarPessoa(credential.user!.uid, nome, email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         throw 'A senha é muito fraca.';
@@ -39,9 +40,5 @@ class ControladorAutenticar {
     }
   }
 
-  static registrarLogar(String email, String senha) async{
-    await registrar(email, senha);
-    await logar(email, senha);
-  }
 
 }
