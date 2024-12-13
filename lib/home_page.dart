@@ -3,6 +3,7 @@ import 'package:app_gp9/autenticacao.dart';
 import 'package:app_gp9/pages_novo_plano.dart';
 import 'package:app_gp9/placeholder.dart';
 import 'package:flutter/material.dart';
+import 'package:app_gp9/pessoa.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +19,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    PessoaCollection.getPessoas();
   }
 
   MaterialPageRoute rotaStartPage = MaterialPageRoute(
@@ -201,7 +203,7 @@ class _RegistroState extends State<Registro> {
     }
 
     await ControladorAutenticar.registrar(
-        _emailController.text, _senhaController.text);
+        _emailController.text, _senhaController.text, _nomeController.text);
   }
 
   dynamic getHeader() {
