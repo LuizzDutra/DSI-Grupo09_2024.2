@@ -16,9 +16,9 @@ class ControladorAutenticar {
       PessoaCollection.adicionarPessoa(credential.user!.uid, nome, email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        throw 'A senha é muito fraca.';
-      } else if (e.code == 'weak-password') {
         throw 'Email já em uso';
+      } else if (e.code == 'weak-password') {
+        throw 'A senha é muito fraca.';
       }
       throw e.code.toString();
     } catch (e) {

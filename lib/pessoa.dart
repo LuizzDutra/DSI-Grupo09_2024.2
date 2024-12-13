@@ -31,49 +31,49 @@ class Pessoa{
 
 class PessoaCollection{
   
-  static _getPessoasDocument() async{
+  static Future<CollectionReference<Map<String, dynamic>>?> _getPessoasCollection() async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     try {
-      QuerySnapshot querySnapshot =
-          await bd.collection('Pessoas').get();
-
-      return querySnapshot.docs;
+      CollectionReference<Map<String, dynamic>> collection = await bd.collection('Pessoas');
+      return collection;
     } catch (e) {
       print("Erro ao obter pessoas: $e");
     }
+    return null;
   }
 
   static Future<Pessoa?> getPessoa(String idUsuario) async{
-    var docs = await _getPessoasDocument();
-    docs.forEach((docSnapshot){
-      Map<String, dynamic> dados = docSnapshot.data() as Map<String, dynamic>;
-      if(dados["idUsuario"] == idUsuario){
-        return _pessoaFromJson(dados);
-      }
-    });
+    var collection = await _getPessoasCollection();
+    var query = await collection!.where('idUsuario', isEqualTo: idUsuario).get();
+    for (var docSnapshot in query.docs) {
+      Map<String, dynamic> dados = docSnapshot.data();
+      return _pessoaFromJson(dados);
+    }
     return null;
     
   }
 
+
   static void getPessoas() async{
-    var docs = await _getPessoasDocument();
-    docs.forEach((docSnapshot){
-      Map<String, dynamic> dados = docSnapshot.data() as Map<String, dynamic>;
-        print(dados);
-        print(_pessoaFromJson(dados).toString());
-    });
+    var collection = await _getPessoasCollection();
+    var query = await collection!.get();
+    for (var docSnapshot in query.docs) {
+      Map<String, dynamic> dados = docSnapshot.data();
+      print(dados);
+      print(_pessoaFromJson(dados).toString());
+    }
+    return null;
   }
 
   static _getProximoId() async{
     int id = 0;
-    var docs = await _getPessoasDocument();
-    docs.forEach((docSnapshot){
-      Map<String, dynamic> dados = docSnapshot.data() as Map<String, dynamic>;
-      if(dados["idPessoa"] >= id){
-        id = dados["idPessoa"];
-      }
-    });
-    return id+1;
+    var collection = await _getPessoasCollection();
+    var query = await collection!.orderBy('idPessoa', descending: true).limit(1).get();
+    for (var docSnapshot in query.docs) {
+      Map<String, dynamic> dados = docSnapshot.data();
+      id = dados["idPessoa"] + 1;
+    }
+    return id;
   }
 
   static Pessoa _pessoaFromJson(Map<String, dynamic> dados){
