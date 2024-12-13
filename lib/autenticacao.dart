@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_gp9/pessoa.dart';
 
 class ControladorAutenticar {
-  static String usuarioLogado = "";
+  //To-do
+  //Checar se usuário que acabou de logar possue uma pessoa na coleção Pessoa,
+  //Possível edge case
 
   static Future<void> registrar(String email, String senha, String nome) async {
     try {
