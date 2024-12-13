@@ -65,6 +65,16 @@ class PessoaCollection{
     return null;
   }
 
+  static void transformarPessoa(Pessoa pessoa) async{
+    var collection = await _getPessoasCollection();
+    var query = await collection!.where('idPessoa', isEqualTo: pessoa.idPessoa).get();
+    for (var docSnapshot in query.docs){
+      String id = docSnapshot.reference.id;
+      collection.doc(id).update(_pessoaToJson(pessoa));
+    }
+
+  }
+
   static _getProximoId() async{
     int id = 0;
     var collection = await _getPessoasCollection();
@@ -109,9 +119,8 @@ class PessoaCollection{
   }
 
   static adicionarPessoa(String idUsuario, String nome, String email) async{
-    FirebaseFirestore _bd = FirebaseFirestore.instance;
+    FirebaseFirestore bd = FirebaseFirestore.instance;
     Pessoa pessoa = Pessoa(idUsuario, await _getProximoId(), nome, email);
-   await _bd.collection("Pessoas").add(_pessoaToJson(pessoa));
-
+   await bd.collection("Pessoas").add(_pessoaToJson(pessoa));
   }
 }
