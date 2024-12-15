@@ -49,10 +49,9 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                   String userInput = _controller1.text;
                   String? temp = usuario?.uid;
 
-                  print(temp);
-
                   if (temp != null) {
-                    Pessoa? pessoa = await PessoaCollection.getPessoa(temp);
+                    Pessoa? pessoa =
+                        await controllerPlanoNegocios.consultarPessoa(temp);
 
                     if (pessoa != null) {
                       int idPessoaTemp = pessoa.idPessoa;
@@ -91,23 +90,35 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   }
 
   Future<List<PlanoNegocios>> _obterDados() async {
-    controllerPlanoNegocios.getPlano(numeroPessoa: 1).then((dados) {
-      dadosLocais = dados;
-      QuantidadePlanos = dadosLocais.length;
-      if (controle) {
-        setState(() {
-          controle = false;
-        });
-      }
-    });
+    // Aguarda a chamada assíncrona
 
+    String? temp = usuario?.uid;
+    if (temp != null) {
+      Pessoa? pessoa = await controllerPlanoNegocios.consultarPessoa(temp);
+      if (pessoa != null) {
+        int idPessoaTemp = pessoa.idPessoa;
+        final dados = await controllerPlanoNegocios.getPlanos(numeroPessoa: idPessoaTemp);
+
+        // Atualiza variáveis locais
+        dadosLocais = dados;
+        QuantidadePlanos = dadosLocais.length;
+
+        if (controle) {
+          setState(() {
+            controle = false;
+          });
+        }
+      }
+    }
+
+    // Retorna os dados
     return dadosLocais;
   }
 
   @override
   void initState() {
     super.initState();
-    controllerPlanoNegocios.getPlano(numeroPessoa: 1).then((dados) {
+    controllerPlanoNegocios.getPlanos(numeroPessoa: 1).then((dados) {
       setState(() {
         controle = false;
         dadosLocais = dados;
@@ -117,6 +128,10 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    controllerPlanoNegocios.getPlanos(numeroPessoa: 1).then((dados) {
+      dadosLocais = dados;
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -133,6 +148,13 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
           ],
         ),
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context,true);
+            },
+            color: Colors.white, // Altere para a cor que desejar
+          ),
         backgroundColor: Color(0xFF001800),
         centerTitle: false,
       ),
@@ -216,6 +238,9 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                           onDismissed: (direction) async {
                             controllerPlanoNegocios.deletarPlano(plano);
                             dados.removeAt(index);
+                            setState(() {
+                              controle = true;
+                            });
                           },
                           child: InkWell(
                               onTap: () {

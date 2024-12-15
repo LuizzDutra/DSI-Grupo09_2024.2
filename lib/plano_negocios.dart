@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:app_gp9/pessoa.dart';
 class PlanoNegocios {
   //Classe Entidade;
 
@@ -233,7 +233,11 @@ class controllerPlanoNegocios {
     bdPlanoNegocios.DeletarPlano(plano: _plano);
   }
 
-  static getPlano({required int numeroPessoa}) {
+  static getPlanos({required int numeroPessoa}) {
     return bdPlanoNegocios.getPlano(idPessoa: numeroPessoa);
+  }
+
+  static consultarPessoa(String? id) async{
+    return PessoaCollection.getPessoa(id!);
   }
 }

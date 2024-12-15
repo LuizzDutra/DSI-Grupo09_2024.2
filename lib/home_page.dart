@@ -19,8 +19,8 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     PessoaCollection.getPessoas();
-    _emailController.text = "";
-    _senhaController.text = "";
+    _emailController.text = "teste@gmail.com";
+    _senhaController.text = "1234567@";
   }
 
   MaterialPageRoute rotaStartPage = MaterialPageRoute(
@@ -30,7 +30,6 @@ class _LoginState extends State<Login> {
               //const Page2(),
               //const Page3(),
               MyPlaceholder(),
-              
             ],
           ));
 
@@ -42,7 +41,19 @@ class _LoginState extends State<Login> {
       await ControladorAutenticar.logar(
           _emailController.text, _senhaController.text);
       if (context.mounted) {
-        Navigator.push(context, rotaStartPage);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PageView(
+              children: [
+                // const Page1(),
+                // const Page2(),
+                // const Page3(),
+                MyPlaceholder(),
+              ],
+            ),
+          ),
+        );
       }
     } on String catch (e) {
       if (context.mounted) {
