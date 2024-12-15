@@ -1,6 +1,5 @@
 import 'package:app_gp9/pages_intro.dart';
 import 'package:app_gp9/autenticacao.dart';
-import 'package:app_gp9/pages_novo_plano.dart';
 import 'package:app_gp9/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/pessoa.dart';
@@ -20,6 +19,8 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     PessoaCollection.getPessoas();
+    _emailController.text = "";
+    _senhaController.text = "";
   }
 
   MaterialPageRoute rotaStartPage = MaterialPageRoute(
@@ -29,7 +30,7 @@ class _LoginState extends State<Login> {
               //const Page2(),
               //const Page3(),
               MyPlaceholder(),
-              Clientes()
+              
             ],
           ));
 
