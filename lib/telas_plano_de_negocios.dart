@@ -34,7 +34,7 @@ class _SuperTela extends State<SuperTela> {
 
   @override
   void initState() {
-    bdPlanoNegocios.getCampoPlano(idPessoa: widget.plano.idPessoa!, idPlano: widget.plano.idPlano!, campo: widget.tipo).then((resultado){
+    controllerPlanoNegocios.getCampoPlano(widget.plano,widget.tipo).then((resultado){
       _controller.text = resultado!;
     });
     print("Fui chamado");

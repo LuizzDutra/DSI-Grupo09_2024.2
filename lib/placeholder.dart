@@ -21,6 +21,14 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
   late bool controle;
 
+  String DataHoje() {
+    DateTime dataAtual = DateTime.now();
+    String dataFormatada = '${dataAtual.day.toString().padLeft(2, '0')}/'
+        '${dataAtual.month.toString().padLeft(2, '0')}/'
+        '${dataAtual.year}';
+    return dataFormatada;
+  }
+
   Future<void> _mostrarPopup() async {
     TextEditingController _controller1 = TextEditingController();
     TextEditingController _controller2 = TextEditingController();
@@ -38,14 +46,13 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
             TextButton(
               child: Text("Cancelar"),
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o pop-up
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text("OK"),
               onPressed: () async {
                 try {
-                  // Captura a entrada do usuário
                   String userInput = _controller1.text;
                   String? temp = usuario?.uid;
 
@@ -53,33 +60,45 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                     Pessoa? pessoa =
                         await controllerPlanoNegocios.consultarPessoa(temp);
 
-                    if (pessoa != null) {
+                    if (pessoa != null && userInput != "") {
                       int idPessoaTemp = pessoa.idPessoa;
                       PlanoNegocios novo = PlanoNegocios(
-                          "",
-                          "",
-                          "",
-                          "",
-                          "",
-                          "",
-                          "",
-                          "",
-                          "",
-                          idPessoaTemp,
-                          QuantidadePlanos + 1,
-                          userInput);
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        idPessoaTemp,
+                        QuantidadePlanos + 1,
+                        userInput,
+                        DataHoje()
+                      );
 
                       await controllerPlanoNegocios.criarPlano(novo);
                       setState(() {
                         controle = true;
                       });
+                    } else {
+                      throw "Por favor, forneça um nome para o plano.";
                     }
                   }
 
                   // Fecha o pop-up após concluir as operações
                   Navigator.of(context).pop();
-                } catch (e) {
-                  print("Erro: $e");
+                } on String catch (e) {
+                  if (context.mounted) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(e),
+                          );
+                        });
+                  }
                 }
               },
             )
@@ -97,7 +116,8 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
       Pessoa? pessoa = await controllerPlanoNegocios.consultarPessoa(temp);
       if (pessoa != null) {
         int idPessoaTemp = pessoa.idPessoa;
-        final dados = await controllerPlanoNegocios.getPlanos(numeroPessoa: idPessoaTemp);
+        final dados =
+            await controllerPlanoNegocios.getPlanos(numeroPessoa: idPessoaTemp);
 
         // Atualiza variáveis locais
         dadosLocais = dados;
@@ -149,14 +169,17 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
         ),
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context,true);
-            },
-            color: Colors.white, // Altere para a cor que desejar
-          ),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          color: Colors.white, // Altere para a cor que desejar
+        ),
         backgroundColor: Color(0xFF001800),
         centerTitle: false,
+        actions: [IconButton(onPressed: (){setState(() {
+          
+        });}, icon: Icon(Icons.refresh))],
       ),
       backgroundColor: Color(0xE5FEFEE3),
       body: Column(
@@ -447,19 +470,14 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                                           Align(
                                             alignment: Alignment
                                                 .topRight, // Posiciona no topo centralizado
-                                            child: InkWell(
-                                              onTap: () {
-                                                print("Helo People");
-                                              },
-                                              child: Image.asset(
-                                                'assets/images/lixeirinha.png',
-                                                width: 50,
-                                                height: 25,
-                                              ),
+                                            child: Image.asset(
+                                              'assets/images/lixeirinha.png',
+                                              width: 0,
+                                              height: 0,
                                             ),
                                           ),
                                           Positioned(
-                                            top: 15,
+                                            top: 10,
                                             left: 190,
                                             child: Image.asset(
                                               'assets/images/regando.png',
@@ -484,7 +502,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                                               ),
                                               SizedBox(height: 32),
                                               Text(
-                                                "13/12/2024",
+                                                plano.data!,
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),

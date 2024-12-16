@@ -16,6 +16,7 @@ class PlanoNegocios {
   int? _idPlano;
   int? _idPessoa;
   String? _nome;
+  String? _data;
 
   String? get descClientes => _descClientes;
   String? get descValor => _descValor;
@@ -29,6 +30,7 @@ class PlanoNegocios {
   int? get idPlano => _idPlano;
   int? get idPessoa => _idPessoa;
   String? get descNome => _nome;
+  String? get data => _data;
 
   set descClientes(String? value) => _descClientes = value;
   set descValor(String? value) => _descValor = value;
@@ -42,6 +44,7 @@ class PlanoNegocios {
   set idPlano(int? value) => _idPlano = value;
   set idPessoa(int? value) => _idPessoa = value;
   set descNome(String? value) => _nome = value;
+  set data (String? value) => _data = value;
 
   PlanoNegocios(
       this._descAtividades,
@@ -55,7 +58,8 @@ class PlanoNegocios {
       this._descValor,
       this._idPessoa,
       this._idPlano,
-      this._nome);
+      this._nome,
+      this._data);
 
   PlanoNegocios.fromJson(Map<String, dynamic> dados) {
     _descClientes = dados['Clientes'];
@@ -70,6 +74,7 @@ class PlanoNegocios {
     _idPlano = dados['idPlano'];
     _idPessoa = dados['idPessoa'];
     _nome = dados['nome'];
+    _data = dados['data'];
   }
 
   Map<String, dynamic> toJson(PlanoNegocios plano) {
@@ -84,7 +89,8 @@ class PlanoNegocios {
       "Relacionamentos": _descRelacionamentos,
       "idPlano": _idPlano,
       "idPessoa": _idPessoa,
-      "nome": _nome
+      "nome": _nome,
+      "data": _data
     };
 
     return mapa;
@@ -129,6 +135,7 @@ class bdPlanoNegocios {
       "idPessoa": plano.idPessoa,
       "idPlano": plano.idPlano,
       "nome": plano.descNome,
+      "data": plano._data
     };
 
     await _bd.collection("PlanoDeNegocios").add(My_plano);
@@ -164,10 +171,10 @@ class bdPlanoNegocios {
           .get();
 
       if (query.docs.isNotEmpty) {
-        // Obtém o ID do primeiro documento encontrado
+        
         String id = query.docs.first.id;
 
-        // Atualiza o documento com o ID encontrado
+
         await planosCollection.doc(id).update(json);
 
         print("Plano de Negócio atualizado com sucesso! $json");
@@ -183,24 +190,22 @@ class bdPlanoNegocios {
     required String campo,
   }) async {
     try {
-      // Consulta para buscar o documento com base no idPessoa e idPlano
+      
       QuerySnapshot querySnapshot = await _bd
           .collection('PlanoDeNegocios')
           .where('idPessoa', isEqualTo: idPessoa)
           .where('idPlano', isEqualTo: idPlano)
           .get();
 
-      // Verifica se algum documento foi encontrado
       if (querySnapshot.docs.isNotEmpty) {
-        // Obtém o primeiro documento encontrado
+       
         DocumentSnapshot docSnapshot = querySnapshot.docs.first;
 
-        // Obtém os dados do documento como um mapa
         Map<String, dynamic> dados = docSnapshot.data() as Map<String, dynamic>;
 
-        // Verifica se o campo existe no documento
+    
         if (dados.containsKey(campo)) {
-          return dados[campo].toString(); // Retorna o valor do campo
+          return dados[campo].toString();
         } else {
           print("Campo '$campo' não encontrado.");
           return null;
@@ -218,6 +223,14 @@ class bdPlanoNegocios {
 }
 
 class controllerPlanoNegocios {
+  
+  
+  static getCampoPlano(PlanoNegocios plano, String target) async
+  {
+    return bdPlanoNegocios.getCampoPlano(idPessoa: plano.idPessoa!, idPlano: plano.idPlano!, campo: target);
+  }
+  
+
   static criarPlano(novo) {
     bdPlanoNegocios.setPlanoNegocio(plano: novo);
   }
