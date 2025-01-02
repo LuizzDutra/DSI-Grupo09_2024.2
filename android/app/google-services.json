@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1035095258595",
+    "project_id": "perene-40298",
+    "storage_bucket": "perene-40298.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035095258595:android:2474c0f8e2bdb690781cd6",
+        "android_client_info": {
+          "package_name": "com.gp9.perene"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQfqpWAVaH5t2c8XioHLt0Uxyg7t9y6d4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
