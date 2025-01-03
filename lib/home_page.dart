@@ -1,6 +1,5 @@
-import 'package:app_gp9/pages_intro.dart';
 import 'package:app_gp9/autenticacao.dart';
-import 'package:app_gp9/placeholder.dart';
+import 'package:app_gp9/plano/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/pessoa.dart';
 

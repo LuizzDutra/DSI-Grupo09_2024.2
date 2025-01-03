@@ -7,6 +7,7 @@ class Pessoa{
   final int idPessoa;
   final String email;
   final String nome;
+  Map<String,dynamic>? planos = {};
   String? pais;
   DateTime? _dataNascimento;
   Empresa? empresa;
@@ -65,7 +66,7 @@ class PessoaCollection{
     return null;
   }
 
-  static void transformarPessoa(Pessoa pessoa) async{
+  static Future<void> transformarPessoa(Pessoa pessoa) async{
     var collection = await _getPessoasCollection();
     var query = await collection!.where('idPessoa', isEqualTo: pessoa.idPessoa).get();
     for (var docSnapshot in query.docs){
@@ -90,6 +91,7 @@ class PessoaCollection{
     Pessoa pessoa = Pessoa(dados['idUsuario'], dados['idPessoa'], dados['nome'], dados['email']);
     pessoa.dataNascimento = dados['dataNascimento'];
     pessoa.pais = dados['pais'];
+    pessoa.planos = dados['planos'];
 
     Empresa empresa = Empresa();
     empresa.nomeNegocio = dados['empresa']['nomeNegocio'];
@@ -114,7 +116,11 @@ class PessoaCollection{
         'numFuncionarios': pessoa.empresa?.numFuncionarios,
         'segmento': pessoa.empresa?.segmento,
         'tempoOperacao': pessoa.empresa?.tempoOperacao
+      },
+      'planos': <String,dynamic>{
+        'total': 0
       }
+      
     };
   }
 
