@@ -1,5 +1,6 @@
 import 'package:app_gp9/pessoa.dart';
 import 'package:app_gp9/plano/listagemPlanos.dart';
+import 'package:app_gp9/plano/planoCreate.dart';
 import 'package:app_gp9/plano/plano_negocios.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,12 +22,14 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
   Future<List<PlanoNegocios>> _obterPlanos({required String idUsuario}) async {
     Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
+
     List<PlanoNegocios> lista = [];
+
     for (var chave in pessoa!.planos!.keys) {
       if (chave != 'total') {
-        var plano =
-            await bdPlanoNegocios.getPlano(reference: pessoa.planos![chave]);
-        lista.add(PlanoNegocios.fromJson(plano));
+        var plano = await controllerPlanoNegocios.getPlano(
+            referencia: pessoa.planos![chave]);
+        lista.add(plano);
       }
     }
     return lista;
@@ -60,7 +63,12 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
             InkWell(
               onTap: () async {
                 //Implementar a criação do plano
-                print("Valeu natalina");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PlanoCreate()),
+                ).then((event) {
+                  setState(() {});
+                });
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -141,6 +149,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
               return ListagemPlanos(
                 dados: resultado,
                 onUpdate: atualizarDados,
+                idUsuario: user!,
               );
             }
           },

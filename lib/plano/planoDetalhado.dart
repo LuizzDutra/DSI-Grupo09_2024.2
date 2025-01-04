@@ -16,10 +16,11 @@ class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
 class _PlanoDetalhadoPrimeiraPaginaState
     extends State<PlanoDetalhadoPrimeiraPagina> {
   void atualizarTela() async {
-    var dados =
-        await bdPlanoNegocios.getPlano(reference: widget.plano.referencia);
+    var dados = await controllerPlanoNegocios.getPlano(
+        referencia: widget.plano.referencia);
+
     setState(() {
-      widget.plano = PlanoNegocios.fromJson(dados);
+      widget.plano = dados;
     });
   }
 
@@ -40,7 +41,14 @@ class _PlanoDetalhadoPrimeiraPaginaState
                 height: 23,
               ),
               Row(
-                children: [Text('Texto 1'), Spacer(), Text("Texto 2")],
+                children: [
+                  Text(
+                    widget.plano.descNome!,
+                    style: TextStyle(fontFamily: "Poppins", fontSize: 40),
+                  ),
+                  Spacer(),
+                  Image.asset('assets/images/tresPontos.png')
+                ],
               ),
               SizedBox(
                 height: 13,
@@ -229,7 +237,6 @@ class _listagemState extends State<listagem> {
                   titulo: widget.categoria,
                   referencia: widget.reference)),
         ).then((event) {
-          print("Fui chamado 1");
           widget.onUpdate();
         });
       },

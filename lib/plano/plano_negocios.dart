@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_gp9/pessoa.dart';
+import 'package:flutter/foundation.dart';
 
 class PlanoNegocios {
   // Classe Entidade
@@ -34,7 +37,8 @@ class PlanoNegocios {
   set descClientes(Map<String, dynamic>? value) => _descClientes = value;
   set descValor(Map<String, dynamic>? value) => _descValor = value;
   set descCanais(Map<String, dynamic>? value) => _descCanais = value;
-  set descRelacionamentos(Map<String, dynamic>? value) => _descRelacionamentos = value;
+  set descRelacionamentos(Map<String, dynamic>? value) =>
+      _descRelacionamentos = value;
   set descReceita(Map<String, dynamic>? value) => _descReceita = value;
   set descRecursos(Map<String, dynamic>? value) => _descRecursos = value;
   set descAtividades(Map<String, dynamic>? value) => _descAtividades = value;
@@ -43,71 +47,70 @@ class PlanoNegocios {
   set descNome(String? value) => _nome = value;
   set idPessoa(int? value) => _idPessoa = value;
 
-
   PlanoNegocios(
-      this._descAtividades,
-      this._descCanais,
-      this._descClientes,
-      this._descCustos,
-      this._descParcerias,
-      this._descReceita,
-      this._descRecursos,
-      this._descRelacionamentos,
-      this._descValor,
-      this._nome,);
+    this._descAtividades,
+    this._descCanais,
+    this._descClientes,
+    this._descCustos,
+    this._descParcerias,
+    this._descReceita,
+    this._descRecursos,
+    this._descRelacionamentos,
+    this._descValor,
+    this._nome,
+  );
 
   Map<String, dynamic> toJson() {
     return {
-      'descAtividades': _descAtividades,
-      'descCanais': _descCanais,
-      'descClientes': _descClientes,
-      'descCustos': _descCustos,
-      'descParcerias': _descParcerias,
-      'descReceita': _descReceita,
-      'descRecursos': _descRecursos,
-      'descRelacionamentos': _descRelacionamentos,
-      'descValor': _descValor,
-      'nome': _nome,
-      "referencia": _referencia
+      'Atividades': _descAtividades,//
+      'Canais': _descCanais,//
+      'Clientes': _descClientes,//
+      'Custos': _descCustos,//
+      'Parcerias': _descParcerias,//
+      'Receita': _descReceita,//
+      'Recursos': _descRecursos,//
+      'Relacionamento': _descRelacionamentos,//
+      'Proposta de valor': _descValor,//
+      'nome': _nome,//
+      "referencia": _referencia//
     };
   }
 
   PlanoNegocios.fromJson(Map<String, dynamic> dados) {
-    _descClientes = dados['Clientes'];//
-    _descValor = dados['Proposta de valor'];//
-    _descCanais = dados['Canais'];//
-    _descCustos = dados['Custos'];//
-    _descParcerias = dados['Parcerias'];//
-    _descReceita = dados['Receita'];//
-    _descRecursos = dados['Recursos'];//
-    _descAtividades = dados['Atividades'];//
-    _descRelacionamentos = dados['Relacionamento'];//
-    _nome = dados['nome'];//
-    _referencia = dados['referencia'];//
+    _descClientes = dados['Clientes']; //
+    _descValor = dados['Proposta de valor']; //
+    _descCanais = dados['Canais']; //
+    _descCustos = dados['Custos']; //
+    _descParcerias = dados['Parcerias']; //
+    _descReceita = dados['Receita']; //
+    _descRecursos = dados['Recursos']; //
+    _descAtividades = dados['Atividades']; //
+    _descRelacionamentos = dados['Relacionamento']; //
+    _nome = dados['nome']; //
+    _referencia = dados['referencia']; //
   }
-  
 }
-
 
 class bdPlanoNegocios {
   static final FirebaseFirestore _bd = FirebaseFirestore.instance;
 
-  static Future<Map<String, dynamic>> getPlano({required DocumentReference? reference}) async {
-  var dados = await reference!.get();
-  if (dados.data() is Map<String, dynamic>) {
-    return dados.data() as Map<String, dynamic>;
-  } else {
-    throw Exception('O documento não contém um Map<String, dynamic> válido');
+  static Future<Map<String, dynamic>> getPlano(
+      {required DocumentReference? reference}) async {
+    var dados = await reference!.get();
+    if (dados.data() is Map<String, dynamic>) {
+      return dados.data() as Map<String, dynamic>;
+    } else {
+      throw Exception('O documento não contém um Map<String, dynamic> válido');
+    }
   }
-}
-
 
   static Future<void> createPlan(
       {required PlanoNegocios plano, required String idUsuario}) async {
     Map<String, dynamic> dados = plano.toJson();
     try {
       DocumentReference? referencia = await _bd.collection('Planos').add(dados);
-      await updatePlan(reference: referencia, dados: {'referencia': referencia});
+      await updatePlan(
+          reference: referencia, dados: {'referencia': referencia});
       Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
       Map<String, dynamic>? planosRef = pessoa?.planos;
       var nova_chave = planosRef?['total'] + 1;
@@ -131,16 +134,33 @@ class bdPlanoNegocios {
     }
   }
 
-  static Future deletePlan(
+  static Future<void> deletePlan(
       {required DocumentReference reference, required int idPessoa}) async {
     try {
       final referencePessoa = await _bd
-          .collection("Pessoa")
+          .collection("Pessoas")
           .where("idPessoa", isEqualTo: idPessoa)
           .get();
-      return referencePessoa.docs;
+      for(var doc in referencePessoa.docs){
+        var jsonCompleto = doc.data();
+        Map<String,dynamic>? jsonPlanos = jsonCompleto['planos'];
+        Map<String,dynamic>? auxiliar = Map.from(jsonPlanos!);
+        for(var iterador in jsonPlanos.entries){
+          if(iterador.value == reference){
+            print(iterador.key);
+            auxiliar.remove(iterador.key);
+            auxiliar["total"] -= 1;
+            break;
+          }
+        }
+        doc.reference.update({"planos":auxiliar});
+        
+        await reference.delete();
+        break;
+        
+        }
     } catch (e) {
-      return null;
+      throw Exception(e);
     }
   }
 
@@ -166,35 +186,36 @@ class bdPlanoNegocios {
   }
 }
 
-/*class controllerPlanoNegocios {
-  
-  
-  static getCampoPlano(PlanoNegocios plano, String target) async
-  {
-    return bdPlanoNegocios.getCampoPlano(idPessoa: plano.idPessoa!, idPlano: plano.idPlano!, campo: target);
-  }
-  
-
-  static criarPlano(novo) {
-    bdPlanoNegocios.setPlanoNegocio(plano: novo);
+class controllerPlanoNegocios {
+  static Future<PlanoNegocios> getPlano(
+      {required DocumentReference? referencia}) async {
+    //Retorna um objeto do Tipo PlanoNegocios
+    //Entrada: Referência ao documento na coleção Planos.
+    var json = await bdPlanoNegocios.getPlano(reference: referencia);
+    var plano = PlanoNegocios.fromJson(json);
+    return plano;
   }
 
-  static editarPlano(PlanoNegocios plano, Map<String, dynamic> json) {
-    int? idPessoa = plano._idPessoa;
-    int? idPlano = plano.idPlano;
-
-    bdPlanoNegocios.updatePlanoNegocio(plano._idPessoa, plano.idPlano, json);
+  static Future<void> updatePlano(
+      {required DocumentReference? referencia,
+      required Map<String, dynamic> novosDados}) async {
+    await bdPlanoNegocios.updatePlan(reference: referencia, dados: novosDados);
   }
 
-  static deletarPlano(PlanoNegocios plano) {
-    bdPlanoNegocios.DeletarPlano(plano: plano);
+  static Future<void> deletePlano({required PlanoNegocios plano, required String idUsuario})async{
+
+    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
+    await bdPlanoNegocios.deletePlan(reference: plano.referencia!, idPessoa: pessoa!.idPessoa);
+
+
   }
 
-  static getPlanos({required int numeroPessoa}) {
-    return bdPlanoNegocios.getPlano(idPessoa: numeroPessoa);
+  static Future<void> createEmptyPlan({required String nome, required String idUsuario}) async{
+    
+    Map<String,dynamic>? mascara = {"total":0};
+    
+    PlanoNegocios registro = PlanoNegocios(mascara, mascara, mascara, mascara, mascara, mascara, mascara, mascara, mascara, nome);
+    await bdPlanoNegocios.createPlan(plano: registro, idUsuario: idUsuario);
   }
 
-  static consultarPessoa(String? id) async{
-    return PessoaCollection.getPessoa(id!);
-  }
-}*/
+}

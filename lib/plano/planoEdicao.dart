@@ -24,7 +24,7 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
     Map<String, dynamic> map = {};
 
     for (var x in lista) {
-      map['${contador+1}'] = x;
+      map['${contador + 1}'] = x;
       contador += 1;
     }
 
@@ -35,7 +35,7 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
   @override
   void initState() {
     for (var x in widget.atributos!.values) {
-      if (x is String) {  
+      if (x is String) {
         widget.temp.add(ListaAtributos(texto: x));
       }
     }
@@ -50,7 +50,6 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
 
   @override
   Widget build(BuildContext context) {
-    
     print(widget.atributos);
 
     return GestureDetector(
@@ -58,20 +57,18 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
         FocusScope.of(context).requestFocus(FocusNode());
         List<String> auxiliar = [];
 
-        for(var x in widget.temp){
-          if(x._Controller.text != ""){
-          auxiliar.add(x._Controller.text);
+        for (var x in widget.temp) {
+          if (x._Controller.text != "") {
+            auxiliar.add(x._Controller.text);
           }
-        } 
-        
-        Map<String, dynamic> update = gerarMapComContador(auxiliar);
-        
-        Map<String, dynamic> auxiliar_vai_pro_banco = {
-          widget.titulo: update
-        };
+        }
 
-        await bdPlanoNegocios.updatePlan(reference: widget.referencia, dados: auxiliar_vai_pro_banco);
-        
+        Map<String, dynamic> update = gerarMapComContador(auxiliar);
+
+        Map<String, dynamic> auxiliar_vai_pro_banco = {widget.titulo: update};
+
+        await controllerPlanoNegocios.updatePlano(
+            referencia: widget.referencia, novosDados: auxiliar_vai_pro_banco);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -106,7 +103,48 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: widget.temp.length,
                         itemBuilder: (context, index) {
-                          return widget.temp[index];
+                          return Dismissible(
+                              key: Key("${widget.temp[index].texto}$index"),
+                              direction: DismissDirection.startToEnd,
+                              onDismissed: (direction) async {
+                              
+                                widget.temp.removeAt(
+                                    index); 
+
+
+                                List<String> auxiliar = widget.temp
+                                    .where((item) =>
+                                        item._Controller.text.isNotEmpty)
+                                    .map((item) => item._Controller.text)
+                                    .toList();
+
+
+                                Map<String, dynamic> update =
+                                    gerarMapComContador(auxiliar);
+                                Map<String, dynamic> auxiliar_vai_pro_banco = {
+                                  widget.titulo: update
+                                };
+
+                                await controllerPlanoNegocios.updatePlano(
+                                  referencia: widget.referencia,
+                                  novosDados: auxiliar_vai_pro_banco,
+                                );
+
+                              
+                                if (widget.temp.isNotEmpty) {
+                                  setState(() {
+  
+                                  });
+                                } else {
+
+                                  setState(() {
+
+                                    widget.temp =
+                                        []; 
+                                  });
+                                }
+                              },
+                              child: widget.temp[index]);
                         },
                       ),
                       SizedBox(height: 10),
