@@ -1,18 +1,25 @@
+import 'package:app_gp9/plano/planoDetalhado.dart';
 import 'package:app_gp9/plano/plano_negocios.dart';
 import 'package:flutter/material.dart';
 
-class ListagemPlanos extends StatelessWidget {
 
+class ListagemPlanos extends StatefulWidget {
   late List<PlanoNegocios> dados;
+  final Function onUpdate;
 
-  ListagemPlanos({super.key, required this.dados});
+  ListagemPlanos({super.key, required this.dados, required this.onUpdate});
 
+  @override
+  State<ListagemPlanos> createState() => _ListagemPlanosState();
+}
+
+class _ListagemPlanosState extends State<ListagemPlanos> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: dados.length,
+      itemCount: widget.dados.length,
       itemBuilder: (context, index) {
-        var plano = dados[index];
+        var plano = widget.dados[index];
         return Container(
           margin: EdgeInsets.only(top: 15),
           child: SizedBox(
@@ -23,7 +30,16 @@ class ListagemPlanos extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: InkWell(
-                      onTap: () => print("Teste ${plano.descNome}"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PlanoDetalhadoPrimeiraPagina(plano: plano)),
+                        ).then((teste){
+                          widget.onUpdate();
+                        });
+                      },
                       child: Card(
                         color: Color(0xFFEDE9B2),
                         elevation: 5,
@@ -37,7 +53,8 @@ class ListagemPlanos extends StatelessWidget {
                             children: [
                               Text("${plano.descNome}",
                                   style: TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.bold)),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
                               SizedBox(height: 10),
                               Text("Canvas", style: TextStyle(fontSize: 14)),
                             ],

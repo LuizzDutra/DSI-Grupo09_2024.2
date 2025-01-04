@@ -12,16 +12,20 @@ class MyPlaceholder extends StatefulWidget {
 }
 
 class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
-  late List<PlanoNegocios> dadosLocais = []; // Lista local
   final user = FirebaseAuth.instance.currentUser?.uid;
   User? usuario = FirebaseAuth.instance.currentUser;
+
+  void atualizarDados() {
+    setState(() {});
+  }
 
   Future<List<PlanoNegocios>> _obterPlanos({required String idUsuario}) async {
     Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
     List<PlanoNegocios> lista = [];
     for (var chave in pessoa!.planos!.keys) {
       if (chave != 'total') {
-        var plano = await bdPlanoNegocios.getPlano(reference: pessoa.planos![chave]);
+        var plano =
+            await bdPlanoNegocios.getPlano(reference: pessoa.planos![chave]);
         lista.add(PlanoNegocios.fromJson(plano));
       }
     }
@@ -123,15 +127,20 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
           future: _obterPlanos(idUsuario: user!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Center(
+                child: SizedBox(
+                    width: 50, height: 50, child: CircularProgressIndicator()),
+              );
             } else if (snapshot.hasError) {
               return Text("Erro ao carregar dados: ${snapshot.error}");
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Text("Nenhum plano encontrado");
+              return Center(child: Text("Nenhum plano encontrado"));
             } else {
               var resultado = snapshot.data!;
-              return Expanded(
-                child: ListagemPlanos(dados: resultado)
+              //Retorna uma lista com planos de negócios
+              return ListagemPlanos(
+                dados: resultado,
+                onUpdate: atualizarDados,
               );
             }
           },
