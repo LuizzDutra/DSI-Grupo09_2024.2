@@ -39,7 +39,7 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(false); 
+                        Navigator.of(context).pop(); 
                         widget.onUpdate();
                       },
                       child: Text('Não'),
