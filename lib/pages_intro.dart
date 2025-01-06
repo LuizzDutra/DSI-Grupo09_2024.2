@@ -1,4 +1,4 @@
-import 'package:app_gp9/placeholder.dart';
+import 'package:app_gp9/plano/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 
 double altura(int valor) {
@@ -46,7 +46,7 @@ class Page1 extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.only(top: 0), //
-              child: Container(
+              child: SizedBox(
                   width:
                       screenWidth, // Ajuste para 90% da largura da tela (como no Figma)
                   height:
@@ -84,7 +84,7 @@ class Page1 extends StatelessWidget {
               padding: EdgeInsets.only(
                   top: screenHeight *
                       0.63), // Ajuste dinâmico baseado na altura
-              child: Container(
+              child: SizedBox(
                 width: screenWidth * 0.9, // Largura ajustada para 90% da tela
                 child: const Text(
                   "Com as ferramentas certas, suas ideias\nganham raízes fortes e frutos duradouros.",
