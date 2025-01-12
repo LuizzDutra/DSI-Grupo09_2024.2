@@ -2,6 +2,7 @@ import 'package:app_gp9/pessoa.dart';
 import 'package:app_gp9/plano/listagemPlanos.dart';
 import 'package:app_gp9/plano/planoCreate.dart';
 import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/swot/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -49,6 +50,24 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
               "Plano de negócios",
               style: TextStyle(color: Color(0xFFFFFFFF)),
             ),
+            SizedBox(
+              width: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeView(idUsuario: user!,),// tela swot
+                  ),
+                );
+              },
+              child: Image.asset(
+                "assets/images/swot.png",
+                color: Color(0xFFFEFEE3),
+                width: 40,
+                height: 40,),
+            )
           ],
         ),
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),

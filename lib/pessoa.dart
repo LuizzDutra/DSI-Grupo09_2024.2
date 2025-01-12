@@ -8,6 +8,7 @@ class Pessoa{
   final String email;
   final String nome;
   Map<String,dynamic>? planos = {};
+  Map<String,dynamic>? swots = {};
   String? pais;
   DateTime? _dataNascimento;
   Empresa? empresa;
