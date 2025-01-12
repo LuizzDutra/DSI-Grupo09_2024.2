@@ -6,34 +6,35 @@ class bdSwot {
   static final FirebaseFirestore _bd = FirebaseFirestore.instance;
 
   // Obter uma análise SWOT
-  static Future<void> createSwot({required AnaliseSwot swot, required String idUsuario}) async {
-  Map<String, dynamic> dados = swot.toMap();
-  try {
-    // Cria o documento SWOT
-    DocumentReference referencia = await _bd.collection('Swots').add(dados);
-    
-    // Atualiza a referência da análise SWOT no campo 'referencia'
-    await updateSwot(reference: referencia, dados: {'referencia': referencia});
+  static Future<void> createSwot(
+      {required AnaliseSwot swot, required String idUsuario}) async {
+    Map<String, dynamic> dados = swot.toMap();
+    try {
+      // Cria o documento SWOT
+      DocumentReference? referencia = await _bd.collection('Swots').add(dados);
 
-    // Obter a pessoa e seu campo de swots
-    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
-    Map<String, dynamic>? swotsRef = pessoa?.swots;
+      // Atualiza a referência da análise SWOT no campo 'referencia'
+      await updateSwot(
+          reference: referencia, dados: {'referencia': referencia});
 
-    // Verificar se a chave 'total' já existe
-    var nova_chave = swotsRef?['total'] ?? 1;
-    swotsRef?[nova_chave.toString()] = referencia; // Adiciona a referência no campo correto
+      // Obter a pessoa e seu campo de swots
+      Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
+      Map<String, dynamic>? swotsRef = pessoa?.swots;
 
-    // Atualizar o total de swots
-    int temp = nova_chave + 1;
-    swotsRef?['total'] = temp; // Atualiza o total de swots
+      var novaChave = swotsRef?['total'] ?? 0;
+      //swotsRef?[novaChave.toString()] = referencia;
 
-    // Atualiza o campo 'swots' na pessoa
-    await atualizarSwots(idUsuario, {'total': temp, nova_chave.toString(): referencia});
-  } catch (e) {
-    throw Exception("Erro ao adicionar SWOT: ${e}");
+      // Atualizar o total de swots
+      int temp = novaChave + 1;
+      swotsRef?['total'] = temp;
+
+      // Atualiza o campo 'swots' na pessoa
+      await atualizarSwots(
+          idUsuario, {'total': temp, novaChave.toString(): referencia});
+    } catch (e) {
+      throw Exception("Erro ao adicionar SWOT: ${e}");
+    }
   }
-}
-
 
   // Atualizar uma análise SWOT
   static Future<void> updateSwot(
@@ -75,25 +76,30 @@ class bdSwot {
   }
 
   // Atualizar os Swots de um usuário
-  static Future<void> atualizarSwots(String idUsuario, Map<String, dynamic>? novosSwots) async {
-  try {
-    final CollectionReference collection = _bd.collection('Pessoas');
-    QuerySnapshot querySnapshot = await collection.where('idUsuario', isEqualTo: idUsuario).get();
+  static Future<void> atualizarSwots(
+      String idUsuario, Map<String, dynamic>? novosSwots) async {
+    try {
+      final CollectionReference collection = _bd.collection('Pessoas');
+      QuerySnapshot querySnapshot =
+          await collection.where('idUsuario', isEqualTo: idUsuario).get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot documento = querySnapshot.docs.first;
-      await documento.reference.update({
-        'swots': novosSwots, // Atualiza todo o campo 'swots'
-      });
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot documento = querySnapshot.docs.first;
+        await documento.reference.update({
+          'swots.${novosSwots?['total']}':
+              novosSwots?[(novosSwots['total'] - 1).toString()],
+          'swots.total': novosSwots?['total']
+        });
+      }
+    } catch (e) {
+      throw Exception('Erro ao atualizar o campo "swots": $e');
     }
-  } catch (e) {
-    throw Exception('Erro ao atualizar o campo "swots": $e');
   }
-}
-
 
   // Método para buscar uma análise SWOT
-  static Future<AnaliseSwot> getSwot({required String swotId, required DocumentReference<Object?> reference}) async {
+  static Future<AnaliseSwot> getSwot(
+      {required String swotId,
+      required DocumentReference<Object?> reference}) async {
     try {
       final swotDoc = await _bd.collection('Swots').doc(swotId).get();
       if (swotDoc.exists) {
@@ -105,7 +111,4 @@ class bdSwot {
       throw Exception("Erro ao obter SWOT: $e");
     }
   }
-
-
-  
 }

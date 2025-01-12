@@ -93,6 +93,7 @@ class PessoaCollection{
     pessoa.dataNascimento = dados['dataNascimento'];
     pessoa.pais = dados['pais'];
     pessoa.planos = dados['planos'];
+    pessoa.swots = dados['swots'];
 
     Empresa empresa = Empresa();
     empresa.nomeNegocio = dados['empresa']['nomeNegocio'];
@@ -119,6 +120,9 @@ class PessoaCollection{
         'tempoOperacao': pessoa.empresa?.tempoOperacao
       },
       'planos': <String,dynamic>{
+        'total': 0
+      },
+      'swots': <String,dynamic>{
         'total': 0
       }
       
