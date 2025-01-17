@@ -1,5 +1,6 @@
-import 'package:app_gp9/plano/planoEdicao.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/views/plano_edicao.dart';
+import 'package:app_gp9/plano/controllers/plano_negocios_controller.dart';
+import 'package:app_gp9/plano/models/plano_negocios_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
 class _PlanoDetalhadoPrimeiraPaginaState
     extends State<PlanoDetalhadoPrimeiraPagina> {
   void atualizarTela() async {
-    var dados = await controllerPlanoNegocios.getPlano(
+    var dados = await ControllerPlanoNegocios.getPlano(
         referencia: widget.plano.referencia);
 
     setState(() {

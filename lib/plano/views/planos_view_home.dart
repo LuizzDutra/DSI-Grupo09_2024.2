@@ -1,9 +1,10 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/listagemPlanos.dart';
-import 'package:app_gp9/plano/planoCreate.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/views/listagem_planos.dart';
+import 'package:app_gp9/plano/views/plano_create.dart';
+import 'package:app_gp9/plano/models/plano_negocios_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_gp9/plano/controllers/plano_negocios_controller.dart';
 
 class MyPlaceholder extends StatefulWidget {
   const MyPlaceholder({super.key});
@@ -27,7 +28,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
     for (var chave in pessoa!.planos!.keys) {
       if (chave != 'total') {
-        var plano = await controllerPlanoNegocios.getPlano(
+        var plano = await ControllerPlanoNegocios.getPlano(
             referencia: pessoa.planos![chave]);
         lista.add(plano);
       }

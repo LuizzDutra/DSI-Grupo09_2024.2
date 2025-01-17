@@ -1,5 +1,6 @@
-import 'package:app_gp9/plano/planoDetalhado.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/views/plano_detalhado.dart';
+import 'package:app_gp9/plano/models/plano_negocios_model.dart';
+import 'package:app_gp9/plano/controllers/plano_negocios_controller.dart';
 import 'package:flutter/material.dart';
 
 class ListagemPlanos extends StatefulWidget {
@@ -39,18 +40,17 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop();
                         widget.onUpdate();
                       },
                       child: Text('Não'),
                     ),
                     TextButton(
                       onPressed: () async {
-                        await controllerPlanoNegocios.deletePlano(
+                        await ControllerPlanoNegocios.deletePlano(
                             plano: plano, idUsuario: widget.idUsuario);
-                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop();
                         widget.onUpdate();
-                        
                       },
                       child: Text('Sim'),
                     ),

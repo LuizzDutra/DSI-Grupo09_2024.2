@@ -1,6 +1,7 @@
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/models/plano_negocios_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:app_gp9/plano/controllers/plano_negocios_controller.dart';
 
 class PlanoEdicao extends StatefulWidget {
   late Map<String, dynamic>? atributos;
@@ -65,10 +66,10 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
 
         Map<String, dynamic> update = gerarMapComContador(auxiliar);
 
-        Map<String, dynamic> auxiliar_vai_pro_banco = {widget.titulo: update};
+        Map<String, dynamic> auxiliarVaiProBanco = {widget.titulo: update};
 
-        await controllerPlanoNegocios.updatePlano(
-            referencia: widget.referencia, novosDados: auxiliar_vai_pro_banco);
+        await ControllerPlanoNegocios.updatePlano(
+            referencia: widget.referencia, novosDados: auxiliarVaiProBanco);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -81,7 +82,7 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: Text(
                   widget.titulo,
@@ -121,13 +122,13 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
 
                                 Map<String, dynamic> update =
                                     gerarMapComContador(auxiliar);
-                                Map<String, dynamic> auxiliar_vai_pro_banco = {
+                                Map<String, dynamic> auxiliarVaiProBanco = {
                                   widget.titulo: update
                                 };
 
-                                await controllerPlanoNegocios.updatePlano(
+                                await ControllerPlanoNegocios.updatePlano(
                                   referencia: widget.referencia,
-                                  novosDados: auxiliar_vai_pro_banco,
+                                  novosDados: auxiliarVaiProBanco,
                                 );
 
                               

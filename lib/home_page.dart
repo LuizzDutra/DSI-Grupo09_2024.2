@@ -1,7 +1,5 @@
 import 'package:app_gp9/autenticacao.dart';
-import 'package:app_gp9/plano/planoCreate.dart';
-import 'package:app_gp9/plano/planoEdicao.dart';
-import 'package:app_gp9/plano/planos_view_temp.dart';
+import 'package:app_gp9/plano/views/planos_view_home.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/pessoa.dart';
 

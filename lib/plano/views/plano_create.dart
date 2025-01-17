@@ -1,9 +1,10 @@
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/models/plano_negocios_model.dart';
+import 'package:app_gp9/plano/controllers/plano_negocios_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PlanoCreate extends StatefulWidget {
-  PlanoCreate({super.key});
+  const PlanoCreate({super.key});
 
   @override
   State<PlanoCreate> createState() => _PlanoCreateState();
@@ -70,7 +71,7 @@ class _PlanoCreateState extends State<PlanoCreate> {
               InkWell(
                 onTap: () async{
                   if(_nomeCanvas.text != ""){
-                    await controllerPlanoNegocios.createEmptyPlan(nome: _nomeCanvas.text, idUsuario: user!);
+                    await ControllerPlanoNegocios.createEmptyPlan(nome: _nomeCanvas.text, idUsuario: user!);
                     
                     setState(() {
                       mensagem = "Plano ${_nomeCanvas.text} registado!";

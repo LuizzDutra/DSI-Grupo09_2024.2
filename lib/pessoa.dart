@@ -35,7 +35,7 @@ class PessoaCollection{
   static Future<CollectionReference<Map<String, dynamic>>?> _getPessoasCollection() async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     try {
-      CollectionReference<Map<String, dynamic>> collection = await bd.collection('Pessoas');
+      CollectionReference<Map<String, dynamic>> collection = bd.collection('Pessoas');
       return collection;
     } catch (e) {
       print("Erro ao obter pessoas: $e");
