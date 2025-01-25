@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_gp9/empresa.dart';
+
 
 class Mapa extends StatefulWidget {
   const Mapa({super.key});
@@ -11,14 +12,26 @@ class Mapa extends StatefulWidget {
 }
 
 class _MapaState extends State<Mapa> {
+
+  List<Marker> markers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    createMarkers().then((value){
+      setState(() {
+        markers = value;
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
             child: Center(
-      child: FlutterMap(
-        options: MapOptions(initialZoom: 3), 
-        children: [
+      child: FlutterMap(options: MapOptions(initialZoom: 3), children: [
         TileLayer(
           // Display map tiles from any source
           urlTemplate:
@@ -26,20 +39,35 @@ class _MapaState extends State<Mapa> {
           userAgentPackageName: 'com.example.app',
           // And many more recommended properties!
         ),
-        MarkerLayer(markers: [
-          Marker(
-            point: LatLng(0, 0),
-            width: 80,
-            height: 80,
-            child: GestureDetector(
-            child: Image(image: AssetImage("assets/images/Logo.png")),
-            onTap: (){
-              print("Apertou papai");
-            },
-            ),
-          )
-        ])
-      ]),
-    )));
+        MarkerLayer(markers: markers),
+    ]))));
   }
+}
+
+
+Future<List<Marker>> createMarkers() async{
+  List<Marker> list = [];
+
+  double defaultWidth = 80;
+  double defaultHeight = 80;
+
+  for (var empresa in await EmpresaCollection.getEmpresas()){
+    list.add(
+      Marker(
+        point: LatLng(empresa["loc"].latitude, empresa["loc"].longitude),
+        width: defaultWidth,
+        height: defaultHeight,
+        child: Column(children: [
+                Text(empresa["nomeNegocio"]),
+                GestureDetector(
+                  child: Image(image: AssetImage("assets/images/Logo.png")),
+                  onTap: () {
+                    print("Apertou");
+                  },
+                ),
+              ])
+      )
+    );
+  }
+  return list;
 }
