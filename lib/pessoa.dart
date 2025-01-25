@@ -10,12 +10,11 @@ class Pessoa{
   Map<String,dynamic>? planos = {};
   String? pais;
   DateTime? _dataNascimento;
-  Empresa? empresa;
+  DocumentReference? empresa;
 
   Pessoa(this.idUsuario, this.idPessoa, this.nome, this.email);
 
   set dataNascimento(String? dataNascimento){
-    print(dataNascimento);
     if(dataNascimento != null){
       _dataNascimento = DateTime.parse(dataNascimento);
     }
@@ -92,13 +91,7 @@ class PessoaCollection{
     pessoa.dataNascimento = dados['dataNascimento'];
     pessoa.pais = dados['pais'];
     pessoa.planos = dados['planos'];
-
-    Empresa empresa = Empresa();
-    empresa.nomeNegocio = dados['empresa']['nomeNegocio'];
-    empresa.numFuncionarios = dados['empresa']['numFuncionarios'];
-    empresa.segmento = dados['empresa']['segmento'];
-    empresa.tempoOperacao = dados['empresa']['tempoOperacao'];
-    pessoa.empresa = empresa;
+    pessoa.empresa = dados['empresa'];
 
     return pessoa;
   }
@@ -111,12 +104,7 @@ class PessoaCollection{
       'nome': pessoa.nome,
       'dataNascimento': pessoa.dataNascimento,
       'pais': pessoa.pais,
-      'empresa': <String, dynamic>{
-        'nomeNegocio': pessoa.empresa?.nomeNegocio,
-        'numFuncionarios': pessoa.empresa?.numFuncionarios,
-        'segmento': pessoa.empresa?.segmento,
-        'tempoOperacao': pessoa.empresa?.tempoOperacao
-      },
+      'empresa': pessoa.empresa,
       'planos': <String,dynamic>{
         'total': 0
       }
