@@ -13,7 +13,7 @@ class Mapa extends StatefulWidget {
 }
 
 class _MapaState extends State<Mapa> {
-  Future<FlutterMap> map = getMap();
+  
   
   
   late StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
@@ -47,26 +47,7 @@ class _MapaState extends State<Mapa> {
     return Scaffold(
         body: Container(
             child: Center(
-                child: FutureBuilder(
-                    future: map,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<FlutterMap> snapshot) {
-                      if (snapshot.hasData & conected) {
-                        return Center(child: snapshot.data);
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Text(
-                                "Algo de errado aconteceu: ${snapshot.error}"));
-                      }else{
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                            Text("Sem conexão")
-                          ]);
-                      }
-                      }
-                    )
+                child: getMapBuilder(conected)
                   )
               )
     );
@@ -110,4 +91,28 @@ Future<FlutterMap> getMap() async {
     ),
     MarkerLayer(markers: markers),
   ]);
+}
+
+FutureBuilder<FlutterMap> getMapBuilder(bool conected){
+  Future<FlutterMap> map = getMap();
+  return FutureBuilder(
+                    future: map,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<FlutterMap> snapshot) {
+                      if (snapshot.hasData & conected) {
+                        return Center(child: snapshot.data);
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child: Text(
+                                "Algo de errado aconteceu: ${snapshot.error}"));
+                      }else{
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Text("Sem conexão")
+                          ]);
+                      }
+                      }
+                    );
 }
