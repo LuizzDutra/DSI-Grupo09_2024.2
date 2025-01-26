@@ -43,6 +43,13 @@ class EmpresaCollection{
     return retArray;
   }
 
+  static Future<Empresa> getEmpresaByReference(String reference) async{
+    FirebaseFirestore bd = FirebaseFirestore.instance;
+    DocumentSnapshot doc = await bd.doc(reference).get();
+    var data = doc.data() as Map<String, dynamic>;
+    return _empresaFromJson(data);
+  }
+
   static Future<DocumentReference<Map<String, dynamic>>> addEmpresa(Empresa empresa) async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     return await bd.collection("Empresa").add(_empresaToJson(empresa));
