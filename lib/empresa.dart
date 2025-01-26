@@ -19,19 +19,24 @@ class EmpresaCollection{
   static Future<CollectionReference<Map<String, dynamic>>?> _getEmpresasCollection() async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     try {
-      CollectionReference<Map<String, dynamic>> collection = await bd.collection('Empresas');
+      CollectionReference<Map<String, dynamic>> collection = bd.collection('Empresas');
       return collection;
-    } catch (e) {
-      print("Erro ao obter empresas: $e");
+    } on FirebaseException catch (e) {
+      print("Erro ao obter empresas: ${e.message}");
     }
     return null;
   }
 
   static Future<List<dynamic>> getEmpresas() async{
     var collection = await _getEmpresasCollection();
-    var query = await collection!.where("show", isEqualTo: true).get();
+    QuerySnapshot<Map<String, dynamic>>? query;
+    try{
+      query = await collection!.where("show", isEqualTo: true).get();
+    }on FirebaseException catch(e){
+      print("Algo deu errado. ${e.code}: ${e.message}");
+    }
     var retArray = [];
-    for (var docSnapshot in query.docs) {
+    for (var docSnapshot in query!.docs) {
       Map<String, dynamic> dados = docSnapshot.data();
       retArray.add(dados);
     }
