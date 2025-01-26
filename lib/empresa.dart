@@ -2,14 +2,14 @@ import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Empresa{
-  String? nomeNegocio;
-  String? segmento;
-  int? numFuncionarios;
-  int? tempoOperacaoAnos;
-  LatLng? loc;
+  String nomeNegocio;
+  String segmento;
+  int numFuncionarios;
+  int tempoOperacaoAnos;
+  LatLng loc = LatLng(0, 0);
   bool show = false;
 
-  Empresa();
+  Empresa(this.nomeNegocio, this.segmento, this.numFuncionarios, this.tempoOperacaoAnos);
 
 }
 
@@ -27,7 +27,7 @@ class EmpresaCollection{
     return null;
   }
 
-  static Future<List<dynamic>> getEmpresas() async{
+  static Future<List<Empresa>> getEmpresas() async{
     var collection = await _getEmpresasCollection();
     QuerySnapshot<Map<String, dynamic>>? query;
     try{
@@ -35,12 +35,42 @@ class EmpresaCollection{
     }on FirebaseException catch(e){
       print("Algo deu errado. ${e.code}: ${e.message}");
     }
-    var retArray = [];
+    List<Empresa> retArray = [];
     for (var docSnapshot in query!.docs) {
-      Map<String, dynamic> dados = docSnapshot.data();
-      retArray.add(dados);
+      Empresa empresa = _empresaFromJson(docSnapshot.data());
+      retArray.add(empresa);
     }
     return retArray;
   }
+
+  static Future<DocumentReference<Map<String, dynamic>>> addEmpresa(Empresa empresa) async{
+    FirebaseFirestore bd = FirebaseFirestore.instance;
+    return await bd.collection("Empresa").add(_empresaToJson(empresa));
+  }
+
+  static void updateEmpresa(String reference, Map<String, dynamic> data) async{
+    FirebaseFirestore bd = FirebaseFirestore.instance;
+    DocumentReference docRef = bd.doc(reference);
+    await docRef.update(data);
+  }
+
+  static Empresa _empresaFromJson(Map<String, dynamic> dados){
+    Empresa empresa = Empresa(dados["nomeNegocio"], dados["segmento"], dados["numFuncionarios"], dados["tempoOperacaoAnos"]);
+    empresa.loc = LatLng(dados["loc"].latitude, dados["loc"].longitude);
+    empresa.show = dados["show"];
+    return empresa;
+  }
+
+  static Map<String, dynamic> _empresaToJson(Empresa empresa){
+    Map<String, dynamic> dados = {
+      "nomeNegocio": empresa.nomeNegocio,
+      "segmento": empresa.segmento,
+      "numFuncionarios": empresa.numFuncionarios,
+      "tempoOperacaoAnos": empresa.tempoOperacaoAnos,
+      "loc": GeoPoint(empresa.loc.latitude, empresa.loc.longitude)
+    };
+    return dados;
+  }
+
 }
 

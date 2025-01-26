@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:app_gp9/empresa.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
@@ -24,14 +23,7 @@ class _MapaState extends State<Mapa> {
   void initState() {
     super.initState();
     connectivitySubscription = Connectivity().onConnectivityChanged.listen((result){
-      if(result.contains(ConnectivityResult.none)){
-        if(conected == true){
-          conected = false;
-          setState(() {
-            
-          });
-        }
-      }else{
+      if(!result.contains(ConnectivityResult.none)){
         if(conected == false){
           conected = true;
           setState(() {
@@ -45,10 +37,8 @@ class _MapaState extends State<Mapa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            child: Center(
-                child: getMapBuilder(conected)
-                  )
+        body: Center(
+            child: getMapBuilder(conected)
               )
     );
   }
@@ -62,15 +52,15 @@ Future<List<Marker>> createMarkers() async {
 
   for (var empresa in await EmpresaCollection.getEmpresas()) {
     list.add(Marker(
-        point: LatLng(empresa["loc"].latitude, empresa["loc"].longitude),
+        point: empresa.loc,
         width: defaultWidth,
         height: defaultHeight,
         child: Column(children: [
-          Text(empresa["nomeNegocio"]),
+          Text(empresa.nomeNegocio),
           GestureDetector(
             child: Image(image: AssetImage("assets/images/Logo.png")),
             onTap: () {
-              print("Apertou");
+              print("Apertou: ${empresa.toString()}");
             },
           ),
         ])));
@@ -95,6 +85,10 @@ Future<FlutterMap> getMap() async {
 
 FutureBuilder<FlutterMap> getMapBuilder(bool conected){
   Future<FlutterMap> map = getMap();
+  String connectionText = "";
+  if(!conected){
+    connectionText = "Sem conexão";
+  }
   return FutureBuilder(
                     future: map,
                     builder: (BuildContext context,
@@ -110,7 +104,7 @@ FutureBuilder<FlutterMap> getMapBuilder(bool conected){
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircularProgressIndicator(),
-                            Text("Sem conexão")
+                            Text(connectionText)
                           ]);
                       }
                       }
