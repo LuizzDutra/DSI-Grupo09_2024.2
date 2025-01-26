@@ -115,6 +115,9 @@ class PessoaCollection{
   static adicionarPessoa(String idUsuario, String nome, String email) async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     Pessoa pessoa = Pessoa(idUsuario, await _getProximoId(), nome, email);
+    Empresa empresa = Empresa("", "", 0, 0);
+    DocumentReference refEmpresa = await EmpresaCollection.addEmpresa(empresa);
+    pessoa.empresa = refEmpresa;
    await bd.collection("Pessoas").add(_pessoaToJson(pessoa));
   }
 }

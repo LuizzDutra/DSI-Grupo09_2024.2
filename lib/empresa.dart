@@ -51,8 +51,8 @@ class EmpresaCollection{
   }
 
   static Future<DocumentReference<Map<String, dynamic>>> addEmpresa(Empresa empresa) async{
-    FirebaseFirestore bd = FirebaseFirestore.instance;
-    return await bd.collection("Empresa").add(_empresaToJson(empresa));
+    CollectionReference<Map<String, dynamic>>? collectionEmpresa = await _getEmpresasCollection();
+    return await collectionEmpresa!.add(_empresaToJson(empresa));
   }
 
   static void updateEmpresa(String reference, Map<String, dynamic> data) async{
@@ -74,7 +74,9 @@ class EmpresaCollection{
       "segmento": empresa.segmento,
       "numFuncionarios": empresa.numFuncionarios,
       "tempoOperacaoAnos": empresa.tempoOperacaoAnos,
-      "loc": GeoPoint(empresa.loc.latitude, empresa.loc.longitude)
+      "loc": GeoPoint(empresa.loc.latitude, empresa.loc.longitude),
+      "show": empresa.show,
+
     };
     return dados;
   }
