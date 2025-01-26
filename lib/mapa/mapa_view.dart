@@ -1,23 +1,23 @@
+import 'package:app_gp9/mapa/mapa.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:app_gp9/empresa.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
 
-class Mapa extends StatefulWidget {
-  const Mapa({super.key});
+class MapaView extends StatefulWidget {
+  const MapaView({super.key});
 
   @override
-  State<Mapa> createState() => _MapaState();
+  State<MapaView> createState() => _MapaState();
 }
 
-class _MapaState extends State<Mapa> {
+class _MapaState extends State<MapaView> {
   
   
   
   late StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
 
   bool conected = false;
+  var mapa = Mapa(80, 80);
 
   @override
   void initState() {
@@ -27,7 +27,6 @@ class _MapaState extends State<Mapa> {
         if(conected == false){
           conected = true;
           setState(() {
-            
           });
         }
       }
@@ -38,75 +37,9 @@ class _MapaState extends State<Mapa> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: getMapBuilder(conected)
+            child: mapa.getMapBuilder(conected)
               )
     );
   }
 }
 
-Future<List<Marker>> createMarkers() async {
-  List<Marker> list = [];
-
-  double defaultWidth = 80;
-  double defaultHeight = 80;
-
-  for (var empresa in await EmpresaCollection.getEmpresas()) {
-    list.add(Marker(
-        point: empresa.loc,
-        width: defaultWidth,
-        height: defaultHeight,
-        child: Column(children: [
-          Text(empresa.nomeNegocio),
-          GestureDetector(
-            child: Image(image: AssetImage("assets/images/Logo.png")),
-            onTap: () {
-              print("Apertou: ${empresa.toString()}");
-            },
-          ),
-        ])));
-  }
-  return list;
-}
-
-Future<FlutterMap> getMap() async {
-  List<Marker> markers = await createMarkers();
-
-  return FlutterMap(options: MapOptions(initialZoom: 3), children: [
-    TileLayer(
-      // Display map tiles from any source
-      urlTemplate:
-          'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
-      userAgentPackageName: 'com.example.app',
-      // And many more recommended properties!
-    ),
-    MarkerLayer(markers: markers),
-  ]);
-}
-
-FutureBuilder<FlutterMap> getMapBuilder(bool conected){
-  Future<FlutterMap> map = getMap();
-  String connectionText = "";
-  if(!conected){
-    connectionText = "Sem conexão";
-  }
-  return FutureBuilder(
-                    future: map,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<FlutterMap> snapshot) {
-                      if (snapshot.hasData & conected) {
-                        return Center(child: snapshot.data);
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Text(
-                                "Algo de errado aconteceu: ${snapshot.error}"));
-                      }else{
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                            Text(connectionText)
-                          ]);
-                      }
-                      }
-                    );
-}
