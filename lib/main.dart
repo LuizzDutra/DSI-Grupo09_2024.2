@@ -4,7 +4,6 @@ import 'package:app_gp9/home_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
-import 'package:app_gp9/mapa/mapa_view.dart';
 
 void main() async{
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +19,7 @@ void main() async{
         useMaterial3: true
 
       ),
-    //home: const Login(),
-    home: const Mapa(),
+    home: const Login(),
   
   )
   
