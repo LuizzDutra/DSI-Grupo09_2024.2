@@ -6,5 +6,6 @@ const Map<int,Color> customColors = {
   3: Color(0xFF41641d),
   4: Color(0xFF213e0d),
   5: Color(0xFF001800),
-  6: Color(0xFFFEFEE3)
+  6: Color(0xFFFEFEE3),
+  7: Color(0xFF2C6E49)
 };
