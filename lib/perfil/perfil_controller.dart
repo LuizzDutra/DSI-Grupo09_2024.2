@@ -16,7 +16,7 @@ class PerfilController{
     return await PessoaCollection.getPessoaReference(FirebaseAuth.instance.currentUser!.uid);
   }
 
-  static void saveData(String nome, String nomeNegocio, String segmento, String descricao) async{
+  static void saveData(String nome, String nomeNegocio, String segmento, String descricao, int tempo, int funcionarios) async{
     DocumentReference? pessoaRef = await getPessoaLogadaReference();
     var pessoaDoc = await pessoaRef!.get();
     var data = pessoaDoc.data() as Map<String, dynamic>;
@@ -26,6 +26,8 @@ class PerfilController{
       "nomeNegocio": nomeNegocio,
       "segmento": segmento,
       "descricao": descricao,
+      "tempoOperacaoAnos": tempo,
+      "numFuncionarios": funcionarios
     });
 
   }

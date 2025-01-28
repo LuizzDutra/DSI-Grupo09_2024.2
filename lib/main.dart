@@ -17,7 +17,7 @@ void main() async{
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true
 
       ),
