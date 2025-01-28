@@ -10,8 +10,11 @@ class PerfilView extends StatefulWidget {
 }
 
 class _PerfilState extends State<PerfilView> {
-  CustomField nome = CustomField(label:"Nome", readOnly: false,);
+  CustomField nome = CustomField(label:"Nome");
   CustomField email = CustomField(label:"Email", readOnly: true,);
+  CustomField nomeNegocio = CustomField(label:"Nome do Negócio");
+  CustomField segmento = CustomField(label:"Segmento do Negócio");
+  CustomField descricao = CustomField(label:"Breve Descrição do negócio");
 
 
   @override
@@ -20,6 +23,11 @@ class _PerfilState extends State<PerfilView> {
     PerfilController.getPessoaLogada().then((pessoa) {
       nome.controller.text = pessoa.nome;
       email.controller.text = pessoa.email;
+      PerfilController.getEmpresa(pessoa.empresa!).then((empresa){
+        nomeNegocio.controller.text = empresa.nomeNegocio;
+        segmento.controller.text = empresa.segmento;
+        descricao.controller.text = empresa.descricao;
+      });
     });
   }
 
@@ -39,11 +47,13 @@ class _PerfilState extends State<PerfilView> {
         children: [
           nome,
           email,
+          nomeNegocio,
+          segmento,
+          descricao,
           ElevatedButton(onPressed: (){
             setState(() {
-              nome = CustomField(label: "Nome", readOnly: !nome.field.readOnly, defaultText: nome.controller.text,);
+              PerfilController.saveData(nome.controller.text, nomeNegocio.controller.text, segmento.controller.text, descricao.controller.text);
             });
-            print("Aqui");
           }, child: Text("Aqui"))
         ],
       ),
@@ -54,11 +64,16 @@ class _PerfilState extends State<PerfilView> {
 class CustomField extends StatelessWidget{
   final String label;
   final TextEditingController controller = TextEditingController();
+  final bool readOnly;
   late final TextField field;
 
-  CustomField({super.key, required this.label, required bool readOnly, defaultText = ""}){
+  CustomField({super.key, required this.label, this.readOnly = false, defaultText = ""}){
     controller.text = defaultText;
     field = TextField(controller: controller,readOnly: readOnly,);
+  }
+
+  CustomField setReadOnly(bool state){
+    return CustomField(label: label, readOnly: state, defaultText: controller.text,);
   }
   
   @override

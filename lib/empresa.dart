@@ -4,12 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Empresa{
   String nomeNegocio;
   String segmento;
+  String descricao;
   int numFuncionarios;
   int tempoOperacaoAnos;
   LatLng loc = LatLng(0, 0);
   bool show = false;
 
-  Empresa(this.nomeNegocio, this.segmento, this.numFuncionarios, this.tempoOperacaoAnos);
+  Empresa(this.nomeNegocio, this.segmento, this.descricao, this.numFuncionarios, this.tempoOperacaoAnos);
 
 }
 
@@ -43,9 +44,8 @@ class EmpresaCollection{
     return retArray;
   }
 
-  static Future<Empresa> getEmpresaByReference(String reference) async{
-    FirebaseFirestore bd = FirebaseFirestore.instance;
-    DocumentSnapshot doc = await bd.doc(reference).get();
+  static Future<Empresa> getEmpresaByReference(DocumentReference reference) async{
+    DocumentSnapshot doc = await reference.get();
     var data = doc.data() as Map<String, dynamic>;
     return _empresaFromJson(data);
   }
@@ -55,14 +55,13 @@ class EmpresaCollection{
     return await collectionEmpresa!.add(_empresaToJson(empresa));
   }
 
-  static void updateEmpresa(String reference, Map<String, dynamic> data) async{
-    FirebaseFirestore bd = FirebaseFirestore.instance;
-    DocumentReference docRef = bd.doc(reference);
-    await docRef.update(data);
+  static void updateEmpresa(DocumentReference reference, Empresa empresa) async{
+    Map<String, dynamic> data = _empresaToJson(empresa);
+    await reference.update(data);
   }
 
   static Empresa _empresaFromJson(Map<String, dynamic> dados){
-    Empresa empresa = Empresa(dados["nomeNegocio"], dados["segmento"], dados["numFuncionarios"], dados["tempoOperacaoAnos"]);
+    Empresa empresa = Empresa(dados["nomeNegocio"], dados["segmento"],  dados["descricao"], dados["numFuncionarios"], dados["tempoOperacaoAnos"]);
     empresa.loc = LatLng(dados["loc"].latitude, dados["loc"].longitude);
     empresa.show = dados["show"];
     return empresa;
@@ -72,6 +71,7 @@ class EmpresaCollection{
     Map<String, dynamic> dados = {
       "nomeNegocio": empresa.nomeNegocio,
       "segmento": empresa.segmento,
+      "descricao": empresa.descricao,
       "numFuncionarios": empresa.numFuncionarios,
       "tempoOperacaoAnos": empresa.tempoOperacaoAnos,
       "loc": GeoPoint(empresa.loc.latitude, empresa.loc.longitude),
