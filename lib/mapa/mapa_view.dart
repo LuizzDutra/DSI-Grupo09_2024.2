@@ -17,7 +17,7 @@ class _MapaState extends State<MapaView> {
   late StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
 
   bool conected = false;
-  var mapa = Mapa(80, 80);
+  var mapa = Mapa();
 
   @override
   void initState() {

@@ -6,11 +6,20 @@ import 'package:latlong2/latlong.dart';
 class Mapa{
   double markerWidth;
   double markerHeight;
-  bool noMarker = false;
+  bool noMarker;
+  bool disabled;
+  LatLng defaultCenter;
+  double defaultZoom;
   final MapController _mapController = MapController();
 
 
-  Mapa(this.markerWidth, this.markerHeight, [this.noMarker = false]);
+  Mapa(
+      {this.markerWidth = 80,
+      this.markerHeight = 80,
+      this.noMarker = false,
+      this.disabled = false,
+      this.defaultCenter = const LatLng(0, 0),
+      this.defaultZoom = 3});
 
   LatLng getMapCenter(){
     return _mapController.camera.center;
@@ -38,10 +47,17 @@ class Mapa{
     return list;
   }
 
+  int getInteraction(){
+    if(disabled){
+      return InteractiveFlag.none;
+    }
+    return InteractiveFlag.all;
+  }
+
   Future<FlutterMap> getMap() async {
     List<Marker> markers = await createMarkers();
 
-    return FlutterMap(options: MapOptions(initialZoom: 3), mapController: _mapController, 
+    return FlutterMap(options: MapOptions(initialCenter: defaultCenter, initialZoom: defaultZoom, interactionOptions: InteractionOptions(flags: getInteraction())), mapController: _mapController, 
     children: [
       TileLayer(
         // Display map tiles from any source

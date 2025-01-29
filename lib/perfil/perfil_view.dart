@@ -1,7 +1,8 @@
-//import 'package:app_gp9/mapa/mapa.dart';
+import 'package:app_gp9/mapa/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/perfil/perfil_controller.dart';
 import 'package:app_gp9/custom_colors.dart';
+import 'package:latlong2/latlong.dart';
 
 class PerfilView extends StatefulWidget {
   const PerfilView({super.key});
@@ -19,6 +20,10 @@ class _PerfilState extends State<PerfilView> {
   CustomField tempo = CustomField(label: "Tempo de operação");
   CustomField funcionarios = CustomField(label: "Número de funcionários");
   bool editState = false;
+  bool show = false;
+  ScrollController scrollController = ScrollController();
+
+  Mapa mapa = Mapa(noMarker: true, disabled: true, defaultZoom: 16);
 
 
   @override
@@ -27,12 +32,17 @@ class _PerfilState extends State<PerfilView> {
     PerfilController.getPessoaLogada().then((pessoa) {
       nome.controller.text = pessoa.nome;
       email.controller.text = pessoa.email;
-      PerfilController.getEmpresa(pessoa.empresa!).then((empresa){
+      PerfilController.getEmpresa(pessoa.empresa!).then((empresa) async{
         nomeNegocio.controller.text = empresa.nomeNegocio;
         segmento.controller.text = empresa.segmento;
         descricao.controller.text = empresa.descricao;
         tempo.controller.text = empresa.tempoOperacaoAnos.toString();
         funcionarios.controller.text = empresa.numFuncionarios.toString();
+        show = empresa.show;
+        if(empresa.loc != LatLng(0, 0)){
+          mapa.defaultCenter = empresa.loc;
+        }
+        setState(() {});
       });
     });
   }
@@ -50,13 +60,16 @@ class _PerfilState extends State<PerfilView> {
                 segmento.controller.text,
                 descricao.controller.text,
                 int.parse(tempo.controller.text),
-                int.parse(funcionarios.controller.text));
+                int.parse(funcionarios.controller.text),
+                show,
+                (){if(show){return mapa.getMapCenter();}return LatLng(0, 0);}());
             nome = nome.setReadOnly(true);
             nomeNegocio = nomeNegocio.setReadOnly(true);
             segmento = segmento.setReadOnly(true);
             descricao = descricao.setReadOnly(true);
             tempo = tempo.setReadOnly(true);
             funcionarios = funcionarios.setReadOnly(true);
+            mapa.disabled = true;
             editState = false;
           });
         });
@@ -67,7 +80,15 @@ class _PerfilState extends State<PerfilView> {
         iconSize: 0.05 * MediaQuery.sizeOf(context).height,
         icon: Icon(Icons.edit),
         color: Colors.white,
-        onPressed: () {
+        onPressed: () async{
+          if(mapa.defaultCenter == LatLng(0, 0)){
+          LatLng? userLoc = await PerfilController.getUserLoc();
+          if(userLoc != null){
+            mapa.defaultCenter = userLoc;
+          }else{
+            mapa.defaultZoom = 3;
+          }
+          }
           setState(() {
             nome = nome.setReadOnly(false);
             nomeNegocio = nomeNegocio.setReadOnly(false);
@@ -75,6 +96,7 @@ class _PerfilState extends State<PerfilView> {
             descricao = descricao.setReadOnly(false);
             tempo = tempo.setReadOnly(false);
             funcionarios = funcionarios.setReadOnly(false);
+            mapa.disabled = false;
             editState = true;
           });
         });
@@ -85,6 +107,22 @@ class _PerfilState extends State<PerfilView> {
       return saveButton();
     }
     return editButton();
+  }
+
+  Function(bool)? switchFunc(value){
+    if(editState){
+      return (value){
+        setState(() {
+          show = value;
+          if(show){
+            scrollController.animateTo(scrollController.position.extentTotal, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+          }else{
+            scrollController.animateTo(scrollController.position.minScrollExtent, duration: Duration(milliseconds: 500), curve: Curves.linear);
+          }
+        });
+      };
+    }
+    return null;
   }
 
   @override
@@ -121,6 +159,7 @@ class _PerfilState extends State<PerfilView> {
           Expanded(
             flex: 1,
             child:  ListView(
+              controller: scrollController,
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 17, right: 17, ),
               children: [
@@ -137,6 +176,20 @@ class _PerfilState extends State<PerfilView> {
                 tempo,
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
                 funcionarios,
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                Row(children: [
+                  Text("Mostrar sua empresa \npara outros usuários ", 
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                  Switch(activeColor: customColors[7], value: show, onChanged: switchFunc(show))
+                  ]),
+                if(show) SizedBox(
+                  height: MediaQuery.sizeOf(context).width,
+                  width: MediaQuery.sizeOf(context).width,
+                child: Stack(alignment: AlignmentDirectional(0, -0.1),children: [
+                  mapa.getMapBuilder(true),
+                  Image(image: AssetImage("assets/images/Logo.png"), alignment: Alignment(0.5, 0))
+                  ])),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
               ],
             ),)
          
@@ -185,7 +238,7 @@ class CustomField extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         field
       ],
     );
