@@ -1,9 +1,7 @@
 import 'package:app_gp9/autenticacao.dart';
-import 'package:app_gp9/plano/planoCreate.dart';
-import 'package:app_gp9/plano/planoEdicao.dart';
+import 'package:app_gp9/home_page/home_view.dart';
 import 'package:app_gp9/plano/planos_view_temp.dart';
 import 'package:flutter/material.dart';
-import 'package:app_gp9/pessoa.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -19,9 +17,6 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    PessoaCollection.getPessoas();
-    _emailController.text = "teste@gmail.com";
-    _senhaController.text = "1234567@";
   }
 
   MaterialPageRoute rotaStartPage = MaterialPageRoute(
@@ -43,16 +38,12 @@ class _LoginState extends State<Login> {
       await ControladorAutenticar.logar(
           _emailController.text, _senhaController.text);
       if (context.mounted) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PageView(
               children: [
-                // const Page1(),
-                // const Page2(),
-                // const Page3(),
-                MyPlaceholder(),
-                //PlanoCreate()
+                Home(),
               ],
             ),
           ),

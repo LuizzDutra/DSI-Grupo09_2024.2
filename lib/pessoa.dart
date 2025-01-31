@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_gp9/empresa.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Pessoa{
   
@@ -10,12 +11,11 @@ class Pessoa{
   Map<String,dynamic>? planos = {};
   String? pais;
   DateTime? _dataNascimento;
-  Empresa? empresa;
+  DocumentReference? empresa;
 
   Pessoa(this.idUsuario, this.idPessoa, this.nome, this.email);
 
   set dataNascimento(String? dataNascimento){
-    print(dataNascimento);
     if(dataNascimento != null){
       _dataNascimento = DateTime.parse(dataNascimento);
     }
@@ -52,6 +52,15 @@ class PessoaCollection{
     }
     return null;
     
+  }
+
+  static Future<DocumentReference?> getPessoaReference(String idUsuario) async{
+    var collection = await _getPessoasCollection();
+    var query = await collection!.where('idUsuario', isEqualTo: idUsuario).get();
+    for (var docSnapshot in query.docs) {
+      return docSnapshot.reference;
+    }
+    return null;
   }
 
 
@@ -92,13 +101,7 @@ class PessoaCollection{
     pessoa.dataNascimento = dados['dataNascimento'];
     pessoa.pais = dados['pais'];
     pessoa.planos = dados['planos'];
-
-    Empresa empresa = Empresa();
-    empresa.nomeNegocio = dados['empresa']['nomeNegocio'];
-    empresa.numFuncionarios = dados['empresa']['numFuncionarios'];
-    empresa.segmento = dados['empresa']['segmento'];
-    empresa.tempoOperacao = dados['empresa']['tempoOperacao'];
-    pessoa.empresa = empresa;
+    pessoa.empresa = dados['empresa'];
 
     return pessoa;
   }
@@ -111,12 +114,7 @@ class PessoaCollection{
       'nome': pessoa.nome,
       'dataNascimento': pessoa.dataNascimento,
       'pais': pessoa.pais,
-      'empresa': <String, dynamic>{
-        'nomeNegocio': pessoa.empresa?.nomeNegocio,
-        'numFuncionarios': pessoa.empresa?.numFuncionarios,
-        'segmento': pessoa.empresa?.segmento,
-        'tempoOperacao': pessoa.empresa?.tempoOperacao
-      },
+      'empresa': pessoa.empresa,
       'planos': <String,dynamic>{
         'total': 0
       }
@@ -124,9 +122,16 @@ class PessoaCollection{
     };
   }
 
+  static void updatePessoa(DocumentReference reference, Pessoa pessoa) async{
+    await reference.update(_pessoaToJson(pessoa));
+  }
+
   static adicionarPessoa(String idUsuario, String nome, String email) async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     Pessoa pessoa = Pessoa(idUsuario, await _getProximoId(), nome, email);
+    Empresa empresa = Empresa("", "", "", 0, 0);
+    DocumentReference refEmpresa = await EmpresaCollection.addEmpresa(empresa);
+    pessoa.empresa = refEmpresa;
    await bd.collection("Pessoas").add(_pessoaToJson(pessoa));
   }
 }
