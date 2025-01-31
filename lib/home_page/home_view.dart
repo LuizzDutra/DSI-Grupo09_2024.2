@@ -1,4 +1,5 @@
 import 'package:app_gp9/login_page.dart';
+import 'package:app_gp9/mapa/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
 import 'package:app_gp9/plano/planos_view_temp.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ class _HomeState extends State<Home> {
   Map<String, dynamic> routes = {
     "planos" : MyPlaceholder(),
     "perfil" : PerfilView(),
-    "login" : Login()
+    "login" : Login(),
+    "mapa" : MapaView()
   };
 
   MaterialPageRoute getRoute(String name){
@@ -52,6 +54,12 @@ class _HomeState extends State<Home> {
           ListTile(
             leading: Icon(Icons.analytics),
             title: Text("SWOT"),
+            onTap : (){}
+          ),
+          ListTile(
+            leading: Icon(Icons.map),
+            title: Text("Outras empresas"),
+            onTap: () => Navigator.push(context, getRoute("mapa"))
           ),
           ListTile(
             leading: Icon(Icons.no_accounts),
