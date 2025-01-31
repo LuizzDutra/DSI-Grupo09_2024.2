@@ -42,7 +42,7 @@ class _PerfilState extends State<PerfilView> {
         if(empresa.loc != LatLng(0, 0)){
           mapa.defaultCenter = empresa.loc;
         }
-        setState(() {});
+        //setState(() {});
       });
     });
   }
@@ -187,7 +187,7 @@ class _PerfilState extends State<PerfilView> {
                   width: MediaQuery.sizeOf(context).width,
                 child: Stack(alignment: AlignmentDirectional(0, -0.1),children: [
                   mapa.getMapBuilder(true),
-                  Image(image: AssetImage("assets/images/Logo.png"), alignment: Alignment(0.5, 0))
+                  IgnorePointer(child:Image(image: AssetImage("assets/images/Logo.png"), alignment: Alignment(0.5, 0)))
                   ])),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
               ],
