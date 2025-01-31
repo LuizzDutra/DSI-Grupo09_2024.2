@@ -17,11 +17,19 @@ class _MapaState extends State<MapaView> {
   late StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
 
   bool conected = false;
-  var mapa = Mapa(80, 80);
+  var mapa = Mapa();
 
   @override
   void initState() {
     super.initState();
+    //Primeira verificação
+    Connectivity().checkConnectivity().then((result){
+      if(!result.contains(ConnectivityResult.none)){
+        conected = true;
+        setState((){});
+      }
+    });
+    //Stream
     connectivitySubscription = Connectivity().onConnectivityChanged.listen((result){
       if(!result.contains(ConnectivityResult.none)){
         if(conected == false){

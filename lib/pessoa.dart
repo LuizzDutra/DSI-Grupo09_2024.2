@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_gp9/empresa.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Pessoa{
   
@@ -51,6 +52,15 @@ class PessoaCollection{
     }
     return null;
     
+  }
+
+  static Future<DocumentReference?> getPessoaReference(String idUsuario) async{
+    var collection = await _getPessoasCollection();
+    var query = await collection!.where('idUsuario', isEqualTo: idUsuario).get();
+    for (var docSnapshot in query.docs) {
+      return docSnapshot.reference;
+    }
+    return null;
   }
 
 
@@ -112,9 +122,16 @@ class PessoaCollection{
     };
   }
 
+  static void updatePessoa(DocumentReference reference, Pessoa pessoa) async{
+    await reference.update(_pessoaToJson(pessoa));
+  }
+
   static adicionarPessoa(String idUsuario, String nome, String email) async{
     FirebaseFirestore bd = FirebaseFirestore.instance;
     Pessoa pessoa = Pessoa(idUsuario, await _getProximoId(), nome, email);
+    Empresa empresa = Empresa("", "", "", 0, 0);
+    DocumentReference refEmpresa = await EmpresaCollection.addEmpresa(empresa);
+    pessoa.empresa = refEmpresa;
    await bd.collection("Pessoas").add(_pessoaToJson(pessoa));
   }
 }
