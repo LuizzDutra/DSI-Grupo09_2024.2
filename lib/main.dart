@@ -1,8 +1,8 @@
 //import 'package:app_gp9/backend.dart';
-import 'package:app_gp9/mapa/mapa_view.dart';
-import 'package:app_gp9/perfil/perfil_view.dart';
+import 'package:app_gp9/home_page/home_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app_gp9/home_page.dart';
+import 'package:app_gp9/login_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
@@ -21,7 +21,10 @@ void main() async{
         useMaterial3: true
 
       ),
-    home: const PerfilView()//const Login(),
+    home: (){
+      if(FirebaseAuth.instance.currentUser == null){
+        return const Login();}
+        return const Home();}(),
   
   )
   

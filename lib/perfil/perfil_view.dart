@@ -136,17 +136,19 @@ class _PerfilState extends State<PerfilView> {
                 color: customColors[7]!,
                 child: SizedBox(
                     width: MediaQuery.sizeOf(context).width,
-                    height: 0.11 * MediaQuery.sizeOf(context).height),
+                    height: 0.13 * MediaQuery.sizeOf(context).height),
               ),
               Column(
                 children: [
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 3/100,),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 5.5/100,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.pop(context);},
                         icon: Icon(Icons.arrow_back),
+                        iconSize: 0.04 * MediaQuery.sizeOf(context).height,
                         color: Colors.white,
                       ),
                       customButton(),
