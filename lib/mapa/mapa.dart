@@ -31,6 +31,7 @@ class Mapa{
 
     for (var empresa in await EmpresaCollection.getEmpresas()) {
       list.add(Marker(
+          alignment: Alignment(0, -1.2),
           point: empresa.loc,
           width: markerWidth,
           height: markerHeight,

@@ -42,7 +42,7 @@ class _PerfilState extends State<PerfilView> {
         if(empresa.loc != LatLng(0, 0)){
           mapa.defaultCenter = empresa.loc;
         }
-        //setState(() {});
+        setState(() {});
       });
     });
   }
