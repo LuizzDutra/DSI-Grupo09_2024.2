@@ -1,3 +1,4 @@
+import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
@@ -68,6 +69,7 @@ class _HomeState extends State<Home> {
             leading: Icon(Icons.no_accounts),
             title: Text("Deslogar"),
             onTap: (){
+              HomeController.signOut();
               Navigator.pushReplacement(context, getRoute("login"));
             }
           )
