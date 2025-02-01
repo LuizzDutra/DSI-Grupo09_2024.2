@@ -1,4 +1,4 @@
-import 'package:app_gp9/plano/planos_view_temp.dart';
+import 'package:app_gp9/plano/view/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 
 double altura(int valor) {

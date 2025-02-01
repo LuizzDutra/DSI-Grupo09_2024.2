@@ -1,4 +1,4 @@
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -6,13 +6,15 @@ class PlanoEdicao extends StatefulWidget {
   late Map<String, dynamic>? atributos;
   late DocumentReference? referencia;
   late List<ListaAtributos> temp = [];
+  final ControllerPlanoNegocios controller;
 
   late String titulo;
   PlanoEdicao(
       {super.key,
       required this.atributos,
       required this.titulo,
-      required this.referencia});
+      required this.referencia,
+      required this.controller});
 
   @override
   State<PlanoEdicao> createState() => _PlanoEdicaoState();
@@ -67,7 +69,7 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
 
         Map<String, dynamic> auxiliar_vai_pro_banco = {widget.titulo: update};
 
-        await controllerPlanoNegocios.updatePlano(
+        await widget.controller.updatePlano(
             referencia: widget.referencia, novosDados: auxiliar_vai_pro_banco);
       },
       child: Scaffold(
@@ -107,10 +109,7 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
                               key: Key("${widget.temp[index].texto}$index"),
                               direction: DismissDirection.startToEnd,
                               onDismissed: (direction) async {
-                              
-                                widget.temp.removeAt(
-                                    index); 
-
+                                widget.temp.removeAt(index);
 
                                 List<String> auxiliar = widget.temp
                                     .where((item) =>
@@ -118,29 +117,22 @@ class _PlanoEdicaoState extends State<PlanoEdicao> {
                                     .map((item) => item._Controller.text)
                                     .toList();
 
-
                                 Map<String, dynamic> update =
                                     gerarMapComContador(auxiliar);
                                 Map<String, dynamic> auxiliar_vai_pro_banco = {
                                   widget.titulo: update
                                 };
 
-                                await controllerPlanoNegocios.updatePlano(
+                                await widget.controller.updatePlano(
                                   referencia: widget.referencia,
                                   novosDados: auxiliar_vai_pro_banco,
                                 );
 
-                              
                                 if (widget.temp.isNotEmpty) {
-                                  setState(() {
-  
-                                  });
+                                  setState(() {});
                                 } else {
-
                                   setState(() {
-
-                                    widget.temp =
-                                        []; 
+                                    widget.temp = [];
                                   });
                                 }
                               },

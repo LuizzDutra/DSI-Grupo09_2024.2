@@ -1,6 +1,6 @@
 import 'package:app_gp9/autenticacao.dart';
 import 'package:app_gp9/home_page/home_view.dart';
-import 'package:app_gp9/plano/planos_view_temp.dart';
+import 'package:app_gp9/plano/view/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {

@@ -1,9 +1,11 @@
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PlanoCreate extends StatefulWidget {
-  PlanoCreate({super.key});
+  final ControllerPlanoNegocios controller;
+
+  const PlanoCreate({super.key, required this.controller});
 
   @override
   State<PlanoCreate> createState() => _PlanoCreateState();
@@ -40,8 +42,11 @@ class _PlanoCreateState extends State<PlanoCreate> {
                 padding: const EdgeInsets.only(left: 25),
                 child: Row(
                   children: [
-                    Text(mensagem,style: TextStyle(fontFamily: "Poppins", color: Color(0x94262926)
-      ),),
+                    Text(
+                      mensagem,
+                      style: TextStyle(
+                          fontFamily: "Poppins", color: Color(0x94262926)),
+                    ),
                   ],
                 ),
               ),
@@ -52,8 +57,10 @@ class _PlanoCreateState extends State<PlanoCreate> {
                 padding: const EdgeInsets.only(left: 19, right: 24),
                 child: TextField(
                   controller: _nomeCanvas,
-                  style:
-                      TextStyle(fontFamily: "Poppins", color: Color(0xFF262926),),
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    color: Color(0xFF262926),
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Nome do seu Canvas',
                     filled: true,
@@ -68,16 +75,16 @@ class _PlanoCreateState extends State<PlanoCreate> {
               ),
               Spacer(),
               InkWell(
-                onTap: () async{
-                  if(_nomeCanvas.text != ""){
-                    await controllerPlanoNegocios.createEmptyPlan(nome: _nomeCanvas.text, idUsuario: user!);
-                    
+                onTap: () async {
+                  if (_nomeCanvas.text != "") {
+                    await widget.controller.createEmptyPlan(
+                        nome: _nomeCanvas.text, idUsuario: user!);
+
                     setState(() {
                       mensagem = "Plano ${_nomeCanvas.text} registado!";
                       _nomeCanvas.text = "";
                     });
-                  }
-                  else{
+                  } else {
                     setState(() {
                       mensagem = "O nome não pode ser vazio";
                     });
@@ -90,7 +97,9 @@ class _PlanoCreateState extends State<PlanoCreate> {
                       child: Text(
                     "Criar Canvas",
                     style: TextStyle(
-                        fontFamily: "Poppins", fontSize: 36, color: Colors.white),
+                        fontFamily: "Poppins",
+                        fontSize: 36,
+                        color: Colors.white),
                   )),
                 ),
               )
