@@ -2,6 +2,7 @@ import 'package:app_gp9/mapa/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/perfil/perfil_controller.dart';
 import 'package:app_gp9/custom_colors.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 
 class PerfilView extends StatefulWidget {
@@ -125,6 +126,7 @@ class _PerfilState extends State<PerfilView> {
 
   @override
   Widget build(BuildContext context) {
+    SizedBox fieldSpacer = SizedBox(height: MediaQuery.sizeOf(context).height * 0.015 );
     return Scaffold(
         appBar: AppBar(
           title: Text("Perfil"),
@@ -147,19 +149,19 @@ class _PerfilState extends State<PerfilView> {
               padding: EdgeInsets.only(left: 17, right: 17, ),
               children: [
                 nome,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 email,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 nomeNegocio,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 segmento,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 descricao,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 tempo,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 funcionarios,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 Row(children: [
                   Text("Mostrar sua empresa \npara outros usuários ", 
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
@@ -196,6 +198,10 @@ class CustomField extends StatelessWidget{
       this.maxSize = 30,
       defaultText = ""}) {
     controller.text = defaultText;
+    String? counterText = null;
+    if(maxSize == null){
+      counterText = " ";
+    }
     field = TextField(
         enabled: !readOnly,
         controller: controller,
@@ -210,6 +216,7 @@ class CustomField extends StatelessWidget{
                           }()
                         ),
         decoration: InputDecoration(
+          counterText: counterText,
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(width:1, color:Color(0XFF000000))
                 ),
@@ -223,7 +230,7 @@ class CustomField extends StatelessWidget{
   }
 
   CustomField setReadOnly(bool state){
-    return CustomField(label: label, readOnly: state, inputType: inputType, defaultText: controller.text,);
+    return CustomField(label: label, readOnly: state, inputType: inputType, defaultText: controller.text, maxSize: maxSize,);
   }
   
   @override
