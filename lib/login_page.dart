@@ -66,43 +66,42 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFEE3),
-      body: Container(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const Center(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 120,
-                    ),
-                    Text(
-                      "Seja Bem-Vindo",
-                      style: TextStyle(
-                          color: Color(0xFF001800),
-                          fontSize: 40,
-                          fontFamily: "Megrim",
-                          fontWeight: FontWeight.w900),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Efetue seu login",
-                      style: TextStyle(
-                          color: Color(0xFF8EA4A4),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: 75,
-                    ),
-                  ],
-                ),
-              ),
+              SizedBox(height:MediaQuery.sizeOf(context).height*0.1),
+              Center(
+                  child: Column(
+                children: [
+                  SizedBox(
+                      width: MediaQuery.sizeOf(context).height * 0.18,
+                      height: MediaQuery.sizeOf(context).height * 0.18,
+                      child: const Image(
+                        image: AssetImage('assets/images/Logo_Login.png'),
+                        fit: BoxFit.fitHeight,
+                      )),
+                  const Text(
+                    "Perene",
+                    style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Poppins"),
+                  ),
+                  const Text(
+                    "Efetue seu login",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0XFF6C6C6C),
+                        fontWeight: FontWeight.w500),
+                  )
+                ],
+                  )),
+              SizedBox(height:MediaQuery.sizeOf(context).height*0.05),
               SizedBox(
-                width: 320,
+                width: MediaQuery.sizeOf(context).width*0.75,
                 child: TextField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'E-mail',
@@ -110,11 +109,11 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height*0.025,
               ),
               SizedBox(
-                width: 320,
+                width: MediaQuery.sizeOf(context).width*0.75,
                 child: TextField(
                   controller: _senhaController,
                   obscureText: true,
@@ -124,8 +123,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height*0.2,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,20 +133,22 @@ class _LoginState extends State<Login> {
                       onPressed: () async {
                         realizarLogin();
                       },
-                      style: const ButtonStyle(
+                      style: ButtonStyle(
                         backgroundColor:
-                            WidgetStatePropertyAll(Color(0xFF628b27)),
-                        fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                            WidgetStatePropertyAll(Color(0XFF628B27)),
+                        fixedSize: WidgetStatePropertyAll(Size(MediaQuery.sizeOf(context).width*0.85,  MediaQuery.sizeOf(context).height * 0.06)),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
                       ),
                       child: const Text(
                         "Entrar",
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins"
                         ),
                       )),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height:  MediaQuery.sizeOf(context).height * 0.03,
                   ),
                   FilledButton(
                       onPressed: () {
@@ -158,13 +159,12 @@ class _LoginState extends State<Login> {
                       },
                       style: const ButtonStyle(
                         backgroundColor:
-                            WidgetStatePropertyAll(Color(0xFF001800)),
-                        fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+                            WidgetStatePropertyAll(Color(0xFFFEFEE3)),
                       ),
                       child: const Text(
-                        "Cadastrar",
+                        "Criar uma conta",
                         style: TextStyle(
-                          color: Color(0xFFFFDE59),
+                          color: Color(0xFF098691),
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -220,8 +220,8 @@ class _RegistroState extends State<Registro> {
             "Cadastro",
             style: TextStyle(
                 fontSize: 40,
-                fontFamily: "Megrim",
-                fontWeight: FontWeight.w900,
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.bold,
                 color: Color(0xFF001800)),
           ),
           SizedBox(
@@ -229,7 +229,7 @@ class _RegistroState extends State<Registro> {
           ),
           Text(
             "Efetue seu cadastro",
-            style: TextStyle(color: Color(0xFF8EA4A4), fontSize: 20),
+            style: TextStyle(color: Color(0xFF6C6C6C), fontSize: 20),
           ),
         ],
       ),
@@ -237,59 +237,53 @@ class _RegistroState extends State<Registro> {
   }
 
   dynamic getFields() {
-    return Wrap(spacing: 20.0, children: [
+    const TextStyle style = TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF001800),
+            );
+    double width = MediaQuery.sizeOf(context).width*0.75;
+    return Wrap(direction: Axis.vertical, spacing: 20.0, alignment: WrapAlignment.center, children: [
       SizedBox(
-        width: 320,
+        width: width,
         child: TextField(
           controller: _nomeController,
           decoration: const InputDecoration(
             labelText: 'Nome completo',
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF001800),
-            ),
+            labelStyle: style
           ),
         ),
       ),
       SizedBox(
-        width: 320,
+        width: width,
         child: TextField(
           obscureText: false,
           controller: _emailController,
           decoration: const InputDecoration(
             labelText: 'E-mail',
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF001800),
-            ),
+            labelStyle: style
           ),
         ),
       ),
       SizedBox(
-        width: 320,
+        width: width,
         child: TextField(
           obscureText: true,
           controller: _senhaController,
           decoration: const InputDecoration(
             labelText: 'Criar Senha',
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF001800),
-            ),
+            labelStyle: style
           ),
         ),
       ),
       SizedBox(
-        width: 320,
+        width: width,
         child: TextField(
           obscureText: true,
           controller: _senhaConfController,
           decoration: const InputDecoration(
             labelText: 'Confimar senha',
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF001800),
-            ),
+            labelStyle: style
           ),
         ),
       ),
@@ -316,30 +310,14 @@ class _RegistroState extends State<Registro> {
                 }
               }
             },
-            style: const ButtonStyle(
+            style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(Color(0xFF628b27)),
-              fixedSize: WidgetStatePropertyAll(Size(188, 45)),
+              fixedSize: WidgetStatePropertyAll(Size(MediaQuery.sizeOf(context).width*0.85,  MediaQuery.sizeOf(context).height * 0.06)),
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
             ),
             child: const Text(
               "Cadastrar",
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
-        const SizedBox(
-          height: 10,
-        ),
-        FilledButton(
-            onPressed: () => Navigator.pop(context),
-            style: const ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Color(0xFF001800)),
-              fixedSize: WidgetStatePropertyAll(Size(188, 45)),
-            ),
-            child: const Text(
-              "Voltar",
-              style: TextStyle(
-                color: Color(0xFFFFDE59),
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -350,20 +328,24 @@ class _RegistroState extends State<Registro> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.sizeOf(context).height;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFEFEE3),
+        iconTheme: IconThemeData(size: 35),
+      ),
       backgroundColor: const Color(0xFFFEFEE3),
       resizeToAvoidBottomInset: true,
-      body: Container(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const SizedBox(height: 100),
+              SizedBox(height: height*0.030,),
               getHeader(),
-              const Spacer(flex: 50),
+              SizedBox(height: height*0.05,),
               getFields(),
-              const Spacer(flex: 20),
+              SizedBox(height: height*0.25,),
               getButtons(),
-              const Spacer(flex: 200),
             ],
           )),
     );

@@ -42,18 +42,11 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 40,
-            ),
+        title: 
             Text(
               "Plano de negócios",
-              style: TextStyle(color: Color(0xFFFFFFFF)),
-            ),
-          ],
-        ),
+              style: TextStyle(color: Color(0xFFFFFFFF)),),
+        centerTitle: true,
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
       ),
