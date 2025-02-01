@@ -1,7 +1,7 @@
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
-import 'package:app_gp9/plano/planos_view_temp.dart';
+import 'package:app_gp9/plano/view/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
