@@ -1,12 +1,15 @@
-import 'package:app_gp9/plano/planoEdicao.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
+import 'package:app_gp9/plano/view/planoEdicao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
   late PlanoNegocios plano;
+  final ControllerPlanoNegocios controller;
 
-  PlanoDetalhadoPrimeiraPagina({super.key, required this.plano});
+  PlanoDetalhadoPrimeiraPagina(
+      {super.key, required this.plano, required this.controller});
 
   @override
   State<PlanoDetalhadoPrimeiraPagina> createState() =>
@@ -16,8 +19,7 @@ class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
 class _PlanoDetalhadoPrimeiraPaginaState
     extends State<PlanoDetalhadoPrimeiraPagina> {
   void atualizarTela() async {
-    var dados = await controllerPlanoNegocios.getPlano(
-        referencia: widget.plano.referencia);
+    var dados = await widget.controller.getPlano(referencia: widget.plano.referencia);
 
     setState(() {
       widget.plano = dados;
@@ -53,7 +55,7 @@ class _PlanoDetalhadoPrimeiraPaginaState
               SizedBox(
                 height: 13,
               ),
-              listagem(
+              Listagem(
                 categoria: "Parcerias",
                 fundo: Color(0xFFA8D0FF),
                 borda: Color(0xFF0E1BAB),
@@ -62,144 +64,97 @@ class _PlanoDetalhadoPrimeiraPaginaState
                 conteudo: widget.plano.descParcerias,
                 onUpdate: atualizarTela,
                 reference: widget.plano.referencia,
+                controller: widget.controller,
               ),
               SizedBox(
                 height: 25,
               ),
               Row(
                 children: [
-                  listagem(
-                    categoria: "Clientes",
-                    fundo: Color(0xFFA8D0FF),
-                    borda: Color(0xFF0E1BAB),
-                    largura: 170,
-                    altura: 107,
-                    conteudo: widget.plano.descClientes,
-                    onUpdate: atualizarTela,
-                    reference: widget.plano.referencia,
-                  ),
+                  Listagem(
+                      categoria: "Clientes",
+                      fundo: Color(0xFFA8D0FF),
+                      borda: Color(0xFF0E1BAB),
+                      largura: 170,
+                      altura: 107,
+                      conteudo: widget.plano.descClientes,
+                      onUpdate: atualizarTela,
+                      reference: widget.plano.referencia,
+                      controller: widget.controller),
                   Spacer(),
-                  listagem(
-                    categoria: "Canais",
-                    fundo: Color(0xFFA8D0FF),
-                    borda: Color(0xFF0E1BAB),
-                    largura: 170,
-                    altura: 107,
-                    conteudo: widget.plano.descCanais,
-                    onUpdate: atualizarTela,
-                    reference: widget.plano.referencia,
-                  )
+                  Listagem(
+                      categoria: "Canais",
+                      fundo: Color(0xFFA8D0FF),
+                      borda: Color(0xFF0E1BAB),
+                      largura: 170,
+                      altura: 107,
+                      conteudo: widget.plano.descCanais,
+                      onUpdate: atualizarTela,
+                      reference: widget.plano.referencia,
+                      controller: widget.controller)
                 ],
               ),
               SizedBox(
                 height: 23,
               ),
-              listagem(
-                categoria: "Proposta de valor",
-                fundo: Color(0xFFFEB5B5),
-                borda: Color(0xFF7F0E0E),
-                largura: double.infinity,
-                altura: 99,
-                conteudo: widget.plano.descValor,
-                onUpdate: atualizarTela,
-                reference: widget.plano.referencia,
-              ),
+              Listagem(
+                  categoria: "Proposta de valor",
+                  fundo: Color(0xFFFEB5B5),
+                  borda: Color(0xFF7F0E0E),
+                  largura: double.infinity,
+                  altura: 99,
+                  conteudo: widget.plano.descValor,
+                  onUpdate: atualizarTela,
+                  reference: widget.plano.referencia,
+                  controller: widget.controller),
               SizedBox(
                 height: 23,
               ),
               Row(
                 children: [
-                  listagem(
-                    categoria: "Recursos",
-                    fundo: Color(0xFFA2E79D),
-                    borda: Color(0xFF045802),
-                    largura: 170,
-                    altura: 107,
-                    conteudo: widget.plano.descRecursos,
-                    onUpdate: atualizarTela,
-                    reference: widget.plano.referencia,
-                  ),
+                  Listagem(
+                      categoria: "Recursos",
+                      fundo: Color(0xFFA2E79D),
+                      borda: Color(0xFF045802),
+                      largura: 170,
+                      altura: 107,
+                      conteudo: widget.plano.descRecursos,
+                      onUpdate: atualizarTela,
+                      reference: widget.plano.referencia,
+                      controller: widget.controller),
                   Spacer(),
-                  listagem(
-                    categoria: "Atividades",
-                    fundo: Color(0xFFA2E79D),
-                    borda: Color(0xFF045802),
-                    largura: 170,
-                    altura: 107,
-                    conteudo: widget.plano.descAtividades,
-                    onUpdate: atualizarTela,
-                    reference: widget.plano.referencia,
-                  ),
+                  Listagem(
+                      categoria: "Atividades",
+                      fundo: Color(0xFFA2E79D),
+                      borda: Color(0xFF045802),
+                      largura: 170,
+                      altura: 107,
+                      conteudo: widget.plano.descAtividades,
+                      onUpdate: atualizarTela,
+                      reference: widget.plano.referencia,
+                      controller: widget.controller),
                 ],
               ),
               SizedBox(
                 height: 30,
               ),
-              listagem(
-                categoria: "Relacionamento",
-                fundo: Color(0xFFEDE9B2),
-                borda: Color(0xFF7F7102),
-                largura: double.infinity,
-                altura: 99,
-                conteudo: widget.plano.descRelacionamentos,
-                onUpdate: atualizarTela,
-                reference: widget.plano.referencia,
-              )
+              Listagem(
+                  categoria: "Relacionamento",
+                  fundo: Color(0xFFEDE9B2),
+                  borda: Color(0xFF7F7102),
+                  largura: double.infinity,
+                  altura: 99,
+                  conteudo: widget.plano.descRelacionamentos,
+                  onUpdate: atualizarTela,
+                  reference: widget.plano.referencia,
+                  controller: widget.controller)
             ],
           )),
     );
   }
 }
 
-/*class PlanoDetalhadoSegundaPagina extends StatefulWidget {
-  late PlanoNegocios plano;
-
-  PlanoDetalhadoSegundaPagina({super.key, required this.plano});
-
-  @override
-  State<PlanoDetalhadoSegundaPagina> createState() =>
-      _PlanoDetalhadoSegundaPaginaState();
-}
-
-class _PlanoDetalhadoSegundaPaginaState
-    extends State<PlanoDetalhadoSegundaPagina> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-        backgroundColor: Color(0xFF001800),
-        toolbarHeight: 96,
-      ),
-      body: Container(
-        padding: EdgeInsets.only(top: 45, left: 26, right: 22),
-        child: Row(
-          children: [
-            listagem(
-              categoria: 'Receita',
-              fundo: Color(0xFFEDE9B2),
-              borda: Color(0xFF7F7102),
-              largura: 170,
-              altura: 107,
-              conteudo: widget.plano.descReceita,
-            ),
-            Spacer(),
-            listagem(
-              categoria: 'Custos',
-              fundo: Color(0xFFEDE9B2),
-              borda: Color(0xFF7F7102),
-              largura: 170,
-              altura: 107,
-              conteudo: widget.plano.descCustos,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
-
-class listagem extends StatefulWidget {
+class Listagem extends StatefulWidget {
   late String categoria;
   late Color fundo;
   late Color borda;
@@ -208,8 +163,9 @@ class listagem extends StatefulWidget {
   late Map<String, dynamic>? conteudo;
   final VoidCallback onUpdate;
   late DocumentReference? reference;
+  final ControllerPlanoNegocios controller;
 
-  listagem(
+  Listagem(
       {super.key,
       required this.categoria,
       required this.fundo,
@@ -218,13 +174,14 @@ class listagem extends StatefulWidget {
       required this.altura,
       required this.conteudo,
       required this.onUpdate,
-      required this.reference});
+      required this.reference,
+      required this.controller});
 
   @override
-  State<listagem> createState() => _listagemState();
+  State<Listagem> createState() => _ListagemState();
 }
 
-class _listagemState extends State<listagem> {
+class _ListagemState extends State<Listagem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -235,7 +192,8 @@ class _listagemState extends State<listagem> {
               builder: (context) => PlanoEdicao(
                   atributos: widget.conteudo,
                   titulo: widget.categoria,
-                  referencia: widget.reference)),
+                  referencia: widget.reference,
+                  controller: widget.controller)),
         ).then((event) {
           widget.onUpdate();
         });
