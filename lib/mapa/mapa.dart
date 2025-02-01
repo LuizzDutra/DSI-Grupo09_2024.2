@@ -31,11 +31,12 @@ class Mapa{
 
     for (var empresa in await EmpresaCollection.getEmpresas()) {
       list.add(Marker(
-          alignment: Alignment(0, -1.2),
           point: empresa.loc,
-          width: markerWidth,
-          height: markerHeight,
-          child: Column(children: [
+          width: 300,
+          height: 80,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             Text(empresa.nomeNegocio),
             GestureDetector(
               child: Image(image: AssetImage("assets/images/Logo.png")),
@@ -52,7 +53,7 @@ class Mapa{
     if(disabled){
       return InteractiveFlag.none;
     }
-    return InteractiveFlag.all;
+    return ~InteractiveFlag.rotate;
   }
 
   Future<FlutterMap> getMap() async {
@@ -67,7 +68,7 @@ class Mapa{
         userAgentPackageName: 'com.example.app',
         // And many more recommended properties!
       ),
-      MarkerLayer(markers: markers),
+      MarkerLayer(markers: markers, alignment: Alignment.topCenter,),
     ]);
   }
 

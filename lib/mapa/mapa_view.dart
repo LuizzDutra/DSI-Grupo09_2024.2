@@ -1,3 +1,4 @@
+import 'package:app_gp9/custom_colors.dart';
 import 'package:app_gp9/mapa/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -44,6 +45,13 @@ class _MapaState extends State<MapaView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Mapa"),
+          centerTitle: true,
+          iconTheme: IconThemeData(size: 35, color: Colors.white),
+          backgroundColor: customColors[7],
+          foregroundColor: Colors.white,
+        ),
         body: Center(
             child: mapa.getMapBuilder(conected)
               )
