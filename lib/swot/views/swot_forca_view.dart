@@ -208,9 +208,6 @@ class _ForcaViewState extends State<ForcaView> {
                             border: InputBorder.none,
                             hintText: 'Digite suas forças...',
                           ),
-                          onChanged: (value) {
-                            _updateForca(index, value);
-                          },
                           onFieldSubmitted: (value) {
                             _updateForca(index, value);
                           },
