@@ -126,7 +126,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: 650,
+        height: MediaQuery.of(context).size.height * 0.7, 
         child: FutureBuilder<List<AnaliseSwot>>(
           future: _obterSwots(idUsuario: user!),
           builder: (context, snapshot) {
