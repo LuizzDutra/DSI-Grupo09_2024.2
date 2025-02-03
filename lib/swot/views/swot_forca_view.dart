@@ -57,6 +57,7 @@ class _ForcaViewState extends State<ForcaView> {
 
   // Função para atualizar uma força no Firestore
   void _updateForca(int index, String newText) {
+    String antigaForca = _Forca[index];
     setState(() {
       _Forca[index] = newText;
     });
@@ -69,13 +70,16 @@ class _ForcaViewState extends State<ForcaView> {
           // Remover a força vazia do Firestore
           await controllerSwot.removerForca(
             reference: widget.referenciaDocumento,
-            antigaForca: _Forca[index],
+            antigaForca: antigaForca,
           );
+          setState(() {
+            _Forca.removeAt(index);
+          });
         } else {
           // Atualizar ou adicionar a força
           await controllerSwot.updateForca(
             reference: widget.referenciaDocumento,
-            antigaForca: _Forca[index],
+            antigaForca: antigaForca,
             novaForca: newText,
           );
         }

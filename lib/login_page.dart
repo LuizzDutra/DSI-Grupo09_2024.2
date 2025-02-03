@@ -1,6 +1,7 @@
 import 'package:app_gp9/autenticacao.dart';
 import 'package:app_gp9/home_page/home_view.dart';
 import 'package:app_gp9/plano/view/planos_view_temp.dart';
+import 'package:app_gp9/swot/views/home_view.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -24,7 +25,7 @@ class _LoginState extends State<Login> {
             children: [
               //const Page1(),
               //const Page2(),
-              //const Page3(),
+              HomeView(),
               MyPlaceholder(),
               //PlanoCreate()
             ],
