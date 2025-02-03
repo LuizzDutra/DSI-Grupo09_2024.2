@@ -3,7 +3,6 @@ import 'package:app_gp9/swot/Controller/swot_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class CriarSwot extends StatefulWidget {
   CriarSwot({super.key});
 
@@ -17,7 +16,6 @@ class _CriarSwotState extends State<CriarSwot> {
   String mensagem = 'Qual será o título do seu SWOT?';
   final user = FirebaseAuth.instance.currentUser?.uid;
   final bdSwot _swotBD = bdSwot();
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +87,7 @@ class _CriarSwotState extends State<CriarSwot> {
                       await controllerSwot.createEmptySwot(
                         nome: _tituloSwot.text,
                         idUsuario: user!,
-                        
                       );
-
                       setState(() {
                         mensagem = 'Análise SWOT criada com sucesso!';
                       });

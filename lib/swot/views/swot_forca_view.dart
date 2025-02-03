@@ -33,7 +33,7 @@ class _ForcaViewState extends State<ForcaView> {
         _Forca.addAll(forcas); // Adiciona as forças na lista local
       });
       print(
-          "Forças carregadas: $_Forca"); // Debug: Verifica se as forças foram carregadas
+          "Forças carregadas: $_Forca"); 
     } catch (e) {
       print("Erro ao buscar forças: $e");
     }
@@ -64,7 +64,7 @@ class _ForcaViewState extends State<ForcaView> {
 
     if (_debounce?.isActive ?? false) _debounce?.cancel();
 
-    _debounce = Timer(const Duration(seconds: 2), () async {
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
       try {
         if (newText.isEmpty) {
           // Remover a força vazia do Firestore

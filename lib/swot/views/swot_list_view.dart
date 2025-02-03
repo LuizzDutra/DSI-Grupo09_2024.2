@@ -42,12 +42,11 @@ class _ListasSwotsState extends State<ListasSwots> {
           onDismissed: (direction) async {
             showDialog<void>(
               context: context,
-              barrierDismissible:
-                  false, 
+              barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Exclusão de Swot'),
-                  content: Text("Deseja excluir o Swot ${swots.nome}?"),
+                  content: Text("Deseja excluir o Swot: ${swots.nome}?"),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
@@ -86,7 +85,6 @@ class _ListasSwotsState extends State<ListasSwots> {
                             MaterialPageRoute(
                                 builder: (context) => SwotMainView(
                                       swot: swots,
-                                      
                                     )),
                           ).then((teste) {
                             widget.onUpdate();
@@ -103,7 +101,7 @@ class _ListasSwotsState extends State<ListasSwots> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${swots.nome}",
+                                Text(swots.nome,
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
