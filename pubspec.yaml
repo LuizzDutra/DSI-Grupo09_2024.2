@@ -93,6 +93,7 @@ flutter:
     - assets/images/Logo.png
     - assets/images/tresPontos.png
     - assets/images/squares.png
+    - assets/images/Logo_Login.png
 
 
   #   - images/a_dot_ham.jpeg

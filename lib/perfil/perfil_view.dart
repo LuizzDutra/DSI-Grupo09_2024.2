@@ -2,6 +2,7 @@ import 'package:app_gp9/mapa/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/perfil/perfil_controller.dart';
 import 'package:app_gp9/custom_colors.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 
 class PerfilView extends StatefulWidget {
@@ -12,13 +13,13 @@ class PerfilView extends StatefulWidget {
 }
 
 class _PerfilState extends State<PerfilView> {
-  CustomField nome = CustomField(label:"Nome");
-  CustomField email = CustomField(label:"Email", readOnly: true,);
-  CustomField nomeNegocio = CustomField(label:"Nome do Negócio");
+  CustomField nome = CustomField(label:"Nome", maxSize: null,);
+  CustomField email = CustomField(label:"Email", readOnly: true, maxSize: null,);
+  CustomField nomeNegocio = CustomField(label:"Nome do Negócio", maxSize: 30);
   CustomField segmento = CustomField(label:"Segmento do Negócio");
-  CustomField descricao = CustomField(label:"Breve Descrição do negócio");
-  CustomField tempo = CustomField(label: "Tempo de operação");
-  CustomField funcionarios = CustomField(label: "Número de funcionários");
+  CustomField descricao = CustomField(label:"Breve Descrição do negócio", inputType: TextInputType.multiline, maxSize: 500,);
+  CustomField tempo = CustomField(label: "Tempo de operação em anos", inputType: TextInputType.number, maxSize: null,);
+  CustomField funcionarios = CustomField(label: "Número de funcionários", inputType: TextInputType.number, maxSize: null,);
   bool editState = false;
   bool show = false;
   ScrollController scrollController = ScrollController();
@@ -49,7 +50,6 @@ class _PerfilState extends State<PerfilView> {
 
   IconButton saveButton() {
     return IconButton(
-        iconSize: 0.05 * MediaQuery.sizeOf(context).height,
         icon: Icon(Icons.save),
         color: Colors.white,
         onPressed: () {
@@ -77,7 +77,6 @@ class _PerfilState extends State<PerfilView> {
 
   IconButton editButton(){
     return IconButton(
-        iconSize: 0.05 * MediaQuery.sizeOf(context).height,
         icon: Icon(Icons.edit),
         color: Colors.white,
         onPressed: () async{
@@ -127,37 +126,21 @@ class _PerfilState extends State<PerfilView> {
 
   @override
   Widget build(BuildContext context) {
+    SizedBox fieldSpacer = SizedBox(height: MediaQuery.sizeOf(context).height * 0.015 );
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Perfil"),
+          centerTitle: true,
+          backgroundColor: customColors[7],
+          foregroundColor: Colors.white,
+          iconTheme: IconThemeData(size: 35, color: Colors.white),
+          actionsIconTheme: IconThemeData(size: 45),
+          actions: [
+            customButton()
+          ],
+        ),
         backgroundColor: customColors[6],
         body: Column(children: [
-          Stack(
-            children: [
-              ColoredBox(
-                color: customColors[7]!,
-                child: SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 0.13 * MediaQuery.sizeOf(context).height),
-              ),
-              Column(
-                children: [
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 5.5/100,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {Navigator.pop(context);},
-                        icon: Icon(Icons.arrow_back),
-                        iconSize: 0.04 * MediaQuery.sizeOf(context).height,
-                        color: Colors.white,
-                      ),
-                      customButton(),
-                    ],
-                  ),
-                ],
-              )
-            ],
-          ),
           Expanded(
             flex: 1,
             child:  ListView(
@@ -166,19 +149,19 @@ class _PerfilState extends State<PerfilView> {
               padding: EdgeInsets.only(left: 17, right: 17, ),
               children: [
                 nome,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 email,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 nomeNegocio,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 segmento,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 descricao,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 tempo,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 funcionarios,
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025 ),
+                fieldSpacer,
                 Row(children: [
                   Text("Mostrar sua empresa \npara outros usuários ", 
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
@@ -203,14 +186,29 @@ class CustomField extends StatelessWidget{
   final String label;
   final TextEditingController controller = TextEditingController();
   final bool readOnly;
+  final TextInputType inputType;
+  final int? maxSize;
   late final TextField field;
 
-  CustomField({super.key, required this.label, this.readOnly = true, defaultText = ""}){
+  CustomField(
+      {super.key,
+      required this.label,
+      this.readOnly = true,
+      this.inputType = TextInputType.text,
+      this.maxSize = 30,
+      defaultText = ""}) {
     controller.text = defaultText;
+    String? counterText = null;
+    if(maxSize == null){
+      counterText = " ";
+    }
     field = TextField(
         enabled: !readOnly,
         controller: controller,
         readOnly: readOnly,
+        keyboardType: inputType,
+        maxLines: null,
+        maxLength: maxSize,
         style: TextStyle(color: 
                         (){
                           if(readOnly){return Color(0XFF545454);}
@@ -218,6 +216,7 @@ class CustomField extends StatelessWidget{
                           }()
                         ),
         decoration: InputDecoration(
+          counterText: counterText,
             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(width:1, color:Color(0XFF000000))
                 ),
@@ -231,7 +230,7 @@ class CustomField extends StatelessWidget{
   }
 
   CustomField setReadOnly(bool state){
-    return CustomField(label: label, readOnly: state, defaultText: controller.text,);
+    return CustomField(label: label, readOnly: state, inputType: inputType, defaultText: controller.text, maxSize: maxSize,);
   }
   
   @override

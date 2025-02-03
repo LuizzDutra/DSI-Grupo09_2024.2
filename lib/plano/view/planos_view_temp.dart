@@ -1,7 +1,8 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/listagemPlanos.dart';
-import 'package:app_gp9/plano/planoCreate.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
+import 'package:app_gp9/plano/view/listagemPlanos.dart';
+import 'package:app_gp9/plano/view/planoCreate.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,6 +17,8 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   final user = FirebaseAuth.instance.currentUser?.uid;
   User? usuario = FirebaseAuth.instance.currentUser;
 
+  final controller = ControllerPlanoNegocios();
+
   void atualizarDados() {
     setState(() {});
   }
@@ -27,8 +30,8 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
     for (var chave in pessoa!.planos!.keys) {
       if (chave != 'total') {
-        var plano = await controllerPlanoNegocios.getPlano(
-            referencia: pessoa.planos![chave]);
+        var plano =
+            await controller.getPlano(referencia: pessoa.planos![chave]);
         lista.add(plano);
       }
     }
@@ -39,18 +42,11 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 40,
-            ),
+        title: 
             Text(
               "Plano de negócios",
-              style: TextStyle(color: Color(0xFFFFFFFF)),
-            ),
-          ],
-        ),
+              style: TextStyle(color: Color(0xFFFFFFFF)),),
+        centerTitle: true,
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
       ),
@@ -62,10 +58,12 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
             SizedBox(height: 20),
             InkWell(
               onTap: () async {
-                //Implementar a criação do plano
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PlanoCreate()),
+                  MaterialPageRoute(
+                      builder: (context) => PlanoCreate(
+                            controller: controller,
+                          )),
                 ).then((event) {
                   setState(() {});
                 });
@@ -150,6 +148,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                 dados: resultado,
                 onUpdate: atualizarDados,
                 idUsuario: user!,
+                controller: controller,
               );
             }
           },

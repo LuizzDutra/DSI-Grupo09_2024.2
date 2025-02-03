@@ -1,17 +1,20 @@
-import 'package:app_gp9/plano/planoDetalhado.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
+import 'package:app_gp9/plano/view/planoDetalhado.dart';
 import 'package:flutter/material.dart';
 
 class ListagemPlanos extends StatefulWidget {
-  late List<PlanoNegocios> dados;
+  final List<PlanoNegocios> dados;
+  final ControllerPlanoNegocios controller;
   final Function onUpdate;
-  late String idUsuario;
+  final String idUsuario;
 
-  ListagemPlanos(
+  const ListagemPlanos(
       {super.key,
       required this.dados,
       required this.onUpdate,
-      required this.idUsuario});
+      required this.idUsuario,
+      required this.controller});
 
   @override
   State<ListagemPlanos> createState() => _ListagemPlanosState();
@@ -39,18 +42,17 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop();
                         widget.onUpdate();
                       },
                       child: Text('Não'),
                     ),
                     TextButton(
                       onPressed: () async {
-                        await controllerPlanoNegocios.deletePlano(
+                        await widget.controller.deletePlano(
                             plano: plano, idUsuario: widget.idUsuario);
-                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop();
                         widget.onUpdate();
-                        
                       },
                       child: Text('Sim'),
                     ),
@@ -74,7 +76,10 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    PlanoDetalhadoPrimeiraPagina(plano: plano)),
+                                    PlanoDetalhadoPrimeiraPagina(
+                                      plano: plano,
+                                      controller: widget.controller,
+                                    )),
                           ).then((teste) {
                             widget.onUpdate();
                           });
