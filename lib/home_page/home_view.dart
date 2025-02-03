@@ -2,6 +2,8 @@ import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
+
+import 'package:app_gp9/swot/views/home_view.dart';
 import 'package:app_gp9/plano/view/planos_view_temp.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/custom_colors.dart';
@@ -17,6 +19,7 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   Map<String, dynamic> routes = {
+
     "planos" : const MyPlaceholder(),
     "perfil" : const PerfilView(),
     "login" : const Login(),
@@ -58,7 +61,9 @@ class _HomeState extends State<Home> {
           ListTile(
             leading: Icon(Icons.analytics),
             title: Text("SWOT"),
-            onTap : (){}
+            onTap : (){
+              Navigator.push(context, getRoute('swots'));
+            }
           ),
           ListTile(
             leading: Icon(Icons.map),
