@@ -136,7 +136,7 @@ class _PlanoDetalhadoPrimeiraPaginaState
                 ],
               ),
               SizedBox(
-                height: 30,
+                height: 20,
               ),
               Listagem(
                   categoria: "Relacionamento",
