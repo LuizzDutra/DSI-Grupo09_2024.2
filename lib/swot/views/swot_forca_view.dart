@@ -33,7 +33,7 @@ class _ForcaViewState extends State<ForcaView> {
         _Forca.addAll(forcas); // Adiciona as forças na lista local
       });
       print(
-          "Forças carregadas: $_Forca"); // Debug: Verifica se as forças foram carregadas
+          "Forças carregadas: $_Forca"); 
     } catch (e) {
       print("Erro ao buscar forças: $e");
     }
@@ -57,25 +57,29 @@ class _ForcaViewState extends State<ForcaView> {
 
   // Função para atualizar uma força no Firestore
   void _updateForca(int index, String newText) {
+    String antigaForca = _Forca[index];
     setState(() {
       _Forca[index] = newText;
     });
 
     if (_debounce?.isActive ?? false) _debounce?.cancel();
 
-    _debounce = Timer(const Duration(seconds: 2), () async {
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
       try {
         if (newText.isEmpty) {
           // Remover a força vazia do Firestore
           await controllerSwot.removerForca(
             reference: widget.referenciaDocumento,
-            antigaForca: _Forca[index],
+            antigaForca: antigaForca,
           );
+          setState(() {
+            _Forca.removeAt(index);
+          });
         } else {
           // Atualizar ou adicionar a força
           await controllerSwot.updateForca(
             reference: widget.referenciaDocumento,
-            antigaForca: _Forca[index],
+            antigaForca: antigaForca,
             novaForca: newText,
           );
         }

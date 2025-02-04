@@ -128,7 +128,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: 650,
+        height: MediaQuery.sizeOf(context).height * 0.7,
         child: FutureBuilder<List<PlanoNegocios>>(
           future: _obterPlanos(idUsuario: user!),
           builder: (context, snapshot) {

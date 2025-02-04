@@ -6,7 +6,6 @@ import 'package:app_gp9/swot/views/swot_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -29,8 +28,8 @@ class _HomeViewState extends State<HomeView> with RouteAware {
 
     for (var chave in pessoa!.swots!.keys) {
       if (chave != 'total') {
-        var swots = await controllerSwot.getSwot(
-            referencia: pessoa.swots![chave]);
+        var swots =
+            await controllerSwot.getSwot(referencia: pessoa.swots![chave]);
         lista.add(swots);
       }
     }
@@ -66,7 +65,9 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                   MaterialPageRoute(
                     builder: (context) => CriarSwot(),
                   ),
-                );
+                ).then((event) {
+                  setState(() {});
+                });
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +111,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                           ),
                         ),
                       ),
-                       Positioned(
+                      Positioned(
                         top: 20,
                         left: 18,
                         child: Image.asset('assets/images/Logo.png'),
@@ -125,7 +126,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: 650,
+        height: MediaQuery.of(context).size.height * 0.7, 
         child: FutureBuilder<List<AnaliseSwot>>(
           future: _obterSwots(idUsuario: user!),
           builder: (context, snapshot) {

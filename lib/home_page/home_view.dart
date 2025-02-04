@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
   Map<String, dynamic> routes = {
 
     "planos" : const MyPlaceholder(),
+    "swots" : const HomeView(),
     "perfil" : const PerfilView(),
     "login" : const Login(),
     "mapa" : const MapaView()
