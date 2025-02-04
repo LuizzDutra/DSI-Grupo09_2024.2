@@ -1,11 +1,13 @@
 import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PlanoCreate extends StatefulWidget {
   final ControllerPlanoNegocios controller;
-
-  const PlanoCreate({super.key, required this.controller});
+  final List<PlanoNegocios> planos;
+  const PlanoCreate(
+      {super.key, required this.controller, required this.planos});
 
   @override
   State<PlanoCreate> createState() => _PlanoCreateState();
@@ -77,6 +79,14 @@ class _PlanoCreateState extends State<PlanoCreate> {
               InkWell(
                 onTap: () async {
                   if (_nomeCanvas.text != "") {
+                    for (var temp in widget.planos) {
+                      if (_nomeCanvas.text == temp.descNome) {
+                        setState(() {
+                          mensagem = "Plano já existente";
+                        });
+                        return;
+                      }
+                    }
                     await widget.controller.createEmptyPlan(
                         nome: _nomeCanvas.text, idUsuario: user!);
 

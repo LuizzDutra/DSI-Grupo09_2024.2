@@ -6,6 +6,8 @@ import 'package:app_gp9/plano/view/planoCreate.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+late var listaDePlanos;
+
 class MyPlaceholder extends StatefulWidget {
   const MyPlaceholder({super.key});
 
@@ -35,6 +37,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
         lista.add(plano);
       }
     }
+    listaDePlanos = lista;
     return lista;
   }
 
@@ -42,10 +45,10 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: 
-            Text(
-              "Plano de negócios",
-              style: TextStyle(color: Color(0xFFFFFFFF)),),
+        title: Text(
+          "Plano de negócios",
+          style: TextStyle(color: Color(0xFFFFFFFF)),
+        ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
@@ -61,9 +64,11 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PlanoCreate(
-                            controller: controller,
-                          )),
+                    builder: (context) => PlanoCreate(
+                      controller: controller,
+                      planos: listaDePlanos,
+                    ),
+                  ),
                 ).then((event) {
                   setState(() {});
                 });
