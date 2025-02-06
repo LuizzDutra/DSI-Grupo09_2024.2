@@ -19,7 +19,8 @@ class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
 class _PlanoDetalhadoPrimeiraPaginaState
     extends State<PlanoDetalhadoPrimeiraPagina> {
   void atualizarTela() async {
-    var dados = await widget.controller.getPlano(referencia: widget.plano.referencia);
+    var dados =
+        await widget.controller.getPlano(referencia: widget.plano.referencia);
 
     setState(() {
       widget.plano = dados;
@@ -204,6 +205,7 @@ class _ListagemState extends State<Listagem> {
         height: widget.altura,
         padding: EdgeInsets.only(left: 14, right: 16),
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
           color: widget.fundo,
           border: Border.all(
             color: widget.borda,
