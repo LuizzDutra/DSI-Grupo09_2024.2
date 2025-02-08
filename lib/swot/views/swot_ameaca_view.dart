@@ -1,29 +1,107 @@
+import 'dart:async';
+
+import 'package:app_gp9/swot/Controller/swot_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AmeacaView extends StatefulWidget {
-
-  const AmeacaView({Key? key}) : super(key: key);
+  final DocumentReference referenciaDocumento;
+  const AmeacaView({Key? key, required this.referenciaDocumento})
+      : super(key: key);
 
   @override
   State<AmeacaView> createState() => _AmeacaViewState();
 }
 
 class _AmeacaViewState extends State<AmeacaView> {
-  final List<String> _Ameaca = [
-    '',
-    '',
-    '',  
-  ];
+  TextEditingController _controller = TextEditingController();
+  Timer? _debounce;
+  final List<String> _Ameaca = [];
 
-  void _addNewAmeaca() {
+  @override
+  void initState() {
+    super.initState();
+    _fetchAmeacas();
+  }
+
+  void _fetchAmeacas() async {
+    try {
+      final ameacas = await controllerSwot.obterAmeacas(
+          reference: widget.referenciaDocumento);
+      setState(() {
+        _Ameaca.clear();
+        _Ameaca.addAll(ameacas);
+      });
+      print("Ameaças carregadas: $_Ameaca");
+    } catch (e) {
+      print("Erro ao buscar Ameaças: $e");
+    }
+  }
+
+  void _addNewAmeaca() async {
     setState(() {
       _Ameaca.add('');
     });
+
+    // Enviar o campo vazio para o Firestore
+    try {
+      await controllerSwot.addAmeacas(
+        reference: widget.referenciaDocumento,
+        novaAmeaca: '',
+      );
+    } catch (e) {
+      print("Erro ao adicionar Ameaça no Firestore: $e");
+    }
   }
+
   void _updateAmeaca(int index, String newText) {
+    String antigaAmeaca = _Ameaca[index];
     setState(() {
       _Ameaca[index] = newText;
     });
+
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      try {
+        if (newText.isEmpty) {
+          await controllerSwot.removerAmeacas(
+            reference: widget.referenciaDocumento,
+            antigaAmeaca: antigaAmeaca,
+          );
+          setState(() {
+            _Ameaca.removeAt(index);
+          });
+        } else {
+          // Atualizar ou adicionar a força
+          await controllerSwot.updateAmeacas(
+            reference: widget.referenciaDocumento,
+            antigaAmeaca: antigaAmeaca,
+            novaAmeaca: newText,
+          );
+        }
+      } catch (e) {
+        print("Erro ao atualizar força no Firestore: $e");
+      }
+    });
+  }
+
+  // Função para remover uma força no Firestore
+  void _removeAmeaca(int index) async {
+    String ameacaRemovida = _Ameaca[index];
+
+    setState(() {
+      _Ameaca.removeAt(index);
+    });
+
+    try {
+      await controllerSwot.removerAmeacas(
+        reference: widget.referenciaDocumento,
+        antigaAmeaca: ameacaRemovida, // Remove do Firestore
+      );
+    } catch (e) {
+      print("Erro ao remover ameaça no Firestore: $e");
+    }
   }
 
   @override
@@ -33,7 +111,7 @@ class _AmeacaViewState extends State<AmeacaView> {
         preferredSize: const Size.fromHeight(200), // Altura do cabeçalho
         child: AppBar(
           automaticallyImplyLeading: true,
-          backgroundColor: const Color.fromARGB(255, 255, 0, 0), 
+          backgroundColor: const Color.fromARGB(255, 255, 0, 0),
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -75,44 +153,65 @@ class _AmeacaViewState extends State<AmeacaView> {
               ),
             ),
           ),
-          // Lista 
+          // Lista
           Expanded(
             child: ListView.builder(
               itemCount: _Ameaca.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Container(
+                return Dismissible(
+                  key: Key(_Ameaca[index]), // Chave única para o item
+                  direction: DismissDirection
+                      .startToEnd, // Deslizar apenas da direita para a esquerda
+                  background: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: ListTile(
-                      leading: Container(
-                        width: 40,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: const  Color.fromARGB(255, 255, 0, 0),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  onDismissed: (direction) {
+                    _removeAmeaca(index);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      title: TextFormField(
-                        initialValue: _Ameaca[index],
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Digite suas ameaças...',
+                      child: ListTile(
+                        leading: Container(
+                          width: 40,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 0, 0),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                        onChanged: (value) {
-                          _updateAmeaca(index, value);
-                        },
+                        title: TextFormField(
+                          initialValue: _Ameaca[index],
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Digite suas ameaças...',
+                          ),
+                          onFieldSubmitted: (value) {
+                            _updateAmeaca(index, value);
+                          },
+                        ),
                       ),
                     ),
                   ),

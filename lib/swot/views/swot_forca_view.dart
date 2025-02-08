@@ -32,8 +32,7 @@ class _ForcaViewState extends State<ForcaView> {
         _Forca.clear();
         _Forca.addAll(forcas); // Adiciona as forças na lista local
       });
-      print(
-          "Forças carregadas: $_Forca"); 
+      print("Forças carregadas: $_Forca");
     } catch (e) {
       print("Erro ao buscar forças: $e");
     }
@@ -91,22 +90,21 @@ class _ForcaViewState extends State<ForcaView> {
 
   // Função para remover uma força no Firestore
   void _removeForca(int index) async {
-  String forcaRemovida = _Forca[index]; 
+    String forcaRemovida = _Forca[index];
 
-  setState(() {
-    _Forca.removeAt(index);
-  });
+    setState(() {
+      _Forca.removeAt(index);
+    });
 
-  try {
-    await controllerSwot.removerForca(
-      reference: widget.referenciaDocumento,
-      antigaForca: forcaRemovida, // Remove do Firestore
-    );
-  } catch (e) {
-    print("Erro ao remover força no Firestore: $e");
+    try {
+      await controllerSwot.removerForca(
+        reference: widget.referenciaDocumento,
+        antigaForca: forcaRemovida, // Remove do Firestore
+      );
+    } catch (e) {
+      print("Erro ao remover força no Firestore: $e");
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +167,7 @@ class _ForcaViewState extends State<ForcaView> {
                   background: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: Colors.red, 
+                      color: Colors.red,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -223,7 +221,6 @@ class _ForcaViewState extends State<ForcaView> {
               },
             ),
           ),
-
           // Botão de adicionar
           Padding(
             padding: const EdgeInsets.all(16.0),
