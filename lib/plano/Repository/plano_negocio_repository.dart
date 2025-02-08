@@ -1,5 +1,5 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Model/plano_negocios.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlanoNegocioRepository {
@@ -57,7 +57,9 @@ class PlanoNegocioRepository {
       await atualizarPlanos(
           idUsuario, {nova_chave.toString(): referencia, 'total': temp});
 
-      _cache.clear();
+      plano.referencia = referencia;
+      _cache.add(plano);
+    
     } catch (e) {
       throw Exception("Erro ao adicionar $e");
     }
