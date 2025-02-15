@@ -1,10 +1,12 @@
 import 'package:app_gp9/pessoa.dart';
+import 'package:app_gp9/plano/Repository/plano_negocio_repository_interface.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PlanoNegocioRepository {
+class PlanoNegocioRepository implements IPlanoNegocioRepository{
   final FirebaseFirestore _bd = FirebaseFirestore.instance;
 
+  @override
   Future<Map<String, dynamic>> getPlano(
       {required DocumentReference? reference}) async {
     var dados = await reference!.get();
@@ -15,6 +17,7 @@ class PlanoNegocioRepository {
     }
   }
 
+  @override
   Future<void> createPlan(
       {required PlanoNegocios plano, required String idUsuario}) async {
     Map<String, dynamic> dados = plano.toJson();
@@ -35,6 +38,7 @@ class PlanoNegocioRepository {
     }
   }
 
+  @override
   Future<void> updatePlan(
       {required DocumentReference? reference,
       required Map<String, dynamic> dados}) async {
@@ -45,6 +49,7 @@ class PlanoNegocioRepository {
     }
   }
 
+  @override
   Future<void> deletePlan(
       {required DocumentReference reference, required int idPessoa}) async {
     try {

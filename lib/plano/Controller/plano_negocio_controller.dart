@@ -1,11 +1,12 @@
 import 'package:app_gp9/pessoa.dart';
+import 'package:app_gp9/plano/Repository/plano_negocio_repository_interface.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/repository/plano_negocio_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ControllerPlanoNegocios {
   
-  final repository = PlanoNegocioRepository();  
+  final IPlanoNegocioRepository repository = PlanoNegocioRepository();  
   
   
   Future<PlanoNegocios> getPlano(
