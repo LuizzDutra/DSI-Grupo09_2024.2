@@ -32,6 +32,16 @@ class _HomeState extends State<Home> {
     return MaterialPageRoute(builder: (context) => routes[name]!);
   }
 
+  List<Widget> chatList = [
+                          ChatBubble(
+                            text:
+                                'No que posso te ajudar?',
+                                left: true
+                          ),
+                        ];
+
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,13 +58,7 @@ class _HomeState extends State<Home> {
                     reverse: true,
                     child: Flexible(
                       child: Column(
-                        children: [
-                          ChatBubble(
-                            text:
-                                'No que posso te ajudar?',
-                                left: true
-                          ),
-                        ],
+                        children: chatList
                       ),
                     )),
             ),
@@ -66,8 +70,15 @@ class _HomeState extends State<Home> {
                   alignment: Alignment.bottomCenter,
                   decoration: BoxDecoration(color: Colors.white),
                   child: TextField(
+                    controller: textController,
                     textAlign: TextAlign.center,
-                decoration: InputDecoration(label: Text("Aqui:")),
+                    decoration: InputDecoration(label: Text("Aqui:")),
+                    onEditingComplete: (){
+                      setState(() {
+                        chatList.add(ChatBubble(text: textController.text));
+                        textController.text = "";
+                      });
+                    },
               )),
             ),
           ],
