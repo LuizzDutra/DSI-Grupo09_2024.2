@@ -1,3 +1,4 @@
+import 'package:app_gp9/home_page/chat_bubble.dart';
 import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
@@ -36,11 +37,34 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _key,
       backgroundColor: customColors[6],
-      body: Container(alignment: Alignment.center,child: Text("Bem vindo!")),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 34, vertical: 30),
+            child: Flexible(
+              child: Column(
+                children: [
+                  ChatBubble(
+                    text: 'Oláaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+                  ),
+                  ChatBubble(
+                    text: 'Oláaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+                    left: true
+                  )
+                ],
+              ),
+            )),
       appBar: AppBar(
-        backgroundColor: customColors[6],
-        leading: IconButton(onPressed: () => _key.currentState!.openDrawer(), icon: Icon(Icons.menu)),
+        backgroundColor: customColors[7],
+        foregroundColor: Colors.white,
+        leading: IconButton(onPressed: () => _key.currentState!.openDrawer(), icon: Icon(Icons.menu), color: Colors.white),
         iconTheme: IconThemeData(size: 35),
+        toolbarHeight: MediaQuery.sizeOf(context).height*0.1,
+        title: Wrap(
+          spacing: 20,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Image(image: AssetImage("assets/images/Logo.png")),
+            Text("Perene", style: TextStyle(fontSize: 30),)
+        ],),
       ),
       drawer: Drawer(
         child: ListView(children: [
