@@ -36,22 +36,42 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: customColors[6],
-        body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 34, vertical: 30),
-            child: Flexible(
-              child: Column(
-                children: [
-                  ChatBubble(
-                    text: 'Oláaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-                  ),
-                  ChatBubble(
-                    text: 'Oláaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-                    left: true
-                  )
-                ],
-              ),
-            )),
+        backgroundColor: customColors[6],
+        body: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                    padding: EdgeInsets.only(left: 17, right: 17, top: 15, bottom: MediaQuery.sizeOf(context).height*0.1),
+                    reverse: true,
+                    child: Flexible(
+                      child: Column(
+                        children: [
+                          ChatBubble(
+                            text:
+                                'No que posso te ajudar?',
+                                left: true
+                          ),
+                        ],
+                      ),
+                    )),
+            ),
+            Positioned(
+              bottom: 0,
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height*0.1,
+              child: Container(
+                  alignment: Alignment.bottomCenter,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                decoration: InputDecoration(label: Text("Aqui:")),
+              )),
+            ),
+          ],
+        ),
       appBar: AppBar(
         backgroundColor: customColors[7],
         foregroundColor: Colors.white,
