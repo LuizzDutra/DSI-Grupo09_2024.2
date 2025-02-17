@@ -74,10 +74,13 @@ class _HomeState extends State<Home> {
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(label: Text("Aqui:")),
                     onEditingComplete: (){
-                      setState(() {
-                        chatList.add(ChatBubble(text: textController.text));
-                        textController.text = "";
-                      });
+                    setState(() => chatList.add(ChatBubble(text: textController.text)));
+                    HomeController.sendMessage(textController.text).then(
+                      (value){
+                        setState(() => chatList.add(ChatBubble(text:value, left:true)));
+                      }
+                    );
+                    textController.text = "";
                     },
               )),
             ),
