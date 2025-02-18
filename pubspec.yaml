@@ -49,6 +49,7 @@ dependencies:
   geolocator: ^10.1.0
   google_generative_ai: ^0.4.6
   flutter_dotenv: ^5.2.1
+  flutter_markdown: ^0.7.6+2
 
 dev_dependencies:
   flutter_test:

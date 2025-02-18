@@ -1,5 +1,6 @@
 import 'package:app_gp9/custom_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ChatBubble extends StatelessWidget{
   final String text;
@@ -25,10 +26,13 @@ class ChatBubble extends StatelessWidget{
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: backgroundColor, borderRadius: BorderRadius.circular(10)),
-          child: Text(
-            text,
-            style: TextStyle(color: Colors.white, fontSize: 16),
-            softWrap: true,
+          child: MarkdownBody(
+            data: text,
+            styleSheet: MarkdownStyleSheet(
+              p: TextStyle(color: Colors.white, fontSize: 16),
+              listBullet: TextStyle(color: Colors.white, fontSize: 16)
+
+            )
           ),
         ),
       ),
