@@ -1,3 +1,4 @@
+import 'package:app_gp9/home_page/chat_bubble.dart';
 import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
@@ -31,16 +32,101 @@ class _HomeState extends State<Home> {
     return MaterialPageRoute(builder: (context) => routes[name]!);
   }
 
+  List<Widget> chatList = [
+                          ChatBubble(
+                            text:
+                                'Olá! Em que posso ajudar você hoje?',
+                                left: true
+                          ),
+                        ];
+
+  TextEditingController textController = TextEditingController();
+
+
+  void sendMessage(){
+    setState(() => chatList.add(ChatBubble(text: textController.text)));
+    chatList.add(FutureBuilder(
+      future: HomeController.sendMessage(textController.text),
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData){
+          return ChatBubble(text:snapshot.data!, left:true);
+        }else if(snapshot.hasError){
+          return ChatBubble(text: snapshot.error.toString(), left:true);
+        }else{
+          return ChatBubble(text: "**...**", left:true);
+        }
+      },
+    ));
+    textController.text = "";
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: customColors[6],
-      body: Container(alignment: Alignment.center,child: Text("Bem vindo!")),
-      appBar: AppBar(
         backgroundColor: customColors[6],
-        leading: IconButton(onPressed: () => _key.currentState!.openDrawer(), icon: Icon(Icons.menu)),
+        body: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                    padding: EdgeInsets.only(left: 17, right: 17, top: 15, bottom: MediaQuery.sizeOf(context).height*0.1),
+                    reverse: true,
+                    child: Column(
+                        children: chatList
+                      ),
+                    ),
+            ),
+            Positioned(
+              bottom: 0,
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height*0.11,
+              child: Container(
+                  alignment: Alignment.bottomCenter,
+                  decoration: BoxDecoration(color: Colors.white),
+                  padding: EdgeInsets.only(right: 4, left: 4, top: 0, bottom: 30),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(color: Color(0xFFE8EBF0), borderRadius: BorderRadius.circular(10)),
+                    child: Wrap(
+                      spacing: 30,
+                      direction: Axis.horizontal,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width*0.75, minHeight: MediaQuery.sizeOf(context).height*0.055),
+                          child: TextField(
+                            controller: textController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                                  hintText: "Tire suas dúvidas.",
+                                  hintStyle: TextStyle(color: Color(0x77000000)),
+                                  border: InputBorder.none
+                                  ),
+                            onEditingComplete: sendMessage
+                            ),
+                        ),
+                        IconButton(onPressed: sendMessage, icon: Icon(Icons.send))
+                      ],
+                    ),
+                  )),
+            ),
+          ],
+        ),
+      appBar: AppBar(
+        backgroundColor: customColors[7],
+        foregroundColor: Colors.white,
+        leading: IconButton(onPressed: () => _key.currentState!.openDrawer(), icon: Icon(Icons.menu), color: Colors.white),
         iconTheme: IconThemeData(size: 35),
+        toolbarHeight: MediaQuery.sizeOf(context).height*0.1,
+        title: Wrap(
+          spacing: 20,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Image(image: AssetImage("assets/images/Logo.png")),
+            Text("Perene", style: TextStyle(fontSize: 30),)
+        ],),
       ),
       drawer: Drawer(
         child: ListView(children: [

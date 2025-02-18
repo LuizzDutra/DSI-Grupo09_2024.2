@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ControllerPlanoNegocios {
   
-  final IPlanoNegocioRepository repository = PlanoNegocioRepository();  
+  final PlanoNegocioRepository repository = PlanoNegocioRepository();  
   
   
   Future<PlanoNegocios> getPlano(
