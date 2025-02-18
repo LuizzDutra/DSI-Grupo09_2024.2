@@ -35,12 +35,30 @@ class _HomeState extends State<Home> {
   List<Widget> chatList = [
                           ChatBubble(
                             text:
-                                'No que posso te ajudar?',
+                                'Olá! Em que posso ajudar você hoje?',
                                 left: true
                           ),
                         ];
 
   TextEditingController textController = TextEditingController();
+
+
+  void sendMessage(){
+    setState(() => chatList.add(ChatBubble(text: textController.text)));
+    chatList.add(FutureBuilder(
+      future: HomeController.sendMessage(textController.text),
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData){
+          return ChatBubble(text:snapshot.data!, left:true);
+        }else if(snapshot.hasError){
+          return ChatBubble(text: snapshot.error.toString(), left:true);
+        }else{
+          return ChatBubble(text: "**...**", left:true);
+        }
+      },
+    ));
+    textController.text = "";
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -64,37 +82,35 @@ class _HomeState extends State<Home> {
             Positioned(
               bottom: 0,
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height*0.1,
+              height: MediaQuery.sizeOf(context).height*0.11,
               child: Container(
                   alignment: Alignment.bottomCenter,
                   decoration: BoxDecoration(color: Colors.white),
-                  child: TextField(
-                    controller: textController,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(label: Text("Aqui:")),
-                    onEditingComplete: (){
-                    setState(() => chatList.add(ChatBubble(text: textController.text)));
-                    /*
-                    HomeController.sendMessage(textController.text).then(
-                      (value){
-                        setState(() => chatList.add(ChatBubble(text:value, left:true)));
-                      }
-                    );*/
-                    chatList.add(FutureBuilder(
-                      future: HomeController.sendMessage(textController.text),
-                      builder: (context, AsyncSnapshot<String> snapshot) {
-                        if (snapshot.hasData){
-                          return ChatBubble(text:snapshot.data!, left:true);
-                        }else if(snapshot.hasError){
-                          return ChatBubble(text: snapshot.error.toString(), left:true);
-                        }else{
-                          return ChatBubble(text: "**...**", left:true);
-                        }
-                      },
-                    ));
-                    textController.text = "";
-                    },
-              )),
+                  padding: EdgeInsets.only(right: 4, left: 4, top: 0, bottom: 30),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(color: Color(0xFFE8EBF0), borderRadius: BorderRadius.circular(10)),
+                    child: Wrap(
+                      spacing: 30,
+                      direction: Axis.horizontal,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width*0.75, minHeight: MediaQuery.sizeOf(context).height*0.055),
+                          child: TextField(
+                            controller: textController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                                  hintText: "Tire suas dúvidas.",
+                                  hintStyle: TextStyle(color: Color(0x77000000)),
+                                  border: InputBorder.none
+                                  ),
+                            onEditingComplete: sendMessage
+                            ),
+                        ),
+                        IconButton(onPressed: sendMessage, icon: Icon(Icons.send))
+                      ],
+                    ),
+                  )),
             ),
           ],
         ),
