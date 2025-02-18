@@ -7,7 +7,7 @@ class HomeController{
   static final GenerativeModel model = GenerativeModel(
       model: "gemini-2.0-flash",
       apiKey: dotenv.env["GEMINI_API_KEY"]!,
-      systemInstruction: Content.text("Você é um assistente de negócios."));
+      systemInstruction: Content.text("Seu papel é ser um assistente de negócios pronto para tirar dúvidas dos seus clientes."));
 
 
   static void signOut(){

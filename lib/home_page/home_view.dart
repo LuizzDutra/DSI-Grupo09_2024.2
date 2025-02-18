@@ -74,11 +74,24 @@ class _HomeState extends State<Home> {
                     decoration: InputDecoration(label: Text("Aqui:")),
                     onEditingComplete: (){
                     setState(() => chatList.add(ChatBubble(text: textController.text)));
+                    /*
                     HomeController.sendMessage(textController.text).then(
                       (value){
                         setState(() => chatList.add(ChatBubble(text:value, left:true)));
                       }
-                    );
+                    );*/
+                    chatList.add(FutureBuilder(
+                      future: HomeController.sendMessage(textController.text),
+                      builder: (context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.hasData){
+                          return ChatBubble(text:snapshot.data!, left:true);
+                        }else if(snapshot.hasError){
+                          return ChatBubble(text: snapshot.error.toString(), left:true);
+                        }else{
+                          return ChatBubble(text: "**...**", left:true);
+                        }
+                      },
+                    ));
                     textController.text = "";
                     },
               )),
