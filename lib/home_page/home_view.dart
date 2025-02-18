@@ -56,11 +56,10 @@ class _HomeState extends State<Home> {
               child: SingleChildScrollView(
                     padding: EdgeInsets.only(left: 17, right: 17, top: 15, bottom: MediaQuery.sizeOf(context).height*0.1),
                     reverse: true,
-                    child: Flexible(
-                      child: Column(
+                    child: Column(
                         children: chatList
                       ),
-                    )),
+                    ),
             ),
             Positioned(
               bottom: 0,
