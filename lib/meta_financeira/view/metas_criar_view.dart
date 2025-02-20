@@ -52,7 +52,7 @@ class _CriarMetaViewState extends State<CriarMetaView> {
       prazo: _prazo,
     );
 
-    Navigator.pop(context, true); // Fecha a tela após criar a meta
+    Navigator.pop(context, true);
   }
 
   @override
@@ -61,50 +61,122 @@ class _CriarMetaViewState extends State<CriarMetaView> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Criar Meta"),
-          backgroundColor: Colors.green[700],
+          backgroundColor: Color(0xFF001800),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white), // 🔥 Botão de voltar branco
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-        backgroundColor: Color(0xE5FEFEE3),
+        backgroundColor: Color(0xFFFFFBE6),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Título", style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(controller: _tituloController),
+              SizedBox(height: 15),
+
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.green,
+                    child: Icon(Icons.savings, color: Colors.white, size: 32),
+                  ),
+                  SizedBox(width: 15),
+                  Expanded(
+                    child: TextField(
+                      controller: _tituloController,
+                      decoration: InputDecoration(
+                        hintText: "Nome",
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
               SizedBox(height: 15),
-              Text("Descrição", style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(controller: _descricaoController),
+              TextField(
+                controller: _valorFimController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.attach_money, color: Colors.green),
+                  hintText: "Insira o montante para a meta",
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
+                ),
+              ),
 
               SizedBox(height: 15),
-              Text("Valor Inicial", style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(controller: _valorInicioController, keyboardType: TextInputType.number),
-
-              SizedBox(height: 15),
-              Text("Valor Final", style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(controller: _valorFimController, keyboardType: TextInputType.number),
-
-              SizedBox(height: 15),
-              Text("Prazo", style: TextStyle(fontWeight: FontWeight.bold)),
               InkWell(
                 onTap: () => _selecionarData(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color.fromARGB(255, 8, 9, 10)),
                   ),
-                  child: Text("${_prazo.day}/${_prazo.month}/${_prazo.year}"),
+                  child: Row(
+                    children: [
+                      Icon(Icons.calendar_today, color: Colors.black),
+                      SizedBox(width: 10),
+                      Text("${_prazo.day}/${_prazo.month}/${_prazo.year}"),
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 15),
+              Text("Descrição", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 5),
+              TextField(
+                controller: _descricaoController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: "Insira uma breve descrição",
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.green, width: 2),
+                  ),
                 ),
               ),
 
               Spacer(),
               ElevatedButton(
                 onPressed: _criarMeta,
-                child: Text("Criar Meta"),
+                child: Text(
+                  "Salvar meta",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white, 
+                ),
+              ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[700],
+                  backgroundColor: Color(0xFF2C6E49),
                   minimumSize: Size(double.infinity, 50),
                 ),
               ),
