@@ -85,7 +85,7 @@ class _MetasDetalhesViewState extends State<MetasDetalhesView> {
       appBar: AppBar(
         backgroundColor: Color(0xFF001800),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white), // 🔥 Botão de voltar branco
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white), 
           onPressed: () => Navigator.pop(context),
         ),
       ),

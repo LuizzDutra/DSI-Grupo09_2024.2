@@ -21,7 +21,7 @@ class Meta {
     required this.referencia,
   });
 
-// Converte um documento Firestore para um objeto Meta
+
   factory Meta.fromMap(String id, Map<String, dynamic> map, DocumentReference referencia) {
     return Meta(
       id: id,
@@ -37,7 +37,7 @@ class Meta {
     );
   }
 
-   // Converte objeto Meta para um Map para salvar no Firestore
+   
   Map<String, dynamic> toMap() {
     return {
       'titulo': titulo,
@@ -49,7 +49,7 @@ class Meta {
     };
   }
 
-// Calcula o progresso da meta financeira
+
   double calcularProgresso() {
     if (valorFim == 0) return 0;
     return ((valorAtual - valorInicio) / (valorFim - valorInicio)) * 100;

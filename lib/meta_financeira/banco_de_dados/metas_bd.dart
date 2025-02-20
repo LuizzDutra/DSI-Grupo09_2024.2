@@ -4,21 +4,21 @@ import '../models/meta_model.dart';
 class MetasBD {
   static final FirebaseFirestore _bd = FirebaseFirestore.instance;
 
-  // Criar uma nova meta financeira
+  
   static Future<void> criarMeta({required Meta meta}) async {
     Map<String, dynamic> dados = meta.toMap();
     try {
-      // Criar documento no Firestore
+      
       DocumentReference referencia = await _bd.collection('Metas').add(dados);
 
-      // Atualiza o campo de referência no documento
+      
       await atualizarMeta(referencia: referencia, novosDados: {'referencia': referencia});
     } catch (e) {
       throw Exception("Erro ao adicionar Meta: $e");
     }
   }
 
-  // Atualizar uma meta existente
+
   static Future<void> atualizarMeta({
     required DocumentReference referencia,
     required Map<String, dynamic> novosDados,
@@ -30,7 +30,7 @@ class MetasBD {
     }
   }
 
-  // Deletar uma meta
+ 
   static Future<void> deletarMeta({required DocumentReference referencia}) async {
     try {
       await referencia.delete();
@@ -39,7 +39,7 @@ class MetasBD {
     }
   }
 
-  // Buscar uma meta pelo DocumentReference
+ 
   static Future<Map<String, dynamic>> getMeta({required DocumentReference referencia}) async {
     try {
       DocumentSnapshot doc = await referencia.get();
@@ -58,7 +58,7 @@ class MetasBD {
     }
   }
 
-  // Buscar todas as metas financeiras
+
   static Future<List<Meta>> getMetas() async {
     try {
       QuerySnapshot query = await _bd.collection('Metas').get();
@@ -70,7 +70,7 @@ class MetasBD {
     }
   }
 
-  // Atualizar valor atual da meta financeira
+ 
   static Future<void> atualizarValorAtual({
     required DocumentReference referencia,
     required double novoValor,
@@ -82,7 +82,7 @@ class MetasBD {
     }
   }
 
-  // Buscar progresso da meta financeira
+ 
   static Future<double> obterProgresso({required DocumentReference referencia}) async {
     try {
       var dados = await getMeta(referencia: referencia);

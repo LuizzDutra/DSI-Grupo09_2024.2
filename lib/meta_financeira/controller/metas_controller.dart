@@ -3,7 +3,7 @@ import '../banco_de_dados/metas_bd.dart';
 import '../models/meta_model.dart';
 
 class ControladorMetas {
-  // Criar uma nova meta financeira
+
   static Future<void> criarMeta({
     required String titulo,
     required double valorInicio,
@@ -12,12 +12,12 @@ class ControladorMetas {
     required DateTime prazo,
   }) async {
     try {
-      // Criando a estrutura da meta
+      
       Meta novaMeta = Meta(
         id: "",
         titulo: titulo,
         valorInicio: valorInicio,
-        valorAtual: valorInicio, // Começa com o mesmo valor inicial
+        valorAtual: valorInicio, 
         valorFim: valorFim,
         descricao: descricao,
         prazo: prazo,
@@ -30,7 +30,7 @@ class ControladorMetas {
     }
   }
 
-  // Obter uma meta específica pelo DocumentReference
+  
   static Future<Meta> getMeta({required DocumentReference referencia}) async {
     try {
       var json = await MetasBD.getMeta(referencia: referencia);
@@ -40,7 +40,7 @@ class ControladorMetas {
     }
   }
 
-  // Obter todas as metas financeiras
+
   static Future<List<Meta>> getMetas() async {
     try {
       return await MetasBD.getMetas();
@@ -49,7 +49,7 @@ class ControladorMetas {
     }
   }
 
-  // Atualizar uma meta financeira
+  
   static Future<void> alterarMeta({
     required DocumentReference referencia,
     required Map<String, dynamic> novosDados,
@@ -61,7 +61,7 @@ class ControladorMetas {
     }
   }
 
-  // Excluir uma meta financeira
+  
   static Future<void> excluirMeta({required DocumentReference referencia}) async {
     try {
       await MetasBD.deletarMeta(referencia: referencia);
@@ -70,7 +70,7 @@ class ControladorMetas {
     }
   }
 
-  // Atualizar o valor atual da meta financeira
+ 
   static Future<void> atualizarValorAtual({
     required DocumentReference referencia,
     required double novoValor,
@@ -82,7 +82,7 @@ class ControladorMetas {
     }
   }
 
-  // Obter progresso da meta financeira
+  
   static Future<double> calcularProgresso({required DocumentReference referencia}) async {
     try {
       return await MetasBD.obterProgresso(referencia: referencia);

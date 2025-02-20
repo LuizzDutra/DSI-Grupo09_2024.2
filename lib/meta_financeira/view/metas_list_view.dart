@@ -51,22 +51,22 @@ class _ListasMetasState extends State<ListasMetas> {
                   content: Text("Tem certeza que deseja excluir '${meta.titulo}'?"),
                   actions: <Widget>[
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(false), // Cancela a exclusão
+                      onPressed: () => Navigator.of(context).pop(false), 
                       child: Text("Cancelar"),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(true), // Confirma a exclusão
+                      onPressed: () => Navigator.of(context).pop(true), 
                       child: Text("Excluir", style: TextStyle(color: Colors.red)),
                     ),
                   ],
                 );
               },
             );
-            return confirmar ?? false; // Só exclui se o usuário confirmar
+            return confirmar ?? false; 
           },
           onDismissed: (direction) async {
             await ControladorMetas.excluirMeta(referencia: meta.referencia);
-            widget.onUpdate(); // Atualiza a lista após exclusão
+            widget.onUpdate(); 
           },
           child: Container(
             margin: EdgeInsets.only(top: 15),
@@ -97,7 +97,7 @@ class _ListasMetasState extends State<ListasMetas> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Ícone do cifrão ($)
+                               
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
@@ -108,7 +108,7 @@ class _ListasMetasState extends State<ListasMetas> {
                                 ),
                                 SizedBox(width: 15),
 
-                                // Texto e barra de progresso
+                                
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +123,7 @@ class _ListasMetasState extends State<ListasMetas> {
                                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                                       ),
                                       SizedBox(height: 8),
-                                      // Barra de progresso
+                                      
                                       Stack(
                                         children: [
                                           Container(
@@ -147,7 +147,7 @@ class _ListasMetasState extends State<ListasMetas> {
                                   ),
                                 ),
 
-                                // Porcentagem ao lado da barra de progresso
+                              
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
