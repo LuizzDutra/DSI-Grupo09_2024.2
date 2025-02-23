@@ -1,14 +1,9 @@
 name: Build and Release
-on: [push]
+on:
+  push:
+    branches:
+        - master
 jobs:
-  create-envfile:
-    runs-on: ubuntu-18.04
-    steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_GEMINI_API_KEY: ${{ secrets.SECRET_API_KEY }}
-        file_name: .env
   build:
     name: Build APK
     runs-on: ubuntu-latest
@@ -17,6 +12,11 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '18.x'
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_GEMINI_API_KEY: ${{ secrets.SECRET_API_KEY }}
+        file_name: .env
     - uses: subosito/flutter-action@v1
       with:
         flutter-version: '3.24.4'
@@ -26,3 +26,4 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/apk/release/*.apk"
+        token: ${{ secrets.GITHUB_TOKEN }}
