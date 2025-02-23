@@ -3,6 +3,7 @@ import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
 import 'package:app_gp9/mapa/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
+import 'package:app_gp9/meta_financeira/view/metas_home_view.dart';
 
 import 'package:app_gp9/swot/views/home_view.dart';
 import 'package:app_gp9/plano/view/planos_view_temp.dart';
@@ -25,7 +26,8 @@ class _HomeState extends State<Home> {
     "swots" : const HomeView(),
     "perfil" : const PerfilView(),
     "login" : const Login(),
-    "mapa" : const MapaView()
+    "mapa" : const MapaView(),
+    "metas" : const MetasHomeView(), 
   };
 
   MaterialPageRoute getRoute(String name){
@@ -152,6 +154,14 @@ class _HomeState extends State<Home> {
               Navigator.push(context, getRoute('swots'));
             }
           ),
+
+          ListTile(
+            leading: Icon(Icons.monetization_on, color: Colors.grey[700]),
+            title: Text("Metas Financeiras"),
+            onTap: () {Navigator.push(context, getRoute("metas"));
+              },
+          ),
+
           ListTile(
             leading: Icon(Icons.map),
             title: Text("Outras empresas"),

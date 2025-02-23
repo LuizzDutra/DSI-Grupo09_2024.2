@@ -10,14 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:app_gp9/swot/models/swot_model.dart';
 
 class SwotMainView extends StatefulWidget {
-  
   final AnaliseSwot swot;
-  
 
   const SwotMainView({
     super.key,
     required this.swot,
-    
   });
 
   @override
@@ -28,11 +25,11 @@ class _SwotMainViewState extends State<SwotMainView> {
   final user = FirebaseAuth.instance.currentUser?.uid;
   late DocumentReference? referencia;
 
-
   @override
   void initState() {
     super.initState();
-    referencia = FirebaseFirestore.instance.collection('Swots').doc(widget.swot.id);
+    referencia =
+        FirebaseFirestore.instance.collection('Swots').doc(widget.swot.id);
   }
 
   @override
@@ -87,7 +84,9 @@ class _SwotMainViewState extends State<SwotMainView> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ForcaView(referenciaDocumento: referencia!,),
+                    builder: (context) => ForcaView(
+                      referenciaDocumento: referencia!,
+                    ),
                   ),
                 ),
                 child: CustomContainer(
@@ -106,13 +105,15 @@ class _SwotMainViewState extends State<SwotMainView> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FraquezaView(),
+                    builder: (context) => FraquezaView(
+                      referenciaDocumento: referencia!,
+                    ),
                   ),
                 ),
                 child: CustomContainer(
                   title: 'Fraquezas',
                   symbol: 'W',
-                  bgColor: const Color.fromARGB(207, 230, 207, 6),
+                  bgColor: const Color.fromARGB(255, 251, 255, 0),
                   textColor: Color(0xFFFFFFFF),
                 ),
               ),
@@ -148,7 +149,9 @@ class _SwotMainViewState extends State<SwotMainView> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OportuniView(),
+                    builder: (context) => OportuniView(
+                      referenciaDocumento: referencia!,
+                    ),
                   ),
                 ),
                 child: CustomContainer(
@@ -167,7 +170,9 @@ class _SwotMainViewState extends State<SwotMainView> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AmeacaView(),
+                    builder: (context) => AmeacaView(
+                      referenciaDocumento: referencia!,
+                    ),
                   ),
                 ),
                 child: CustomContainer(

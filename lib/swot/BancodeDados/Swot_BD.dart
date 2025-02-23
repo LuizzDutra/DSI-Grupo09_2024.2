@@ -165,4 +165,176 @@ class bdSwot {
       throw Exception("Erro ao obter as forças: $e");
     }
   }
+
+  // Gerenciando Fraqueza
+
+  static Future<void> addFraquezas(
+      {required DocumentReference reference,
+      required String novaFraqueza}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteInterno.Fraquezas':
+            FieldValue.arrayUnion([novaFraqueza])
+      });
+    } catch (e) {
+      throw Exception("Erro ao adicionar Fraqueza: $e");
+    }
+  }
+
+  static Future<void> removerFraquezas(
+      {required DocumentReference reference,
+      required String antigaFraqueza}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteInterno.Fraquezas':
+            FieldValue.arrayRemove([antigaFraqueza])
+      });
+    } catch (e) {
+      throw Exception("Erro ao remover Fraqueza: $e");
+    }
+  }
+
+  static Future<void> updateFraquezas(
+      {required DocumentReference reference,
+      required String antigaFraqueza,
+      required String novaFraqueza}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteInterno.Fraquezas':
+            FieldValue.arrayRemove([antigaFraqueza])
+      });
+
+      await reference.update({
+        'analise.AmbienteInterno.Fraquezas':
+            FieldValue.arrayUnion([novaFraqueza])
+      });
+    } catch (e) {
+      throw Exception("Erro ao atualizar Fraqueza: $e");
+    }
+  }
+
+  static Future<List<String>> obterFraquezas(
+      {required DocumentReference reference}) async {
+    try {
+      var json = await getSwot(reference: reference);
+      return List<String>.from(json['analise']['AmbienteInterno']['Fraquezas']);
+    } catch (e) {
+      throw Exception("Erro ao obter as Fraquezas: $e");
+    }
+  }
+
+  // Gerenciando Ameaça
+
+  static Future<void> addAmeacas(
+      {required DocumentReference reference,
+      required String novaAmeaca}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Ameacas':
+            FieldValue.arrayUnion([novaAmeaca])
+      });
+    } catch (e) {
+      throw Exception("Erro ao adicionar Ameaça: $e");
+    }
+  }
+
+  static Future<void> removerAmeacas(
+      {required DocumentReference reference,
+      required String antigaAmeaca}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Ameacas':
+            FieldValue.arrayRemove([antigaAmeaca])
+      });
+    } catch (e) {
+      throw Exception("Erro ao remover Ameaça: $e");
+    }
+  }
+
+  static Future<void> updateAmeacas(
+      {required DocumentReference reference,
+      required String antigaAmeaca,
+      required String novaAmeaca}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Ameacas':
+            FieldValue.arrayRemove([antigaAmeaca])
+      });
+
+      await reference.update({
+        'analise.AmbienteExterno.Ameacas':
+            FieldValue.arrayUnion([novaAmeaca])
+      });
+    } catch (e) {
+      throw Exception("Erro ao atualizar Ameaça: $e");
+    }
+  }
+
+  static Future<List<String>> obterAmeacas(
+      {required DocumentReference reference}) async {
+    try {
+      var json = await getSwot(reference: reference);
+      return List<String>.from(json['analise']['AmbienteExterno']['Ameacas']);
+    } catch (e) {
+      throw Exception("Erro ao obter as Ameacas: $e");
+    }
+  }
+
+  // Gerenciando Oportunidade
+
+  static Future<void> addOportunidades(
+      {required DocumentReference reference,
+      required String novaOportunidade}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Oportunidades':
+            FieldValue.arrayUnion([novaOportunidade])
+      });
+    } catch (e) {
+      throw Exception("Erro ao adicionar Oportunidade: $e");
+    }
+  }
+
+  static Future<void> removerOportunidades(
+      {required DocumentReference reference,
+      required String antigaOportunidade}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Oportunidades':
+            FieldValue.arrayRemove([antigaOportunidade])
+      });
+    } catch (e) {
+      throw Exception("Erro ao remover Oportunidade: $e");
+    }
+  }
+
+  static Future<void> updateOportunidades(
+      {required DocumentReference reference,
+      required String antigaOportunidade,
+      required String novaOportunidade}) async {
+    try {
+      await reference.update({
+        'analise.AmbienteExterno.Oportunidades':
+            FieldValue.arrayRemove([antigaOportunidade])
+      });
+
+      await reference.update({
+        'analise.AmbienteExterno.Oportunidades':
+            FieldValue.arrayUnion([novaOportunidade])
+      });
+    } catch (e) {
+      throw Exception("Erro ao atualizar Oportunidade: $e");
+    }
+  }
+
+  static Future<List<String>> obterOportunidades(
+      {required DocumentReference reference}) async {
+    try {
+      var json = await getSwot(reference: reference);
+      return List<String>.from(json['analise']['AmbienteExterno']['Oportunidades']);
+    } catch (e) {
+      throw Exception("Erro ao obter as Oportunidades: $e");
+    }
+  }
+  
 }
