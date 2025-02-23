@@ -43,6 +43,13 @@ class _HomeState extends State<Home> {
                         ];
 
   TextEditingController textController = TextEditingController();
+  String userName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    HomeController.getUserName().then((value) => setState(() => userName = value));
+  }
 
 
   void sendMessage(){
@@ -132,7 +139,14 @@ class _HomeState extends State<Home> {
       ),
       drawer: Drawer(
         child: ListView(children: [
-          const DrawerHeader(child: Text("Head")),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(userName, textAlign: TextAlign.left, 
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20
+              ),),
+          ),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text("Perfil"),
