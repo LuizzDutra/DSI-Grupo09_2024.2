@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    HomeController.getUserName().then((value) => userName = value);
+    HomeController.getUserName().then((value) => setState(() => userName = value));
   }
 
 
