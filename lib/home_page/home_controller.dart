@@ -1,3 +1,4 @@
+import 'package:app_gp9/pessoa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,5 +19,11 @@ class HomeController{
     var response = await model.generateContent([Content.text(message)]);
     String responseText = response.text ?? '';
     return responseText;
+  }
+
+
+  static Future<String> getUserName() async{
+    Pessoa? pessoa = await PessoaCollection.getPessoa(FirebaseAuth.instance.currentUser!.uid);
+    return pessoa!.nome;
   }
 }
