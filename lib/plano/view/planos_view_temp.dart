@@ -1,9 +1,12 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/listagemPlanos.dart';
-import 'package:app_gp9/plano/planoCreate.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
+import 'package:app_gp9/plano/view/listagemPlanos.dart';
+import 'package:app_gp9/plano/view/planoCreate.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+late var listaDePlanos;
 
 class MyPlaceholder extends StatefulWidget {
   const MyPlaceholder({super.key});
@@ -16,6 +19,8 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   final user = FirebaseAuth.instance.currentUser?.uid;
   User? usuario = FirebaseAuth.instance.currentUser;
 
+  final controller = ControllerPlanoNegocios();
+
   void atualizarDados() {
     setState(() {});
   }
@@ -27,11 +32,12 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
     for (var chave in pessoa!.planos!.keys) {
       if (chave != 'total') {
-        var plano = await controllerPlanoNegocios.getPlano(
-            referencia: pessoa.planos![chave]);
+        var plano =
+            await controller.getPlano(referencia: pessoa.planos![chave]);
         lista.add(plano);
       }
     }
+    listaDePlanos = lista;
     return lista;
   }
 
@@ -39,18 +45,11 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 40,
-            ),
-            Text(
-              "Plano de negócios",
-              style: TextStyle(color: Color(0xFFFFFFFF)),
-            ),
-          ],
+        title: Text(
+          "Plano de negócios",
+          style: TextStyle(color: Color(0xFFFFFFFF)),
         ),
+        centerTitle: true,
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
       ),
@@ -62,10 +61,14 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
             SizedBox(height: 20),
             InkWell(
               onTap: () async {
-                //Implementar a criação do plano
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PlanoCreate()),
+                  MaterialPageRoute(
+                    builder: (context) => PlanoCreate(
+                      controller: controller,
+                      planos: listaDePlanos,
+                    ),
+                  ),
                 ).then((event) {
                   setState(() {});
                 });
@@ -130,7 +133,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: 650,
+        height: MediaQuery.sizeOf(context).height * 0.7,
         child: FutureBuilder<List<PlanoNegocios>>(
           future: _obterPlanos(idUsuario: user!),
           builder: (context, snapshot) {
@@ -150,6 +153,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                 dados: resultado,
                 onUpdate: atualizarDados,
                 idUsuario: user!,
+                controller: controller,
               );
             }
           },

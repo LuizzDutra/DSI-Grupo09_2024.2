@@ -9,6 +9,7 @@ class Pessoa{
   final String email;
   final String nome;
   Map<String,dynamic>? planos = {};
+  Map<String,dynamic>? swots = {};
   String? pais;
   DateTime? _dataNascimento;
   DocumentReference? empresa;
@@ -102,6 +103,7 @@ class PessoaCollection{
     pessoa.pais = dados['pais'];
     pessoa.planos = dados['planos'];
     pessoa.empresa = dados['empresa'];
+    pessoa.swots = dados['swots'];
 
     return pessoa;
   }
@@ -117,6 +119,9 @@ class PessoaCollection{
       'empresa': pessoa.empresa,
       'planos': <String,dynamic>{
         'total': 0
+      },
+      'swots': <String,dynamic>{
+        'total': 0        
       }
       
     };

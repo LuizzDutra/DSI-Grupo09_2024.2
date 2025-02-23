@@ -1,56 +1,66 @@
-import 'package:app_gp9/plano/planoDetalhado.dart';
-import 'package:app_gp9/plano/plano_negocios.dart';
+import 'package:app_gp9/swot/BancodeDados/Swot_BD.dart';
+import 'package:app_gp9/swot/Controller/swot_controller.dart';
+import 'package:app_gp9/swot/models/swot_model.dart';
+import 'package:app_gp9/swot/views/swot_main_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ListagemPlanos extends StatefulWidget {
-  late List<PlanoNegocios> dados;
+class ListasSwots extends StatefulWidget {
+  late List<AnaliseSwot> swots;
   final Function onUpdate;
   late String idUsuario;
 
-  ListagemPlanos(
-      {super.key,
-      required this.dados,
-      required this.onUpdate,
-      required this.idUsuario});
+  ListasSwots({
+    super.key,
+    required this.swots,
+    required this.onUpdate,
+    required this.idUsuario,
+  });
 
   @override
-  State<ListagemPlanos> createState() => _ListagemPlanosState();
+  State<ListasSwots> createState() => _ListasSwotsState();
 }
 
-class _ListagemPlanosState extends State<ListagemPlanos> {
+class _ListasSwotsState extends State<ListasSwots> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: widget.dados.length,
+      itemCount: widget.swots.length,
       itemBuilder: (context, index) {
-        var plano = widget.dados[index];
+        var swots = widget.swots[index];
         return Dismissible(
-          key: Key(plano.referencia.toString()),
+          key: Key(swots.referencia.toString()),
           direction: DismissDirection.startToEnd,
+          background: Container(
+            alignment: Alignment.centerLeft,
+            color: Colors.red,
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
           onDismissed: (direction) async {
             showDialog<void>(
               context: context,
-              barrierDismissible:
-                  false, // Evita fechar ao clicar fora do diálogo
+              barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Exclusão de plano'),
-                  content: Text("Deseja excluir o plano ${plano.descNome}?"),
+                  title: Text('Exclusão de Swot'),
+                  content: Text("Deseja excluir o Swot: ${swots.nome}?"),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop();
                         widget.onUpdate();
                       },
                       child: Text('Não'),
                     ),
                     TextButton(
                       onPressed: () async {
-                        await controllerPlanoNegocios.deletePlano(
-                            plano: plano, idUsuario: widget.idUsuario);
-                        Navigator.of(context).pop(); 
+                        await controllerSwot.deleteSwot(
+                            swot: swots, idUsuario: widget.idUsuario);
+                        Navigator.of(context).pop();
                         widget.onUpdate();
-                        
                       },
                       child: Text('Sim'),
                     ),
@@ -73,8 +83,9 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    PlanoDetalhadoPrimeiraPagina(plano: plano)),
+                                builder: (context) => SwotMainView(
+                                      swot: swots,
+                                    )),
                           ).then((teste) {
                             widget.onUpdate();
                           });
@@ -90,7 +101,7 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${plano.descNome}",
+                                Text(swots.nome,
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
