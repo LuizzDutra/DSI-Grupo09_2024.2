@@ -1,5 +1,7 @@
 import 'package:app_gp9/custom_colors.dart';
+import 'package:app_gp9/empresa.dart';
 import 'package:app_gp9/mapa/controller/mapa_controller.dart';
+import 'package:app_gp9/mapa/view/detalhes.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
@@ -45,6 +47,7 @@ class _MapaState extends State<MapaView> {
     });
     searchController.addListener(processFilter);
     debouncer = Timer(Duration(milliseconds: 500), saveFilter);
+    MapaController.setMapCallBack(goToDetailsPage);
   }
 
   void processFilter(){
@@ -54,6 +57,11 @@ class _MapaState extends State<MapaView> {
 
   void saveFilter(){
     setState(() => MapaController.setMapFilter(searchController.text));
+  }
+
+
+  void goToDetailsPage(Empresa empresa){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Detalhes(empresa: empresa)));
   }
 
   @override

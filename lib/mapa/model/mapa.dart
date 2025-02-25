@@ -11,6 +11,7 @@ class Mapa{
   LatLng defaultCenter;
   double defaultZoom;
   String filter;
+  void Function(Empresa empresa)? tapCallBack;
   final MapController _mapController = MapController();
 
 
@@ -45,7 +46,7 @@ class Mapa{
             GestureDetector(
               child: Image(image: AssetImage("assets/images/Logo.png")),
               onTap: () {
-                print("Apertou: ${empresa.loc.toString()}");
+                tapCallBack!(empresa);
               },
             ),
           ])));
