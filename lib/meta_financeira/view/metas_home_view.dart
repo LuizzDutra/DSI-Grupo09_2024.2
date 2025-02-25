@@ -27,16 +27,10 @@ class _MetasHomeViewState extends State<MetasHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 40),
-            Text("Metas Financeiras", style: TextStyle(color: Colors.white)),
-            SizedBox(width: 10),
-          ],
-        ),
+        title: Text("Metas Financeiras", style: TextStyle(color: Colors.white)),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xFF001800),
+        centerTitle: true,
       ),
       backgroundColor: Color(0xE5FEFEE3),
       body: Container(
