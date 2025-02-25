@@ -5,20 +5,21 @@ import '../models/meta_model.dart';
 class MetasBD {
   static final FirebaseFirestore _bd = FirebaseFirestore.instance;
 
-  
-  static Future<void> criarMeta({required Meta meta}) async {
-    Map<String, dynamic> dados = meta.toMap();
-    try {
-      
-      DocumentReference referencia = await _bd.collection('Metas').add(dados);
 
-      
+  static Future<void> criarMeta({required Meta meta}) async {
+    String? idUsuario = FirebaseAuth.instance.currentUser?.uid;
+    if (idUsuario == null) throw Exception("Usuário não autenticado.");
+
+    Map<String, dynamic> dados = meta.toMap();
+    dados['idUsuario'] = idUsuario;
+
+    try {
+      DocumentReference referencia = await _bd.collection('Metas').add(dados);
       await atualizarMeta(referencia: referencia, novosDados: {'referencia': referencia});
     } catch (e) {
       throw Exception("Erro ao adicionar Meta: $e");
     }
   }
-
 
   static Future<void> atualizarMeta({
     required DocumentReference referencia,
@@ -31,7 +32,6 @@ class MetasBD {
     }
   }
 
- 
   static Future<void> deletarMeta({required DocumentReference referencia}) async {
     try {
       await referencia.delete();
@@ -40,7 +40,23 @@ class MetasBD {
     }
   }
 
- 
+  static Future<List<Meta>> getMetas() async {
+    try {
+      String? idUsuario = FirebaseAuth.instance.currentUser?.uid;
+      if (idUsuario == null) throw Exception("Usuário não autenticado.");
+
+      QuerySnapshot query = await _bd.collection('Metas')
+          .where('idUsuario', isEqualTo: idUsuario) 
+          .get();
+
+      return query.docs
+          .map((doc) => Meta.fromMap(doc.id, doc.data() as Map<String, dynamic>, doc.reference))
+          .toList();
+    } catch (e) {
+      throw Exception("Erro ao obter as Metas do usuário: $e");
+    }
+  }
+
   static Future<Map<String, dynamic>> getMeta({required DocumentReference referencia}) async {
     try {
       DocumentSnapshot doc = await referencia.get();
@@ -59,19 +75,6 @@ class MetasBD {
     }
   }
 
-
-  static Future<List<Meta>> getMetas() async {
-    try {
-      QuerySnapshot query = await _bd.collection('Metas').get();
-      return query.docs
-          .map((doc) => Meta.fromMap(doc.id, doc.data() as Map<String, dynamic>, doc.reference))
-          .toList();
-    } catch (e) {
-      throw Exception("Erro ao obter todas as Metas: $e");
-    }
-  }
-
- 
   static Future<void> atualizarValorAtual({
     required DocumentReference referencia,
     required double novoValor,
@@ -83,7 +86,7 @@ class MetasBD {
     }
   }
 
- 
+
   static Future<double> obterProgresso({required DocumentReference referencia}) async {
     try {
       var dados = await getMeta(referencia: referencia);
