@@ -38,7 +38,23 @@ class _LoginState extends State<Login> {
       }
       await ControladorAutenticar.logar(
           _emailController.text, _senhaController.text);
-      if (context.mounted) {
+      goToHomePage();
+    } on String catch (e) {
+      showAlert(e);
+    }
+  }
+
+  void showAlert(String e) {
+    showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e),
+            );
+          });
+  }
+
+  void goToHomePage(){
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -50,18 +66,7 @@ class _LoginState extends State<Login> {
           ),
         );
       }
-    } on String catch (e) {
-      if (context.mounted) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(e),
-              );
-            });
-      }
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
