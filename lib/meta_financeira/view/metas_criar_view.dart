@@ -134,7 +134,7 @@ class _CriarMetaViewState extends State<CriarMetaView> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(color: Colors.black),
                     ),
                     child: Row(
                       children: [
