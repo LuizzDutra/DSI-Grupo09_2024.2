@@ -66,7 +66,7 @@ class _CriarSwotState extends State<CriarSwot> {
                     color: Color(0xFF262926),
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Título do SWOT',
+                    hintText: 'Título',
                     filled: true,
                     fillColor: Color(0xFFEDE9B2),
                     border: OutlineInputBorder(
@@ -107,7 +107,7 @@ class _CriarSwotState extends State<CriarSwot> {
                   color: Color(0xFF2C6E49),
                   child: Center(
                     child: Text(
-                      'Criar Canvas',
+                      'Criar SWOT',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 36,

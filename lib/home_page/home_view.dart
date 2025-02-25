@@ -170,7 +170,7 @@ class _HomeState extends State<Home> {
           ),
 
           ListTile(
-            leading: Icon(Icons.monetization_on, color: Colors.grey[700]),
+            leading: Icon(Icons.monetization_on, color: const Color.fromARGB(255, 74, 74, 74)),
             title: Text("Metas Financeiras"),
             onTap: () {Navigator.push(context, getRoute("metas"));
               },

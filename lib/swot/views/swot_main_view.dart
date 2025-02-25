@@ -36,27 +36,19 @@ class _SwotMainViewState extends State<SwotMainView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 50),
-            Text("SWOT - ${widget.swot.nome}",
+        title: Text("SWOT - ${widget.swot.nome}",
                 style: TextStyle(color: Color(0xFFFFFFFF))),
-            SizedBox(width: 10),
-          ],
-        ),
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
+        centerTitle: true,
       ),
       backgroundColor: Color(0xE5FEFEE3),
-      body: Center(
-        child: Stack(
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Imagem e Texto "Ambiente Interno"
-            Positioned(
-              top: 100, // Ajuste para a posição Y
-              left: 50, // Ajuste para a posição X
-              child: Row(
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                     "assets/images/squares.png",
@@ -75,53 +67,49 @@ class _SwotMainViewState extends State<SwotMainView> {
                   ),
                 ],
               ),
-            ),
-            // Container "Forças"
-            Positioned(
-              top: 150, // Ajuste para a posição Y
-              left: 50, // Ajuste para a posição X
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ForcaView(
-                      referenciaDocumento: referencia!,
+            Wrap(
+              direction: Axis.horizontal,
+              spacing: 30,
+              children: [
+                // Container "Forças"
+                GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ForcaView(
+                          referenciaDocumento: referencia!,
+                        ),
+                      ),
+                    ),
+                    child: CustomContainer(
+                      title: 'Forças',
+                      symbol: 'S',
+                      bgColor: Colors.pink,
+                      textColor: Color(0xFFFFFFFF),
                     ),
                   ),
-                ),
-                child: CustomContainer(
-                  title: 'Forças',
-                  symbol: 'S',
-                  bgColor: Colors.pink,
-                  textColor: Color(0xFFFFFFFF),
-                ),
-              ),
-            ),
-            // Container "Fraquezas"
-            Positioned(
-              top: 150,
-              left: 220,
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FraquezaView(
-                      referenciaDocumento: referencia!,
+                // Container "Fraquezas"
+                GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FraquezaView(
+                          referenciaDocumento: referencia!,
+                        ),
+                      ),
+                    ),
+                    child: CustomContainer(
+                      title: 'Fraquezas',
+                      symbol: 'W',
+                      bgColor: const Color.fromARGB(255, 251, 255, 0),
+                      textColor: Color(0xFFFFFFFF),
                     ),
                   ),
-                ),
-                child: CustomContainer(
-                  title: 'Fraquezas',
-                  symbol: 'W',
-                  bgColor: const Color.fromARGB(255, 251, 255, 0),
-                  textColor: Color(0xFFFFFFFF),
-                ),
-              ),
+              ],
             ),
-            Positioned(
-              top: 386, // Ajuste para a posição Y
-              left: 35, // Ajuste para a posição X
-              child: Row(
+            SizedBox(height: MediaQuery.sizeOf(context).height*0.06,),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                     "assets/images/squares.png",
@@ -140,53 +128,50 @@ class _SwotMainViewState extends State<SwotMainView> {
                   ),
                 ],
               ),
-            ),
-            // Container "Oportunidades"
-            Positioned(
-              top: 426,
-              left: 41,
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OportuniView(
-                      referenciaDocumento: referencia!,
+            Wrap(
+              direction: Axis.horizontal,
+              spacing: 30,
+              children: [
+                // Container "Oportunidades"
+                GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OportuniView(
+                          referenciaDocumento: referencia!,
+                        ),
+                      ),
+                    ),
+                    child: CustomContainer(
+                      title: 'Oportunidades',
+                      symbol: 'O',
+                      bgColor: Colors.blue,
+                      textColor: Color(0xFFFFFFFF),
                     ),
                   ),
-                ),
-                child: CustomContainer(
-                  title: 'Oportunidades',
-                  symbol: 'O',
-                  bgColor: Colors.blue,
-                  textColor: Color(0xFFFFFFFF),
-                ),
-              ),
-            ),
-            // Container "Ameaças"
-            Positioned(
-              top: 426,
-              left: 206,
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AmeacaView(
-                      referenciaDocumento: referencia!,
+                // Container "Ameaças"
+                GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AmeacaView(
+                          referenciaDocumento: referencia!,
+                        ),
+                      ),
+                    ),
+                    child: CustomContainer(
+                      title: 'Ameaças',
+                      symbol: 'T',
+                      bgColor: const Color.fromARGB(255, 253, 17, 0),
+                      textColor: Color(0xFFFFFFFF),
                     ),
                   ),
-                ),
-                child: CustomContainer(
-                  title: 'Ameaças',
-                  symbol: 'T',
-                  bgColor: const Color.fromARGB(255, 253, 17, 0),
-                  textColor: Color(0xFFFFFFFF),
-                ),
-              ),
+              ],
             ),
+            SizedBox(height: MediaQuery.sizeOf(context).height*0.06,),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

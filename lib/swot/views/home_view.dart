@@ -40,16 +40,10 @@ class _HomeViewState extends State<HomeView> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 100),
-            Text("SWOT", style: TextStyle(color: Color(0xFFFFFFFF))),
-            SizedBox(width: 10),
-          ],
-        ),
+        title: Text("SWOT", style: TextStyle(color: Color(0xFFFFFFFF))),
         iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF001800),
+        centerTitle: true,
       ),
       backgroundColor: Color(0xE5FEFEE3),
       body: Container(
@@ -98,7 +92,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                           ),
                           child: Row(
                             children: [
-                              SizedBox(width: 80),
+                              SizedBox(width: 65),
                               Text(
                                 "Criar e Análisar",
                                 style: TextStyle(
