@@ -1,3 +1,4 @@
+import 'package:app_gp9/custom_colors.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
 import 'package:app_gp9/plano/view/planoEdicao.dart';
@@ -29,6 +30,7 @@ class _PlanoDetalhadoPrimeiraPaginaState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: customColors[6]!,
       appBar: AppBar(
         title: const Text(''),
         backgroundColor: Color(0xFF001800),
