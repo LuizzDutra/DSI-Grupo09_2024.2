@@ -10,6 +10,8 @@ class Mapa{
   bool disabled;
   LatLng defaultCenter;
   double defaultZoom;
+  String filter;
+  void Function(Empresa empresa)? tapCallBack;
   final MapController _mapController = MapController();
 
 
@@ -19,7 +21,8 @@ class Mapa{
       this.noMarker = false,
       this.disabled = false,
       this.defaultCenter = const LatLng(0, 0),
-      this.defaultZoom = 3});
+      this.defaultZoom = 3,
+      this.filter = ""});
 
   LatLng getMapCenter(){
     return _mapController.camera.center;
@@ -29,7 +32,9 @@ class Mapa{
     List<Marker> list = [];
     if(noMarker){return list;}
 
-    for (var empresa in await EmpresaCollection.getEmpresas()) {
+    for (var empresa in 
+    (await EmpresaCollection.getEmpresas()).
+    where((Empresa e) => e.segmento.toUpperCase().contains(filter.toUpperCase().trim()))) {
       list.add(Marker(
           point: empresa.loc,
           width: 300,
@@ -41,7 +46,7 @@ class Mapa{
             GestureDetector(
               child: Image(image: AssetImage("assets/images/Logo.png")),
               onTap: () {
-                print("Apertou: ${empresa.loc.toString()}");
+                tapCallBack!(empresa);
               },
             ),
           ])));

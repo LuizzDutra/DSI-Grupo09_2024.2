@@ -1,4 +1,4 @@
-import 'package:app_gp9/mapa/mapa.dart';
+import 'package:app_gp9/mapa/model/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/perfil/perfil_controller.dart';
 import 'package:app_gp9/custom_colors.dart';
@@ -59,8 +59,8 @@ class _PerfilState extends State<PerfilView> {
                 nomeNegocio.controller.text,
                 segmento.controller.text,
                 descricao.controller.text,
-                int.parse(tempo.controller.text),
-                int.parse(funcionarios.controller.text),
+                int.tryParse(funcionarios.controller.text) ?? 0,
+                int.tryParse(funcionarios.controller.text) ?? 0,
                 show,
                 (){if(show){return mapa.getMapCenter();}return LatLng(0, 0);}());
             nome = nome.setReadOnly(true);
