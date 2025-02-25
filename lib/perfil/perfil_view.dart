@@ -59,8 +59,8 @@ class _PerfilState extends State<PerfilView> {
                 nomeNegocio.controller.text,
                 segmento.controller.text,
                 descricao.controller.text,
-                int.parse(tempo.controller.text),
-                int.parse(funcionarios.controller.text),
+                int.tryParse(funcionarios.controller.text) ?? 0,
+                int.tryParse(funcionarios.controller.text) ?? 0,
                 show,
                 (){if(show){return mapa.getMapCenter();}return LatLng(0, 0);}());
             nome = nome.setReadOnly(true);
