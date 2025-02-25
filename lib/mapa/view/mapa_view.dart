@@ -1,8 +1,9 @@
 import 'package:app_gp9/custom_colors.dart';
-import 'package:app_gp9/mapa/mapa.dart';
+import 'package:app_gp9/mapa/controller/mapa_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
+
 
 class MapaView extends StatefulWidget {
   const MapaView({super.key});
@@ -18,7 +19,9 @@ class _MapaState extends State<MapaView> {
   late StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
 
   bool conected = false;
-  var mapa = Mapa();
+  String filter = "";
+  TextEditingController searchController = TextEditingController();
+  late Timer debouncer;
 
   @override
   void initState() {
@@ -40,6 +43,17 @@ class _MapaState extends State<MapaView> {
         }
       }
     });
+    searchController.addListener(processFilter);
+    debouncer = Timer(Duration(milliseconds: 500), saveFilter);
+  }
+
+  void processFilter(){
+    debouncer.cancel();
+    debouncer = Timer(Duration(milliseconds: 500), saveFilter);
+  }
+
+  void saveFilter(){
+    setState(() => MapaController.setMapFilter(searchController.text));
   }
 
   @override
@@ -52,9 +66,25 @@ class _MapaState extends State<MapaView> {
           backgroundColor: customColors[7],
           foregroundColor: Colors.white,
         ),
-        body: Center(
-            child: mapa.getMapBuilder(conected)
-              )
+        body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+        SizedBox(
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height,
+            child: MapaController.getMapBuilder(conected)),
+        Positioned(child: 
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(color: customColors[6]!),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: "Filtre por segmento"
+            ),
+            controller: searchController,
+          ),
+        ))
+      ]),
     );
   }
 }

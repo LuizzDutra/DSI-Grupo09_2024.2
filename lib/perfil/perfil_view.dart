@@ -1,4 +1,4 @@
-import 'package:app_gp9/mapa/mapa.dart';
+import 'package:app_gp9/mapa/model/mapa.dart';
 import 'package:flutter/material.dart';
 import 'package:app_gp9/perfil/perfil_controller.dart';
 import 'package:app_gp9/custom_colors.dart';
