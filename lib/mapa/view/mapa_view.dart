@@ -46,13 +46,13 @@ class _MapaState extends State<MapaView> {
       }
     });
     searchController.addListener(processFilter);
-    debouncer = Timer(Duration(milliseconds: 500), saveFilter);
+    debouncer = Timer(Duration(milliseconds: 250), saveFilter);
     MapaController.setMapCallBack(goToDetailsPage);
   }
 
   void processFilter(){
     debouncer.cancel();
-    debouncer = Timer(Duration(milliseconds: 500), saveFilter);
+    debouncer = Timer(Duration(milliseconds: 250), saveFilter);
   }
 
   void saveFilter(){
