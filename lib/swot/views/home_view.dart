@@ -98,7 +98,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
                           ),
                           child: Row(
                             children: [
-                              SizedBox(width: 80),
+                              SizedBox(width: 65),
                               Text(
                                 "Criar e Análisar",
                                 style: TextStyle(
