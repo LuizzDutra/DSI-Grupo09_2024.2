@@ -1,4 +1,4 @@
-import 'package:app_gp9/plano/Model/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class IPlanoNegocioRepository {

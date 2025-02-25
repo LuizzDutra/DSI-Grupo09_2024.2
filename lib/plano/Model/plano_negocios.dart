@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlanoNegocios {
   // Classe Entidade
-
   Map<String, dynamic>? _descClientes;
   Map<String, dynamic>? _descValor;
   Map<String, dynamic>? _descCanais;

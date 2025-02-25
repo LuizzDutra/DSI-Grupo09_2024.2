@@ -1,7 +1,7 @@
 import 'package:app_gp9/custom_colors.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
-import 'package:app_gp9/plano/view/planoEdicao.dart';
+import 'package:app_gp9/plano/view/plano_edicao.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -40,115 +40,117 @@ class _PlanoDetalhadoPrimeiraPaginaState
       ),
       body: Container(
           padding: EdgeInsets.only(left: 23, right: 24),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 23,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.plano.descNome!,
-                  style: TextStyle(fontFamily: "Poppins", fontSize: 40),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 23,
                 ),
-              ),
-              SizedBox(
-                height: 13,
-              ),
-              Listagem(
-                categoria: "Parcerias",
-                fundo: Color(0xFFA8D0FF),
-                borda: Color(0xFF0E1BAB),
-                largura: double.infinity,
-                altura: 99,
-                conteudo: widget.plano.descParcerias,
-                onUpdate: atualizarTela,
-                reference: widget.plano.referencia,
-                controller: widget.controller,
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                children: [
-                  Listagem(
-                      categoria: "Clientes",
-                      fundo: Color(0xFFA8D0FF),
-                      borda: Color(0xFF0E1BAB),
-                      largura: 170,
-                      altura: 107,
-                      conteudo: widget.plano.descClientes,
-                      onUpdate: atualizarTela,
-                      reference: widget.plano.referencia,
-                      controller: widget.controller),
-                  Spacer(),
-                  Listagem(
-                      categoria: "Canais",
-                      fundo: Color(0xFFA8D0FF),
-                      borda: Color(0xFF0E1BAB),
-                      largura: 170,
-                      altura: 107,
-                      conteudo: widget.plano.descCanais,
-                      onUpdate: atualizarTela,
-                      reference: widget.plano.referencia,
-                      controller: widget.controller)
-                ],
-              ),
-              SizedBox(
-                height: 23,
-              ),
-              Listagem(
-                  categoria: "Proposta de valor",
-                  fundo: Color(0xFFFEB5B5),
-                  borda: Color(0xFF7F0E0E),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.plano.descNome!,
+                    style: TextStyle(fontFamily: "Poppins", fontSize: 40),
+                  ),
+                ),
+                SizedBox(
+                  height: 13,
+                ),
+                Listagem(
+                  categoria: "Parcerias",
+                  fundo: Color(0xFFA8D0FF),
+                  borda: Color(0xFF0E1BAB),
                   largura: double.infinity,
                   altura: 99,
-                  conteudo: widget.plano.descValor,
+                  conteudo: widget.plano.descParcerias,
                   onUpdate: atualizarTela,
                   reference: widget.plano.referencia,
-                  controller: widget.controller),
-              SizedBox(
-                height: 23,
-              ),
-              Row(
-                children: [
-                  Listagem(
-                      categoria: "Recursos",
-                      fundo: Color(0xFFA2E79D),
-                      borda: Color(0xFF045802),
-                      largura: 170,
-                      altura: 107,
-                      conteudo: widget.plano.descRecursos,
-                      onUpdate: atualizarTela,
-                      reference: widget.plano.referencia,
-                      controller: widget.controller),
-                  Spacer(),
-                  Listagem(
-                      categoria: "Atividades",
-                      fundo: Color(0xFFA2E79D),
-                      borda: Color(0xFF045802),
-                      largura: 170,
-                      altura: 107,
-                      conteudo: widget.plano.descAtividades,
-                      onUpdate: atualizarTela,
-                      reference: widget.plano.referencia,
-                      controller: widget.controller),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Listagem(
-                  categoria: "Relacionamento",
-                  fundo: Color(0xFFEDE9B2),
-                  borda: Color(0xFF7F7102),
-                  largura: double.infinity,
-                  altura: 99,
-                  conteudo: widget.plano.descRelacionamentos,
-                  onUpdate: atualizarTela,
-                  reference: widget.plano.referencia,
-                  controller: widget.controller)
-            ],
+                  controller: widget.controller,
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  children: [
+                    Listagem(
+                        categoria: "Clientes",
+                        fundo: Color(0xFFA8D0FF),
+                        borda: Color(0xFF0E1BAB),
+                        largura: 170,
+                        altura: 107,
+                        conteudo: widget.plano.descClientes,
+                        onUpdate: atualizarTela,
+                        reference: widget.plano.referencia,
+                        controller: widget.controller),
+                    Spacer(),
+                    Listagem(
+                        categoria: "Canais",
+                        fundo: Color(0xFFA8D0FF),
+                        borda: Color(0xFF0E1BAB),
+                        largura: 170,
+                        altura: 107,
+                        conteudo: widget.plano.descCanais,
+                        onUpdate: atualizarTela,
+                        reference: widget.plano.referencia,
+                        controller: widget.controller)
+                  ],
+                ),
+                SizedBox(
+                  height: 23,
+                ),
+                Listagem(
+                    categoria: "Proposta de valor",
+                    fundo: Color(0xFFFEB5B5),
+                    borda: Color(0xFF7F0E0E),
+                    largura: double.infinity,
+                    altura: 99,
+                    conteudo: widget.plano.descValor,
+                    onUpdate: atualizarTela,
+                    reference: widget.plano.referencia,
+                    controller: widget.controller),
+                SizedBox(
+                  height: 23,
+                ),
+                Row(
+                  children: [
+                    Listagem(
+                        categoria: "Recursos",
+                        fundo: Color(0xFFA2E79D),
+                        borda: Color(0xFF045802),
+                        largura: 170,
+                        altura: 107,
+                        conteudo: widget.plano.descRecursos,
+                        onUpdate: atualizarTela,
+                        reference: widget.plano.referencia,
+                        controller: widget.controller),
+                    Spacer(),
+                    Listagem(
+                        categoria: "Atividades",
+                        fundo: Color(0xFFA2E79D),
+                        borda: Color(0xFF045802),
+                        largura: 170,
+                        altura: 107,
+                        conteudo: widget.plano.descAtividades,
+                        onUpdate: atualizarTela,
+                        reference: widget.plano.referencia,
+                        controller: widget.controller),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Listagem(
+                    categoria: "Relacionamento",
+                    fundo: Color(0xFFEDE9B2),
+                    borda: Color(0xFF7F7102),
+                    largura: double.infinity,
+                    altura: 99,
+                    conteudo: widget.plano.descRelacionamentos,
+                    onUpdate: atualizarTela,
+                    reference: widget.plano.referencia,
+                    controller: widget.controller)
+              ],
+            ),
           )),
     );
   }

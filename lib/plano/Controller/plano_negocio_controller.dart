@@ -1,5 +1,5 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/Model/plano_negocios.dart';
+import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/Repository/plano_negocio_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,7 +7,7 @@ class ControllerPlanoNegocios {
 
   final repository = PlanoNegocioRepository();
 
-  Future<List> obterPlanos({required String idUsuario}) async {
+  Future<List<PlanoNegocios>> obterPlanos({required String idUsuario}) async {
     final planosLista = await repository.getPlanos(idUsuario: idUsuario);
     return planosLista;
   }
