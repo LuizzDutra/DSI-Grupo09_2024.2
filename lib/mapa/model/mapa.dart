@@ -33,7 +33,7 @@ class Mapa{
 
     for (var empresa in 
     (await EmpresaCollection.getEmpresas()).
-    where((Empresa e) => e.segmento.toUpperCase().contains(filter.toUpperCase()))) {
+    where((Empresa e) => e.segmento.toUpperCase().contains(filter.toUpperCase().trim()))) {
       list.add(Marker(
           point: empresa.loc,
           width: 300,
