@@ -58,9 +58,9 @@ class _CriarMetaViewState extends State<CriarMetaView> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), // 🔥 Fecha o teclado ao tocar fora
+      onTap: () => FocusScope.of(context).unfocus(), 
       child: Scaffold(
-        resizeToAvoidBottomInset: true, // 🔥 Ajusta o layout quando o teclado aparece
+        resizeToAvoidBottomInset: true, 
         appBar: AppBar(
           backgroundColor: Color(0xFF001800),
           leading: IconButton(
@@ -69,7 +69,7 @@ class _CriarMetaViewState extends State<CriarMetaView> {
           ),
         ),
         backgroundColor: Color(0xFFFFFBE6),
-        body: SingleChildScrollView( // 🔥 Permite rolagem para evitar overflow
+        body: SingleChildScrollView( 
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(

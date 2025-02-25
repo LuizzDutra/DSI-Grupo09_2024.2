@@ -82,9 +82,9 @@ class _MetasDetalhesViewState extends State<MetasDetalhesView> {
     double valorFaltante = widget.meta.valorFim - _valorAtual;
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), // 🔥 Fecha o teclado ao tocar fora
+      onTap: () => FocusScope.of(context).unfocus(), 
       child: Scaffold(
-        resizeToAvoidBottomInset: true, // 🔥 Ajusta a tela quando o teclado aparece
+        resizeToAvoidBottomInset: true, 
         appBar: AppBar(
           backgroundColor: Color(0xFF001800),
           leading: IconButton(
@@ -93,7 +93,7 @@ class _MetasDetalhesViewState extends State<MetasDetalhesView> {
           ),
         ),
         backgroundColor: Color(0xFFFFFBE6),
-        body: SingleChildScrollView( // 🔥 Permite rolagem quando o teclado aparece
+        body: SingleChildScrollView( 
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
