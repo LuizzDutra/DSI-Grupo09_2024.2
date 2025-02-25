@@ -6,8 +6,6 @@ import 'package:app_gp9/plano/view/planoCreate.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-late var listaDePlanos;
-
 class MyPlaceholder extends StatefulWidget {
   const MyPlaceholder({super.key});
 
@@ -23,22 +21,6 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
 
   void atualizarDados() {
     setState(() {});
-  }
-
-  Future<List<PlanoNegocios>> _obterPlanos({required String idUsuario}) async {
-    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
-
-    List<PlanoNegocios> lista = [];
-
-    for (var chave in pessoa!.planos!.keys) {
-      if (chave != 'total') {
-        var plano =
-            await controller.getPlano(referencia: pessoa.planos![chave]);
-        lista.add(plano);
-      }
-    }
-    listaDePlanos = lista;
-    return lista;
   }
 
   @override
@@ -61,13 +43,17 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
             SizedBox(height: 20),
             InkWell(
               onTap: () async {
+                final listaDePlanos =
+                    await controller.obterPlanos(idUsuario: user!);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlanoCreate(
-                      controller: controller,
-                      planos: listaDePlanos,
-                    ),
+                    builder: (context) {
+                      return PlanoCreate(
+                        controller: controller,
+                        planos: listaDePlanos,
+                      );
+                    },
                   ),
                 ).then((event) {
                   setState(() {});
@@ -135,7 +121,7 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
       bottomNavigationBar: SizedBox(
         height: MediaQuery.sizeOf(context).height * 0.7,
         child: FutureBuilder<List<PlanoNegocios>>(
-          future: _obterPlanos(idUsuario: user!),
+          future: controller.obterPlanos(idUsuario: user!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(

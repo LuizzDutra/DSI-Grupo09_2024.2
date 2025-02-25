@@ -1,10 +1,30 @@
 import 'package:app_gp9/pessoa.dart';
 import 'package:app_gp9/plano/Repository/plano_negocio_repository_interface.dart';
-import 'package:app_gp9/plano/model/plano_negocios.dart';
+import 'package:app_gp9/plano/Model/plano_negocios.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlanoNegocioRepository implements IPlanoNegocioRepository{
   final FirebaseFirestore _bd = FirebaseFirestore.instance;
+  final List<PlanoNegocios> _cache = [];
+
+  Future<List<PlanoNegocios>> getPlanos({required String idUsuario}) async {
+    if (_cache.isNotEmpty) {
+      return _cache;
+    }
+
+    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
+
+    List<PlanoNegocios> lista = [];
+
+    for (var chave in pessoa!.planos!.keys) {
+      if (chave != 'total') {
+        var plano = await getPlano(reference: pessoa.planos![chave]);
+        lista.add(PlanoNegocios.fromJson(plano));
+      }
+    }
+    _cache.addAll(lista);
+    return _cache;
+  }
 
   @override
   Future<Map<String, dynamic>> getPlano(
@@ -20,6 +40,12 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
   @override
   Future<void> createPlan(
       {required PlanoNegocios plano, required String idUsuario}) async {
+    for (var plan in _cache) {
+      if (plan.descNome == plano.descNome) {
+        return;
+      }
+    }
+
     Map<String, dynamic> dados = plano.toJson();
     try {
       DocumentReference? referencia = await _bd.collection('Planos').add(dados);
@@ -33,6 +59,10 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
 
       await atualizarPlanos(
           idUsuario, {nova_chave.toString(): referencia, 'total': temp});
+
+      plano.referencia = referencia;
+      _cache.add(plano);
+    
     } catch (e) {
       throw Exception("Erro ao adicionar $e");
     }
@@ -44,6 +74,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
       required Map<String, dynamic> dados}) async {
     try {
       await reference!.update(dados);
+      _cache.clear();
     } catch (e) {
       throw Exception("Erro ao deletar");
     }
@@ -72,6 +103,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
         doc.reference.update({"planos": auxiliar});
 
         await reference.delete();
+        _cache.clear();
         break;
       }
     } catch (e) {
@@ -96,7 +128,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
         });
       }
     } catch (e) {
-      print('Erro ao atualizar o campo "planos": $e');
+      rethrow;
     }
   }
 }
