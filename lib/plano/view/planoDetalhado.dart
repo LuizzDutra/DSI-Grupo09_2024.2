@@ -44,15 +44,12 @@ class _PlanoDetalhadoPrimeiraPaginaState
               SizedBox(
                 height: 23,
               ),
-              Row(
-                children: [
-                  Text(
-                    widget.plano.descNome!,
-                    style: TextStyle(fontFamily: "Poppins", fontSize: 40),
-                  ),
-                  Spacer(),
-                  Image.asset('assets/images/tresPontos.png')
-                ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.plano.descNome!,
+                  style: TextStyle(fontFamily: "Poppins", fontSize: 40),
+                ),
               ),
               SizedBox(
                 height: 13,
