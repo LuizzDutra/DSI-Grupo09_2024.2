@@ -3,8 +3,28 @@ import 'package:app_gp9/plano/Repository/plano_negocio_repository_interface.dart
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PlanoNegocioRepository implements IPlanoNegocioRepository{
+class PlanoNegocioRepository implements IPlanoNegocioRepository {
   final FirebaseFirestore _bd = FirebaseFirestore.instance;
+  List<PlanoNegocios> _cache = [];
+
+  Future<List<PlanoNegocios>> getPlanos({required String idUsuario}) async {
+    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
+
+    if (_cache.isNotEmpty) {
+      return _cache;
+    }
+
+    List<PlanoNegocios> lista = [];
+
+    for (var chave in pessoa!.planos!.keys) {
+      if (chave != 'total') {
+        var plano = await getPlano(reference: pessoa.planos![chave]);
+        lista.add(PlanoNegocios.fromJson(plano));
+      }
+    }
+    _cache = lista;
+    return lista;
+  }
 
   @override
   Future<Map<String, dynamic>> getPlano(
@@ -33,6 +53,9 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
 
       await atualizarPlanos(
           idUsuario, {nova_chave.toString(): referencia, 'total': temp});
+
+      plano.referencia = referencia;
+      _cache.clear();
     } catch (e) {
       throw Exception("Erro ao adicionar $e");
     }
@@ -43,6 +66,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
       {required DocumentReference? reference,
       required Map<String, dynamic> dados}) async {
     try {
+      _cache.clear();
       await reference!.update(dados);
     } catch (e) {
       throw Exception("Erro ao deletar");
@@ -53,6 +77,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
   Future<void> deletePlan(
       {required DocumentReference reference, required int idPessoa}) async {
     try {
+      _cache.clear();
       final referencePessoa = await _bd
           .collection("Pessoas")
           .where("idPessoa", isEqualTo: idPessoa)
@@ -63,7 +88,6 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
         Map<String, dynamic>? auxiliar = Map.from(jsonPlanos!);
         for (var iterador in jsonPlanos.entries) {
           if (iterador.value == reference) {
-            print(iterador.key);
             auxiliar.remove(iterador.key);
             auxiliar["total"] -= 1;
             break;
@@ -96,7 +120,7 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository{
         });
       }
     } catch (e) {
-      print('Erro ao atualizar o campo "planos": $e');
+      rethrow;
     }
   }
 }

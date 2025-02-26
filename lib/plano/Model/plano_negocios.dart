@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlanoNegocios {
   // Classe Entidade
-
   Map<String, dynamic>? _descClientes;
   Map<String, dynamic>? _descValor;
   Map<String, dynamic>? _descCanais;
@@ -41,6 +40,7 @@ class PlanoNegocios {
   set descCustos(Map<String, dynamic>? value) => _descCustos = value;
   set descNome(String? value) => _nome = value;
   set idPessoa(int? value) => _idPessoa = value;
+  set referencia(DocumentReference? value) => _referencia = value;
 
   PlanoNegocios(
     this._descAtividades,
@@ -57,17 +57,17 @@ class PlanoNegocios {
 
   Map<String, dynamic> toJson() {
     return {
-      'Atividades': _descAtividades,//
-      'Canais': _descCanais,//
-      'Clientes': _descClientes,//
-      'Custos': _descCustos,//
-      'Parcerias': _descParcerias,//
-      'Receita': _descReceita,//
-      'Recursos': _descRecursos,//
-      'Relacionamento': _descRelacionamentos,//
-      'Proposta de valor': _descValor,//
-      'nome': _nome,//
-      "referencia": _referencia//
+      'Atividades': _descAtividades, //
+      'Canais': _descCanais, //
+      'Clientes': _descClientes, //
+      'Custos': _descCustos, //
+      'Parcerias': _descParcerias, //
+      'Receita': _descReceita, //
+      'Recursos': _descRecursos, //
+      'Relacionamento': _descRelacionamentos, //
+      'Proposta de valor': _descValor, //
+      'nome': _nome, //
+      "referencia": _referencia //
     };
   }
 
@@ -85,7 +85,3 @@ class PlanoNegocios {
     _referencia = dados['referencia']; //
   }
 }
-
-
-
-

@@ -1,12 +1,10 @@
 import 'package:app_gp9/pessoa.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
-import 'package:app_gp9/plano/view/listagemPlanos.dart';
-import 'package:app_gp9/plano/view/planoCreate.dart';
+import 'package:app_gp9/plano/view/listagem_planos.dart';
+import 'package:app_gp9/plano/view/plano_create.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-late var listaDePlanos;
 
 class MyPlaceholder extends StatefulWidget {
   const MyPlaceholder({super.key});
@@ -16,29 +14,25 @@ class MyPlaceholder extends StatefulWidget {
 }
 
 class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
+  bool _filter = false;
+
   final user = FirebaseAuth.instance.currentUser?.uid;
   User? usuario = FirebaseAuth.instance.currentUser;
-
   final controller = ControllerPlanoNegocios();
+  final controllerFilter = TextEditingController();
 
   void atualizarDados() {
     setState(() {});
   }
 
-  Future<List<PlanoNegocios>> _obterPlanos({required String idUsuario}) async {
-    Pessoa? pessoa = await PessoaCollection.getPessoa(idUsuario);
-
-    List<PlanoNegocios> lista = [];
-
-    for (var chave in pessoa!.planos!.keys) {
-      if (chave != 'total') {
-        var plano =
-            await controller.getPlano(referencia: pessoa.planos![chave]);
-        lista.add(plano);
+  List<PlanoNegocios> filtro(List<PlanoNegocios> lista, String valor) {
+    final List<PlanoNegocios> nova = [];
+    for (var element in lista) {
+      if (element.descNome!.toUpperCase().contains(valor.toUpperCase())) {
+        nova.add(element);
       }
     }
-    listaDePlanos = lista;
-    return lista;
+    return nova;
   }
 
   @override
@@ -55,87 +49,104 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
       ),
       backgroundColor: Color(0xE5FEFEE3),
       body: Container(
-        padding: EdgeInsets.only(left: 25),
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            InkWell(
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PlanoCreate(
-                      controller: controller,
-                      planos: listaDePlanos,
+        padding: EdgeInsets.symmetric(horizontal: 25),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              InkWell(
+                onTap: () async {
+                  final listaDePlanos =
+                      await controller.obterPlanos(idUsuario: user!);
+                  print(listaDePlanos.length);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return PlanoCreate(
+                          controller: controller,
+                          planos: listaDePlanos,
+                        );
+                      },
                     ),
-                  ),
-                ).then((event) {
-                  setState(() {});
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        // Círculo
-                        width: 100.0,
-                        height: 100.0,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF2C6E49),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Positioned(
-                        left: 40,
-                        top: 25,
-                        child: Container(
-                          width: 280.0,
-                          height: 50.0,
+                  ).then((event) {
+                    setState(() {});
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          // Círculo
+                          width: 100.0,
+                          height: 100.0,
                           decoration: BoxDecoration(
                             color: Color(0xFF2C6E49),
-                            borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(20),
-                              right: Radius.circular(20),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 80,
-                              ),
-                              Text(
-                                "Criar Plano",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins-Regular',
-                                  fontSize: 28,
-                                ),
-                              ),
-                            ],
+                            shape: BoxShape.circle,
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: 20,
-                        left: 18,
-                        child: Image.asset('assets/images/Logo.png'),
-                      ),
-                    ],
-                  ),
-                ],
+                        Positioned(
+                          left: 40,
+                          top: 25,
+                          child: Container(
+                            width: 280.0,
+                            height: 50.0,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF2C6E49),
+                              borderRadius: BorderRadius.horizontal(
+                                left: Radius.circular(20),
+                                right: Radius.circular(20),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 80,
+                                ),
+                                Text(
+                                  "Criar Plano",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins-Regular',
+                                    fontSize: 28,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 20,
+                          left: 18,
+                          child: Image.asset('assets/images/Logo.png'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-          ],
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _filter = true;
+                  });
+                },
+                decoration: InputDecoration(
+                    hintText: "Pesquisa", icon: Icon(Icons.search)),
+                controller: controllerFilter,
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SizedBox(
         height: MediaQuery.sizeOf(context).height * 0.7,
         child: FutureBuilder<List<PlanoNegocios>>(
-          future: _obterPlanos(idUsuario: user!),
+          future: controller.obterPlanos(idUsuario: user!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -148,9 +159,13 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
               return Center(child: Text("Nenhum plano encontrado"));
             } else {
               var resultado = snapshot.data!;
+              //print(_filter);
+              //print(resultado.length);
               //Retorna uma lista com planos de negócios
               return ListagemPlanos(
-                dados: resultado,
+                dados: _filter
+                    ? filtro(resultado, controllerFilter.text)
+                    : resultado,
                 onUpdate: atualizarDados,
                 idUsuario: user!,
                 controller: controller,

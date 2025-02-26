@@ -21,6 +21,7 @@ class PlanoEdicao extends StatefulWidget {
 }
 
 class _PlanoEdicaoState extends State<PlanoEdicao> {
+  
   Map<String, dynamic> gerarMapComContador(List lista) {
     int contador = 0;
     Map<String, dynamic> map = {};

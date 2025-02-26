@@ -1,6 +1,6 @@
 import 'package:app_gp9/plano/model/plano_negocios.dart';
 import 'package:app_gp9/plano/Controller/plano_negocio_controller.dart';
-import 'package:app_gp9/plano/view/planoDetalhado.dart';
+import 'package:app_gp9/plano/view/plano_detalhado.dart';
 import 'package:flutter/material.dart';
 
 class ListagemPlanos extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ListagemPlanosState extends State<ListagemPlanos> {
     return ListView.builder(
       itemCount: widget.dados.length,
       itemBuilder: (context, index) {
-        var plano = widget.dados[index];
+        PlanoNegocios plano = widget.dados[index];
         return Dismissible(
           key: Key(plano.referencia.toString()),
           direction: DismissDirection.startToEnd,

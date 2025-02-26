@@ -1,7 +1,7 @@
 import 'package:app_gp9/home_page/chat_bubble.dart';
 import 'package:app_gp9/home_page/home_controller.dart';
 import 'package:app_gp9/login_page.dart';
-import 'package:app_gp9/mapa/mapa_view.dart';
+import 'package:app_gp9/mapa/view/mapa_view.dart';
 import 'package:app_gp9/perfil/perfil_view.dart';
 import 'package:app_gp9/meta_financeira/view/metas_home_view.dart';
 
@@ -170,7 +170,7 @@ class _HomeState extends State<Home> {
           ),
 
           ListTile(
-            leading: Icon(Icons.monetization_on, color: Colors.grey[700]),
+            leading: Icon(Icons.monetization_on, color: const Color.fromARGB(255, 74, 74, 74)),
             title: Text("Metas Financeiras"),
             onTap: () {Navigator.push(context, getRoute("metas"));
               },

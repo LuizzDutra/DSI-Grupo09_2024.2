@@ -1,14 +1,17 @@
 import 'package:app_gp9/pessoa.dart';
-import 'package:app_gp9/plano/Repository/plano_negocio_repository_interface.dart';
 import 'package:app_gp9/plano/model/plano_negocios.dart';
-import 'package:app_gp9/plano/repository/plano_negocio_repository.dart';
+import 'package:app_gp9/plano/Repository/plano_negocio_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ControllerPlanoNegocios {
-  
-  final PlanoNegocioRepository repository = PlanoNegocioRepository();  
-  
-  
+
+  final repository = PlanoNegocioRepository();
+
+  Future<List<PlanoNegocios>> obterPlanos({required String idUsuario}) async {
+    final planosLista = await repository.getPlanos(idUsuario: idUsuario);
+    return planosLista;
+  }
+
   Future<PlanoNegocios> getPlano(
       {required DocumentReference? referencia}) async {
     //Retorna um objeto do Tipo PlanoNegocios
@@ -21,8 +24,7 @@ class ControllerPlanoNegocios {
   Future<void> updatePlano(
       {required DocumentReference? referencia,
       required Map<String, dynamic> novosDados}) async {
-    await repository.updatePlan(
-        reference: referencia, dados: novosDados);
+    await repository.updatePlan(reference: referencia, dados: novosDados);
   }
 
   Future<void> deletePlano(
@@ -38,7 +40,6 @@ class ControllerPlanoNegocios {
 
     PlanoNegocios registro = PlanoNegocios(mascara, mascara, mascara, mascara,
         mascara, mascara, mascara, mascara, mascara, nome);
-    await repository.createPlan(
-        plano: registro, idUsuario: idUsuario);
+    await repository.createPlan(plano: registro, idUsuario: idUsuario);
   }
 }

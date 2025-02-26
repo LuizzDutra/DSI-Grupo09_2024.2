@@ -81,109 +81,34 @@ class _MetasDetalhesViewState extends State<MetasDetalhesView> {
   Widget build(BuildContext context) {
     double valorFaltante = widget.meta.valorFim - _valorAtual;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF001800),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white), 
-          onPressed: () => Navigator.pop(context),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(), 
+      child: Scaffold(
+        resizeToAvoidBottomInset: true, 
+        appBar: AppBar(
+          backgroundColor: Color(0xFF001800),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-      ),
-      backgroundColor: Color(0xFFFFFBE6),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Descrição", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            Container(
-              height: 120,
-              child: TextField(
-                controller: _descricaoController,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFFEDE9B2),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.green, width: 2),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.green, width: 2),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        backgroundColor: Color(0xFFFFFBE6),
+        body: SingleChildScrollView( 
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Meta", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text("R\$ ${widget.meta.valorFim.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: Colors.green[700])),
-                    SizedBox(height: 5),
-                    Text("Faltam", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text("R\$ ${valorFaltante.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: Colors.red[700])),
-                  ],
-                ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      child: CircularProgressIndicator(
-                        value: _calcularProgresso() / 100,
-                        backgroundColor: Colors.grey[300],
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            _calcularProgresso() >= 100 ? Colors.green : Colors.blue),
-                        strokeWidth: 8,
-                      ),
-                    ),
-                    Text("${_calcularProgresso().toStringAsFixed(0)}%", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-
-            Text("Dinheiro Acumulado", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
-            Text("R\$ ${_valorAtual.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue)),
-
-            SizedBox(height: 15),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _alterarValor(false),
-                  child: Text("Retirar", style: TextStyle(fontSize: 18)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                ),
-                SizedBox(width: 15),
-                ElevatedButton(
-                  onPressed: () => _alterarValor(true),
-                  child: Text("Adicionar", style: TextStyle(fontSize: 18)),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-                ),
-              ],
-            ),
-
-            if (_mostrarCampoValor) ...[
-              SizedBox(height: 15),
-              Center(
-                child: SizedBox(
-                  width: 150,
+                Text("Descrição", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: 5),
+                Container(
+                  height: 120,
                   child: TextField(
-                    controller: _valorController,
-                    keyboardType: TextInputType.number,
+                    controller: _descricaoController,
+                    maxLines: 5,
                     decoration: InputDecoration(
-                      labelText: "Valor",
+                      filled: true,
+                      fillColor: Color(0xFFEDE9B2),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(color: Colors.green, width: 2),
@@ -195,16 +120,97 @@ class _MetasDetalhesViewState extends State<MetasDetalhesView> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _confirmarAlteracao,
-                  child: Text("Confirmar"),
+                SizedBox(height: 15),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Meta", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text("R\$ ${widget.meta.valorFim.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: Colors.green[700])),
+                        SizedBox(height: 5),
+                        Text("Faltam", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text("R\$ ${valorFaltante.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, color: Colors.red[700])),
+                      ],
+                    ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          child: CircularProgressIndicator(
+                            value: _calcularProgresso() / 100,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                _calcularProgresso() >= 100 ? Colors.green : Colors.blue),
+                            strokeWidth: 8,
+                          ),
+                        ),
+                        Text("${_calcularProgresso().toStringAsFixed(0)}%", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ],
+                SizedBox(height: 15),
+
+                Text("Dinheiro Acumulado", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+                Text("R\$ ${_valorAtual.toStringAsFixed(2)}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue)),
+
+                SizedBox(height: 15),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _alterarValor(false),
+                      child: Text("Retirar", style: TextStyle(fontSize: 18)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                    ),
+                    SizedBox(width: 15),
+                    ElevatedButton(
+                      onPressed: () => _alterarValor(true),
+                      child: Text("Adicionar", style: TextStyle(fontSize: 18)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                    ),
+                  ],
+                ),
+
+                if (_mostrarCampoValor) ...[
+                  SizedBox(height: 15),
+                  Center(
+                    child: SizedBox(
+                      width: 150,
+                      child: TextField(
+                        controller: _valorController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: "Valor",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.green, width: 2),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.green, width: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _confirmarAlteracao,
+                      child: Text("Confirmar"),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
