@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 
 class PlanoCreate extends StatefulWidget {
   final ControllerPlanoNegocios controller;
-  final List<PlanoNegocios> planos;
-  const PlanoCreate(
-      {super.key, required this.controller, required this.planos});
+  List<PlanoNegocios> planos;
+  PlanoCreate({super.key, required this.controller, required this.planos});
 
   @override
   State<PlanoCreate> createState() => _PlanoCreateState();
@@ -44,11 +43,12 @@ class _PlanoCreateState extends State<PlanoCreate> {
                 padding: const EdgeInsets.only(left: 25),
                 child: Row(
                   children: [
-                    Text(
+                    if(mensagem != "criando")Text(
                       mensagem,
                       style: TextStyle(
                           fontFamily: "Poppins", color: Color(0x94262926)),
                     ),
+                    if(mensagem == "criando") CircularProgressIndicator()
                   ],
                 ),
               ),
@@ -87,8 +87,16 @@ class _PlanoCreateState extends State<PlanoCreate> {
                         return;
                       }
                     }
+
+                    setState(() {
+                      mensagem = "criando";
+                    });
+
                     await widget.controller.createEmptyPlan(
                         nome: _nomeCanvas.text, idUsuario: user!);
+
+                    widget.planos =
+                        await widget.controller.obterPlanos(idUsuario: user!);
 
                     setState(() {
                       mensagem = "Plano ${_nomeCanvas.text} registado!";

@@ -20,8 +20,7 @@ class PlanoDetalhadoPrimeiraPagina extends StatefulWidget {
 class _PlanoDetalhadoPrimeiraPaginaState
     extends State<PlanoDetalhadoPrimeiraPagina> {
   void atualizarTela() async {
-    var dados =
-        await widget.controller.getPlano(referencia: widget.plano.referencia);
+    var dados = await widget.controller.getPlano(referencia: widget.plano.referencia);
 
     setState(() {
       widget.plano = dados;

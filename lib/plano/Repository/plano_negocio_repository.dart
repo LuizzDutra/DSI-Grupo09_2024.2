@@ -16,14 +16,18 @@ class PlanoNegocioRepository implements IPlanoNegocioRepository {
 
     List<PlanoNegocios> lista = [];
 
-    for (var chave in pessoa!.planos!.keys) {
-      if (chave != 'total') {
-        var plano = await getPlano(reference: pessoa.planos![chave]);
-        lista.add(PlanoNegocios.fromJson(plano));
+    try {
+      for (var chave in pessoa!.planos!.keys) {
+        if (chave != 'total') {
+          var plano = await getPlano(reference: pessoa.planos![chave]);
+          lista.add(PlanoNegocios.fromJson(plano));
+        }
       }
+      _cache = lista;
+      return lista;
+    } catch (e) {
+      return [];
     }
-    _cache = lista;
-    return lista;
   }
 
   @override

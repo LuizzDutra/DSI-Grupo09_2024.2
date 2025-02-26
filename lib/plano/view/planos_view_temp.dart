@@ -58,7 +58,6 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
                 onTap: () async {
                   final listaDePlanos =
                       await controller.obterPlanos(idUsuario: user!);
-                  print(listaDePlanos.length);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -159,9 +158,6 @@ class _MyPlaceholderState extends State<MyPlaceholder> with RouteAware {
               return Center(child: Text("Nenhum plano encontrado"));
             } else {
               var resultado = snapshot.data!;
-              //print(_filter);
-              //print(resultado.length);
-              //Retorna uma lista com planos de negócios
               return ListagemPlanos(
                 dados: _filter
                     ? filtro(resultado, controllerFilter.text)
